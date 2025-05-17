@@ -1,0 +1,293 @@
+<!doctype html>
+<html>
+
+<head>
+  <script>
+    document.write('<meta charset="UTF-8">'); // Ini agar tidak error saat load awal
+    fetch('/components/head.html')
+      .then(response => response.text())
+      .then(html => {
+        document.head.innerHTML += html;
+      })
+      .catch(err => console.error('Gagal memuat head:', err));
+  </script>
+<!-- TABCONTENT -->
+<script src="/tabcontent.js" type="text/javascript"></script>
+<link href="/tabcontent.css" rel="stylesheet" type="text/css" />
+
+<title>Pemazmur SMDTBA</title>
+</head>
+<!-- OUTER-WRAPPER BEGIN -->
+<div id="outer-wrapper">
+
+	<a name="top"></a>
+
+	<!-- HEADER PAROKI -->
+	<!-- ======================================================================= -->
+		<!-- ======================================================================= -->
+	<div class="divheaderparoki">
+		<a href="/index.html"><img src="/img/header-logo-1.png" style="border:0; width: 100%"></a>
+	</div>
+
+<!-- ============================================ -->
+<body onload="menusetup(0,'Kategorial')">
+
+<!-- ============================================ -->
+<link rel="stylesheet" href="/style.css">
+
+<script>
+function togglemenudiv() {
+    var div = document.getElementById("divmenu");
+	var caret_up = document.getElementById("caret_up");
+	var caret_down = document.getElementById("caret_down");
+
+    //div.style.display = div.style.display == "none" ? "block" : "none";
+
+	if(div.style.display == "none"){
+		div.style.display = "block";
+		caret_up.style.display = "inline";
+		caret_down.style.display = "none";
+	} else{
+		div.style.display = "none";
+		caret_up.style.display = "none";
+		caret_down.style.display = "inline";
+	}
+}
+
+function menusetup(flag,title){ //1 0, judul hlm
+	//set menu visibility
+	var div = document.getElementById("divmenu");
+	var caret_up = document.getElementById("caret_up");
+	var caret_down = document.getElementById("caret_down");
+
+	if(flag == 1){
+		div.style.display = "block";
+		caret_up.style.display = "inline";
+		caret_down.style.display = "none";
+	} else{
+		div.style.display = "none";
+		caret_up.style.display = "none";
+		caret_down.style.display = "inline";
+	}
+	
+	//set title
+	var judul = document.getElementById('menubartitle');
+	judul.textContent = title;
+}
+</script>
+
+<!-- BEGIN LAYOUT -->
+<!-- MENU BAR -->
+<div id="divmenubar">
+	<button id="btnmenu" onclick="togglemenudiv()">
+		Menu &nbsp;
+		<i id="caret_up" class="fa fa-caret-up" style="background:transparent; font-size:18px; color:white; display:none"></i>
+		<i id="caret_down" class="fa fa-th" style="background:transparent; font-size:18px; color:white; display:none"></i> <!-- fa-th-large -->
+	</button>
+	<!-- <span id="txtflag">On</span> -->
+	<span id="menubartitle">&nbsp;</span>
+</div>
+
+<!-- MENU DIV -->
+  <div id="menu-container"></div>
+
+
+<!-- <div class="divbtbar"> -->
+	<!-- </div> -->
+
+	</div> <!--div_menu-->
+</div> <!-- clip for animation -->
+
+<!-- ============================================ -->
+
+<!-- PHOTO BOX : The Modal Window -->
+<!-- ================================================================================================ -->
+<div class="modalx" id="boxModal">
+  
+  <!-- Modal content -->
+  <div class="modalx-content" style="color:black">
+
+    <table cellpadding="0" cellspacing="0">
+        <tr>
+            <td style="padding:0 8px 0 8px;">
+                <span id="boxModalTitle" style="float:left; margin-top:7px; margin-left:2px; font-family:ArchivoNarrow; font-size:12px; color:#777">&nbsp;</span>
+                <div class="closex">&#215;</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:center; padding: 0 8px 6px 8px;">
+                <img id="boxModalImage" src="/img/smdtba-sharelogo.png" style="width:200px;border-radius:6px;">
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:center; padding:0 8px 0 8px;">
+                <span id="boxModalText" ><em>&nbsp;</em></span>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:center; padding:0 8px 15px 8px; font-family:ArchivoNarrow; font-size:12px; color:#8c6755">
+                <span id="boxModalSubText" ><em>&nbsp;</em></span>
+            </td>
+        </tr>        
+    </table>
+  </div>
+
+</div>
+<!-- ================================================================================================ -->
+
+
+<!-- ABOUT BOX : The Modal Window -->
+<!-- ================================================================================================ -->
+<div class='modal' id='aboutModal'>
+  <!-- Modal content -->
+  <div class='modal-content' style="color:white">
+    <div class='close'>&#215;</div>
+    <div class='modal-body'>
+        <!-- <span class='close'>&#215;</span> -->
+        <div>
+            <img src='/img/smdtba-sharelogo.PNG' style='width:150px; margin: 0 0 10px 10px;'>
+        </div>
+        <span style="font-size:18px; font-weight:bold;">Team Web SMDTBA</span>
+		<span><em>komsosparokitulungagung@gmail.com</em></span>
+    </div>
+  </div>
+</div>
+
+
+<!-- SCRIPT -->
+<script>
+	/* Get the about modal */
+	var aboutmodal = document.getElementById("aboutModal");
+
+    /* Caller function */
+	function ShowAboutBox() {
+		aboutmodal.style.display = "block";
+	}
+	/* OTHER METHOD: Get the link that opens the modal */
+	/* var lnk = document.getElementById("myAboutLink");*/
+	/* When the user clicks the button, open the modal  */
+	/* lnk.onclick = function() { modal.style.display = "block";} */
+
+	/* Get the span element that closes the modal */
+	var span = document.getElementsByClassName("close")[0];
+
+	/* When the user clicks on span (x), close the modal */
+	span.onclick = function() {
+		aboutmodal.style.display = "none";
+	}
+
+    /* ******************************************************** */
+
+	/* Get the photo box modal */
+	var boxmodal = document.getElementById("boxModal");
+
+    /* Caller function */
+	function ShowPhotoBox(txt,fotopath,title,subtxt) {
+        document.getElementById("boxModalTitle").innerHTML = title;
+        document.getElementById("boxModalImage").src = fotopath;
+        document.getElementById("boxModalText").innerHTML = txt;
+        document.getElementById("boxModalSubText").innerHTML = subtxt;
+        boxmodal.style.display = "block";
+	}
+	/* OTHER METHOD: Get the link that opens the modal */
+	/* var lnk = document.getElementById("myAboutLink");*/
+	/* When the user clicks the button, open the modal  */
+	/* lnk.onclick = function() { modal.style.display = "block";} */
+
+	/* Get the span element that closes the modal */
+	var spanx = document.getElementsByClassName("closex")[0];
+
+	/* When the user clicks on span (x), close the modal */
+	spanx.onclick = function() {
+		boxmodal.style.display = "none";
+	}
+
+    /* ******************************************************** */
+
+	/* When the user clicks anywhere outside of the modal, close it */
+	window.onclick = function(event) {
+		if (event.target == aboutmodal) {
+			aboutmodal.style.display = "none";
+		}
+		if (event.target == boxmodal) {
+			boxmodal.style.display = "none";
+		}        
+	}
+
+</script>
+
+
+
+<!-- BEGIN LAYOUT -->
+
+
+<div style="padding:6px">
+	<div style="margin-bottom: 1em"><table cellpadding="0" cellspacing="0"><tr><td class="tdiconheadline">
+		<img class="iconheadline" src="/img/icon/kategorial/pemazmur.png" ></td><td style="padding-left:0.2em"><span 
+			class="headline_title">Pemazmur</span><br/><span class="headline_subtitle">Santa Maria Dengan Tidak Bernoda Asal</span></td></tr></table></div>
+	<ul class="tabs" data-persist="true">
+		<li><a href="#tab_info">Info Kegiatan</a></li>
+		<li><a href="#tab_foto">&nbsp;Foto&nbsp;</a></li>
+	</ul>
+
+	<div class="tabcontents" style="margin-bottom:1.2em; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.08), 0 2px 6px 0 rgba(0,0,0,0.08)">
+		<div id="tab_info">
+			<div class="defparcenter" style="padding-top:1em">
+
+			</div>
+			<div class="defpar">
+				<b>JADWAL :</b><br>
+				Latihan tiap ... Pk. 00.00 WIB di Gereja SMDTBA.<br>
+				Pertemuan rutin pada hari .... 00.00 setiap bulan di Gereja SMDTBA
+			</div>
+			<div class="defpar">
+				<img style="width:36px; vertical-align:middle" src="" alt="">&nbsp;
+						<a href=""> </a>
+			</div>
+           
+		</div> <!-- tab_info -->
+
+		<div id="tab_foto">
+			<div class="defparcenter">
+				<br>Belum ada foto.<br><br>
+			</div>
+		</div> <!-- tab_foto -->
+	</div> <!--tabcontents-->
+
+</div>
+
+<!-- BACK BUTTON -->
+<div style="width:100%; padding-bottom:1em; text-align:center" >
+	<input type="button" class="btnorange" value="Kembali" onclick="window.history.back()">
+</div>
+
+<!-- ======================================================================= -->
+<!-- ======================================================================= -->
+
+<div id="div_footer"> <!-- defined in upperbase.php -->
+<table class="tabledef table100">
+	<tr>
+		<td class="tdfooter">
+			Copyright © <b>Paroki Santa Maria Dengan Tidak Bernoda Asal Tulungagung</b>
+			<br>Email: komsosparokitulungagung@gmail.com |&nbsp;Dikelola oleh :<br> 
+			<button class="btdef btabout" onclick="javascript:ShowAboutBox()">Team Web SMDTBA</button>
+			<!-- <a href="javascript:ShowAboutBox()" id="myAboutLink"><b>Team Web SMDTBA</b></a> -->
+			<a href="#top"><i id="topjump" class="fa fa-arrow-circle-up"></i></a>
+		</td>
+	</tr>
+</table>
+</div>
+
+<!-- FOOTER END -->
+
+<!-- ============================================ -->
+  <script>
+    fetch('/components/menu.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('menu-container').innerHTML = data;
+      })
+      .catch(error => console.error('Gagal memuat menu:', error));
+  </script>
+</body>
+</html>

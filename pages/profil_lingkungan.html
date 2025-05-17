@@ -1,0 +1,277 @@
+<!doctype html>
+<html>
+
+<head>
+  <script>
+    document.write('<meta charset="UTF-8">'); // Ini agar tidak error saat load awal
+    fetch('/components/head.html')
+      .then(response => response.text())
+      .then(html => {
+        document.head.innerHTML += html;
+      })
+      .catch(err => console.error('Gagal memuat head:', err));
+  </script>
+
+<title>Wilayah dan Lingkungan</title>
+
+<!-- TABCONTENT -->
+<script src="/tabcontent.js" type="text/javascript"></script>
+<link href="/tabcontent.css" rel="stylesheet" type="text/css" />
+
+</head>
+<!-- OUTER-WRAPPER BEGIN -->
+<div id="outer-wrapper">
+
+	<a name="top"></a>
+
+	<!-- HEADER PAROKI -->
+	<!-- ======================================================================= -->
+		<!-- ======================================================================= -->
+	<div class="divheaderparoki">
+		<a href="/index.html"><img src="/img/header-logo-1.png" style="border:0; width: 100%"></a>
+	</div>
+
+<!-- ============================================ -->
+<body onload="menusetup(0,'Wilayah &amp; Lingkungan / Kring')">
+
+<!-- ============================================ -->
+<link rel="stylesheet" href="/style.css">
+
+<script>
+function togglemenudiv() {
+    var div = document.getElementById("divmenu");
+	var caret_up = document.getElementById("caret_up");
+	var caret_down = document.getElementById("caret_down");
+
+    //div.style.display = div.style.display == "none" ? "block" : "none";
+
+	if(div.style.display == "none"){
+		div.style.display = "block";
+		caret_up.style.display = "inline";
+		caret_down.style.display = "none";
+	} else{
+		div.style.display = "none";
+		caret_up.style.display = "none";
+		caret_down.style.display = "inline";
+	}
+}
+
+function menusetup(flag,title){ //1 0, judul hlm
+	//set menu visibility
+	var div = document.getElementById("divmenu");
+	var caret_up = document.getElementById("caret_up");
+	var caret_down = document.getElementById("caret_down");
+
+	if(flag == 1){
+		div.style.display = "block";
+		caret_up.style.display = "inline";
+		caret_down.style.display = "none";
+	} else{
+		div.style.display = "none";
+		caret_up.style.display = "none";
+		caret_down.style.display = "inline";
+	}
+	
+	//set title
+	var judul = document.getElementById('menubartitle');
+	judul.textContent = title;
+}
+</script>
+
+<!-- BEGIN LAYOUT -->
+<!-- MENU BAR -->
+<div id="divmenubar">
+	<button id="btnmenu" onclick="togglemenudiv()">
+		Menu &nbsp;
+		<i id="caret_up" class="fa fa-caret-up" style="background:transparent; font-size:18px; color:white; display:none"></i>
+		<i id="caret_down" class="fa fa-th" style="background:transparent; font-size:18px; color:white; display:none"></i> <!-- fa-th-large -->
+	</button>
+	<!-- <span id="txtflag">On</span> -->
+	<span id="menubartitle">&nbsp;</span>
+</div>
+
+<!-- MENU DIV -->
+  <div id="menu-container"></div>
+<!-- PHOTO BOX : The Modal Window -->
+<!-- ================================================================================================ -->
+<div class="modalx" id="boxModal">
+  
+  <!-- Modal content -->
+  <div class="modalx-content" style="color:black">
+
+    <table cellpadding="0" cellspacing="0">
+        <tr>
+            <td style="padding:0 8px 0 8px;">
+                <span id="boxModalTitle" style="float:left; margin-top:7px; margin-left:2px; font-family:ArchivoNarrow; font-size:12px; color:#777">&nbsp;</span>
+                <div class="closex">&#215;</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:center; padding: 0 8px 6px 8px;">
+                <img id="boxModalImage" src="/img/htbspm-sharelogo.png" style="width:200px;border-radius:6px;">
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:center; padding:0 8px 0 8px;">
+                <span id="boxModalText" ><em>&nbsp;</em></span>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:center; padding:0 8px 15px 8px; font-family:ArchivoNarrow; font-size:12px; color:#8c6755">
+                <span id="boxModalSubText" ><em>&nbsp;</em></span>
+            </td>
+        </tr>        
+    </table>
+  </div>
+
+</div>
+<!-- ================================================================================================ -->
+
+
+<!-- ABOUT BOX : The Modal Window -->
+<!-- ================================================================================================ -->
+<div class='modal' id='aboutModal'>
+  <!-- Modal content -->
+  <div class='modal-content' style="color:white">
+    <div class='close'>&#215;</div>
+    <div class='modal-body'>
+        <!-- <span class='close'>&#215;</span> -->
+        <div>
+            <img src='/img/smdtba-sharelogo.PNG' style='width:150px; margin: 0 0 10px 10px;'>
+        </div>
+        <span style="font-size:18px; font-weight:bold;">Team Web SMDTBA</span>
+		<span><em>komsosparokitulungagung@gmail.com</em></span>
+    </div>
+  </div>
+</div>
+
+
+<!-- SCRIPT -->
+<script>
+	/* Get the about modal */
+	var aboutmodal = document.getElementById("aboutModal");
+
+    /* Caller function */
+	function ShowAboutBox() {
+		aboutmodal.style.display = "block";
+	}
+	/* OTHER METHOD: Get the link that opens the modal */
+	/* var lnk = document.getElementById("myAboutLink");*/
+	/* When the user clicks the button, open the modal  */
+	/* lnk.onclick = function() { modal.style.display = "block";} */
+
+	/* Get the span element that closes the modal */
+	var span = document.getElementsByClassName("close")[0];
+
+	/* When the user clicks on span (x), close the modal */
+	span.onclick = function() {
+		aboutmodal.style.display = "none";
+	}
+
+    /* ******************************************************** */
+
+	/* Get the photo box modal */
+	var boxmodal = document.getElementById("boxModal");
+
+    /* Caller function */
+	function ShowPhotoBox(txt,fotopath,title,subtxt) {
+        document.getElementById("boxModalTitle").innerHTML = title;
+        document.getElementById("boxModalImage").src = fotopath;
+        document.getElementById("boxModalText").innerHTML = txt;
+        document.getElementById("boxModalSubText").innerHTML = subtxt;
+        boxmodal.style.display = "block";
+	}
+	/* OTHER METHOD: Get the link that opens the modal */
+	/* var lnk = document.getElementById("myAboutLink");*/
+	/* When the user clicks the button, open the modal  */
+	/* lnk.onclick = function() { modal.style.display = "block";} */
+
+	/* Get the span element that closes the modal */
+	var spanx = document.getElementsByClassName("closex")[0];
+
+	/* When the user clicks on span (x), close the modal */
+	spanx.onclick = function() {
+		boxmodal.style.display = "none";
+	}
+
+    /* ******************************************************** */
+
+	/* When the user clicks anywhere outside of the modal, close it */
+	window.onclick = function(event) {
+		if (event.target == aboutmodal) {
+			aboutmodal.style.display = "none";
+		}
+		if (event.target == boxmodal) {
+			boxmodal.style.display = "none";
+		}        
+	}
+
+</script>
+
+<!-- END OF LINTANG ABOUT MODAL WINDOW -->
+
+
+<div style="padding:6px">
+
+	<div style="margin-bottom: 1em"><table cellpadding="0" cellspacing="0"><tr><td class="tdiconheadline"><img class="iconheadline" src="img/icon/icon_square_lingkungan.png" ></td><td style="padding-left:0.2em"><span class="headline_title">WILAYAH &amp; LINGKUNGAN / KRING</span><br/><span class="headline_subtitle">6 WILAYAH, 43 LINGKUNGAN</span><br/><div class="headline_ket">Berikut Pengurus Periode 2022-2025</div></td></tr></table></div><div class="ket">Klik pada lingkungan untuk melihat <span style="color:green">profil tiap lingkungan.</span></div>
+	<ul class="tabs" data-persist="true">
+		<li><a href="#wil1">WIL 1</a></li>
+		<li><a href="#wil2">WIL 2</a></li>
+		<li><a href="#wil3">WIL 3</a></li>
+		<li><a href="#wil4">WIL 4</a></li>
+		<li><a href="#wil5">WIL 5</a></li>
+		<li><a href="#wil6">WIL 6</a></li>
+	</ul>
+
+	<div class="tabcontents" style="box-shadow: 0 2px 4px 0 rgba(0,0,0,0.08), 0 2px 6px 0 rgba(0,0,0,0.08)">
+		<div id="wil1">
+			<div class="w3-container w3-card" style="background-color:#d6ece6"><table cellpadding="0" cellspacing="0"><tr><td class="tddesc"><span class="wilayah">WILAYAH 1</span><br/><span class="darkgreyfont">Koordinator: </span><b>Stefanus Gunawan</b></td><td class="tdicon"><a href="javascript:ShowPhotoBox('Stefanus Gunawan','img/person/stephanus-gunawan.jpg','KOORDINATOR WILAYAH','Wilayah 1')"><img class="iconcircle" src="img/person/stephanus-gunawan.jpg"/></td></tr></table><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kringb578.html?&amp;k=lukas';"><img class="iconsquare" src="img/person/thomas-pribadi-santoso.jpg"></td><td class="tddesc"  onclick="location.href='kringb578.html?&amp;k=lukas';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">LUKAS</span><span class="greyfont"><br />Ketua: </span><b>Thomas Pribadi Santoso</b></td><td class="tdnum">1</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring6830.html?&amp;k=matheus1';"><img class="iconsquare" src="img/person/paulus-ook-hidayat.jpg"></td><td class="tddesc"  onclick="location.href='kring6830.html?&amp;k=matheus1';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">MATHEUS 1</span><span class="greyfont"><br />Ketua: </span><b>Paulus Ook Hidayat</b></td><td class="tdnum">2</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring4126.html?&amp;k=matheus2utara';"><img class="iconsquare" src="img/person/petrus-tri-hardjono.jpg"></td><td class="tddesc"  onclick="location.href='kring4126.html?&amp;k=matheus2utara';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">MATHEUS 2 UTARA</span><span class="greyfont"><br />Ketua: </span><b>Petrus Tri Hardjono</b></td><td class="tdnum">3</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring94df.html?&amp;k=matheus2selatan';"><img class="iconsquare" src="img/person/maria-theresia-yetty-farida.jpg"></td><td class="tddesc"  onclick="location.href='kring94df.html?&amp;k=matheus2selatan';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">MATHEUS 2 SELATAN</span><span class="greyfont"><br />Ketua: </span><b>Maria Theresia Yetty Farida Aryati</b></td><td class="tdnum">4</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring5049.html?&amp;k=matheus3';"><img class="iconsquare" src="img/person/henni-tanurahardja.jpg"></td><td class="tddesc"  onclick="location.href='kring5049.html?&amp;k=matheus3';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">MATHEUS 3</span><span class="greyfont"><br />Ketua: </span><b>Saverin Henni Tanurahardja</b></td><td class="tdnum">5</td></tr></table></div></div>		</div>	
+		<div id="wil2">	
+			<div class="w3-container w3-card" style="background-color:#f0e6d0"><table cellpadding="0" cellspacing="0"><tr><td class="tddesc"><span class="wilayah">WILAYAH 2</span><br/><span class="darkgreyfont">Koordinator: </span><b>Yohanes Baptis Budi</b></td><td class="tdicon"><a href="javascript:ShowPhotoBox('Yohanes Baptis Budi','img/person/yohanes-b-budi.jpg','KOORDINATOR WILAYAH','Wilayah 2')"><img class="iconcircle" src="img/person/yohanes-b-budi.jpg"/></td></tr></table><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring52b2.html?&amp;k=elisabeth';"><img class="iconsquare" src="img/person/maria-lucia-widiatmi.jpg"></td><td class="tddesc"  onclick="location.href='kring52b2.html?&amp;k=elisabeth';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">ELISABETH</span><span class="greyfont"><br />Ketua: </span><b>Maria Lucia Widiatmi</b></td><td class="tdnum">6</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring0310.html?&amp;k=thomjohn';"><img class="iconsquare" src="img/person/yohanes-b-budi.jpg"></td><td class="tddesc"  onclick="location.href='kring0310.html?&amp;k=thomjohn';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">THOM JOHN</span><span class="greyfont"><br />Ketua: </span><b>Yohanes B. Budi</b></td><td class="tdnum">7</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kringcaca.html?&amp;k=petrus';"><img class="iconsquare" src="img/person/johanes-triangka-setiadji.jpg"></td><td class="tddesc"  onclick="location.href='kringcaca.html?&amp;k=petrus';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">PETRUS</span><span class="greyfont"><br />Ketua: </span><b>Johanes Triangka Setiadji</b></td><td class="tdnum">8</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kringa8ea.html?&amp;k=paulus';"><img class="iconsquare" src="img/person/ridwan-hambali.jpg"></td><td class="tddesc"  onclick="location.href='kringa8ea.html?&amp;k=paulus';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">PAULUS</span><span class="greyfont"><br />Ketua: </span><b>Ridwan Hambali</b></td><td class="tdnum">9</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring616d.html?&amp;k=markusutara';"><img class="iconsquare" src="img/person/laurensia-lenny-sulistyo.jpg"></td><td class="tddesc"  onclick="location.href='kring616d.html?&amp;k=markusutara';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">MARKUS UTARA</span><span class="greyfont"><br />Ketua: </span><b>Laurensia Lenny Sulistyo</b></td><td class="tdnum">10</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring2e73.html?&amp;k=markusselatan';"><img class="iconsquare" src="img/person/adriana-pusparini.jpg"></td><td class="tddesc"  onclick="location.href='kring2e73.html?&amp;k=markusselatan';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">MARKUS SELATAN</span><span class="greyfont"><br />Ketua: </span><b>Adriana Pusparini</b></td><td class="tdnum">11</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kringe69b.html?&amp;k=andreas2';"><img class="iconsquare" src="img/person/frida-lake.jpg"></td><td class="tddesc"  onclick="location.href='kringe69b.html?&amp;k=andreas2';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">ANDREAS 2</span><span class="greyfont"><br />Ketua: </span><b>Frida Lake</b></td><td class="tdnum">12</td></tr></table></div></div>		</div>
+		<div id="wil3">	
+			<div class="w3-container w3-card" style="background-color:#d3e0f3"><table cellpadding="0" cellspacing="0"><tr><td class="tddesc"><span class="wilayah">WILAYAH 3</span><br/><span class="darkgreyfont">Koordinator: </span><b>Anastasia Suzane</b></td><td class="tdicon"><a href="javascript:ShowPhotoBox('Anastasia Suzane','img/person/anastasia-suzanne.jpg','KOORDINATOR WILAYAH','Wilayah 3')"><img class="iconcircle" src="img/person/anastasia-suzanne.jpg"/></td></tr></table><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kringcecd.html?&amp;k=aloysius1';"><img class="iconsquare" src="img/person/henry-hantoro-tanamas.jpg"></td><td class="tddesc"  onclick="location.href='kringcecd.html?&amp;k=aloysius1';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">ALOYSIUS 1</span><span class="greyfont"><br />Ketua: </span><b>Johanes Henry Hantoro Tanamas</b></td><td class="tdnum">13</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kringb901.html?&amp;k=aloysius2a';"><img class="iconsquare" src="img/person/fransisca-vera-hardja.jpg"></td><td class="tddesc"  onclick="location.href='kringb901.html?&amp;k=aloysius2a';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">ALOYSIUS 2 A</span><span class="greyfont"><br />Ketua: </span><b>Fransisca Vera Hardja</b></td><td class="tdnum">14</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring2a55.html?&amp;k=aloysius2b';"><img class="iconsquare" src="img/person/veronica-nancy.jpg"></td><td class="tddesc"  onclick="location.href='kring2a55.html?&amp;k=aloysius2b';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">ALOYSIUS 2 B</span><span class="greyfont"><br />Ketua: </span><b>Veronica Nancy</b></td><td class="tdnum">15</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring1072.html?&amp;k=aloysius3utara';"><img class="iconsquare" src="img/person/peter-erwien-susanto.jpg"></td><td class="tddesc"  onclick="location.href='kring1072.html?&amp;k=aloysius3utara';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">ALOYSIUS 3 UTARA</span><span class="greyfont"><br />Ketua: </span><b>Peter Erwien Susanto</b></td><td class="tdnum">16</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring2ffc.html?&amp;k=aloysius3selatan';"><img class="iconsquare" src="img/person/petrus-rudy-kwaria.jpg"></td><td class="tddesc"  onclick="location.href='kring2ffc.html?&amp;k=aloysius3selatan';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">ALOYSIUS 3 SELATAN</span><span class="greyfont"><br />Ketua: </span><b>Petrus Rudy Kwaria</b></td><td class="tdnum">17</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring6830-2.html?&amp;k=aloysius4';"><img class="iconsquare" src="img/person/celeste-kowik.jpg"></td><td class="tddesc"  onclick="location.href='kring6830-2.html?&amp;k=aloysius4';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">ALOYSIUS 4</span><span class="greyfont"><br />Ketua: </span><b>Celeste Kowik</b></td><td class="tdnum">18</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring87ff.html?&amp;k=aloysius5';"><img class="iconsquare" src="img/person/yovita-rinawati.jpg"></td><td class="tddesc"  onclick="location.href='kring87ff.html?&amp;k=aloysius5';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">ALOYSIUS 5</span><span class="greyfont"><br />Ketua: </span><b>Yovita Rinawati</b></td><td class="tdnum">19</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring5efe.html?&amp;k=aloysius6';"><img class="iconsquare" src="img/person/dianawati-darmawan.jpg"></td><td class="tddesc"  onclick="location.href='kring5efe.html?&amp;k=aloysius6';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">ALOYSIUS 6</span><span class="greyfont"><br />Ketua: </span><b>Veronica Laurentia Dianawati Darmawan</b></td><td class="tdnum">20</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring5ef9.html?&amp;k=bartholomeus';"><img class="iconsquare" src="img/person/lusius-siagian.jpg"></td><td class="tddesc"  onclick="location.href='kring5ef9.html?&amp;k=bartholomeus';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">BARTHOLOMEUS </span><span class="greyfont"><br />Ketua: </span><b>Lusius Siagian</b></td><td class="tdnum">21</td></tr></table></div></div>		</div>					
+		<div id="wil4">	
+			<div class="w3-container w3-card" style="background-color:#eedef0"><table cellpadding="0" cellspacing="0"><tr><td class="tddesc"><span class="wilayah">WILAYAH 4</span><br/><span class="darkgreyfont">Koordinator: </span><b>Agustinus Heru Lajar</b></td><td class="tdicon"><a href="javascript:ShowPhotoBox('Agustinus Heru Lajar','img/person/agustinus-heru-ladjar.jpg','KOORDINATOR WILAYAH','Wilayah 4')"><img class="iconcircle" src="img/person/agustinus-heru-ladjar.jpg"/></td></tr></table><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kringc8c3.html?&amp;k=andreas1';"><img class="iconsquare" src="img/person/hyacintha-primaria.jpg"></td><td class="tddesc"  onclick="location.href='kringc8c3.html?&amp;k=andreas1';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">ANDREAS 1</span><span class="greyfont"><br />Ketua: </span><b>Hyacintha Primaria</b></td><td class="tdnum">22</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring9421.html?&amp;k=maria1';"><img class="iconsquare" src="img/person/handrianus-eddy-sunaryo.jpg"></td><td class="tddesc"  onclick="location.href='kring9421.html?&amp;k=maria1';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">MARIA 1</span><span class="greyfont"><br />Ketua: </span><b>Handrianus Eddy Sunaryo</b></td><td class="tdnum">23</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kringedfa.html?&amp;k=maria2';"><img class="iconsquare" src="img/person/yani-iskandar-tanzil.jpg"></td><td class="tddesc"  onclick="location.href='kringedfa.html?&amp;k=maria2';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">MARIA 2</span><span class="greyfont"><br />Ketua: </span><b>Yohanes Yani Iskandar Tanzil</b></td><td class="tdnum">24</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring74f8.html?&amp;k=borromeus1';"><img class="iconsquare" src="img/person/agustinus-heru-ladjar.jpg"></td><td class="tddesc"  onclick="location.href='kring74f8.html?&amp;k=borromeus1';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">BORROMEUS 1</span><span class="greyfont"><br />Ketua: </span><b>Agustinus Heru Ladjar</b></td><td class="tdnum">25</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring0ad4.html?&amp;k=borromeus2';"><img class="iconsquare" src="img/person/silvester-d-lajar.jpg"></td><td class="tddesc"  onclick="location.href='kring0ad4.html?&amp;k=borromeus2';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">BORROMEUS 2</span><span class="greyfont"><br />Ketua: </span><b>Silvester D Lajar</b></td><td class="tdnum">26</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring72f2.html?&amp;k=debritto';"><img class="iconsquare" src="img/person/andreas-yayan-rudianto1.jpg"></td><td class="tddesc"  onclick="location.href='kring72f2.html?&amp;k=debritto';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">DE BRITTO</span><span class="greyfont"><br />Ketua: </span><b>Andreas Yayan Rudianto</b></td><td class="tdnum">27</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kringd985.html?&amp;k=hilarius';"><img class="iconsquare" src="img/person/yohanes-harun-wahyudi1.jpg"></td><td class="tddesc"  onclick="location.href='kringd985.html?&amp;k=hilarius';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">HILARIUS</span><span class="greyfont"><br />Ketua: </span><b>Yohanes Harun Wahyudi</b></td><td class="tdnum">28</td></tr></table></div></div>		</div>					
+		<div id="wil5">	
+			<div class="w3-container w3-card" style="background-color:#e9f0d3"><table cellpadding="0" cellspacing="0"><tr><td class="tddesc"><span class="wilayah">WILAYAH 5</span><br/><span class="darkgreyfont">Koordinator: </span><b>Franciscus Xaverius Sriyono</b></td><td class="tdicon"><a href="javascript:ShowPhotoBox('Franciscus Xaverius Sriyono','img/person/fx-sriyono1.jpg','KOORDINATOR WILAYAH','Wilayah 5')"><img class="iconcircle" src="img/person/fx-sriyono1.jpg"/></td></tr></table><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kringa974.html?&amp;k=yosef1';"><img class="iconsquare" src="img/person/paulus-widonarko.jpg"></td><td class="tddesc"  onclick="location.href='kringa974.html?&amp;k=yosef1';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">YOSEF 1</span><span class="greyfont"><br />Ketua: </span><b>Paulus Widonarko</b></td><td class="tdnum">29</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kringfca3.html?&amp;k=yosef2';"><img class="iconsquare" src="img/person/sen-hok.jpg"></td><td class="tddesc"  onclick="location.href='kringfca3.html?&amp;k=yosef2';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">YOSEF 2</span><span class="greyfont"><br />Ketua: </span><b>Yusuf Sen Hok Sutanto</b></td><td class="tdnum">30</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kringc1aa.html?&amp;k=antonius12';"><img class="iconsquare" src="img/person/yanuarius-soekino.jpg"></td><td class="tddesc"  onclick="location.href='kringc1aa.html?&amp;k=antonius12';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">ANTONIUS 1 &AMP; 2</span><span class="greyfont"><br />Ketua: </span><b>Yanuarius Soekino</b></td><td class="tdnum">31</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kringd37c.html?&amp;k=antonius3';"><img class="iconsquare" src="img/person/suisman-agusno.jpg"></td><td class="tddesc"  onclick="location.href='kringd37c.html?&amp;k=antonius3';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">ANTONIUS 3</span><span class="greyfont"><br />Ketua: </span><b>Alphonsus Suisman Agusno</b></td><td class="tdnum">32</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kringc033.html?&amp;k=antonius4';"><img class="iconsquare" src="img/person/clara-karniah.jpg"></td><td class="tddesc"  onclick="location.href='kringc033.html?&amp;k=antonius4';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">ANTONIUS 4</span><span class="greyfont"><br />Ketua: </span><b>Clara Karniah</b></td><td class="tdnum">33</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring4900.html?&amp;k=antonius5';"><img class="iconsquare" src="img/person/enny-setiawati.jpg"></td><td class="tddesc"  onclick="location.href='kring4900.html?&amp;k=antonius5';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">ANTONIUS 5</span><span class="greyfont"><br />Ketua: </span><b>Enny Setiawati Anwar</b></td><td class="tdnum">34</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kringb6be.html?&amp;k=fransiskus';"><img class="iconsquare" src="img/person/rakut-sitepu.jpg"></td><td class="tddesc"  onclick="location.href='kringb6be.html?&amp;k=fransiskus';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">FRANSISKUS</span><span class="greyfont"><br />Ketua: </span><b>Rakut Sitepu</b></td><td class="tdnum">35</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kringb999.html?&amp;k=benediktus';"><img class="iconsquare" src="img/person/antonius-hendrawan-ardianto.jpg"></td><td class="tddesc"  onclick="location.href='kringb999.html?&amp;k=benediktus';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">BENEDIKTUS</span><span class="greyfont"><br />Ketua: </span><b>Antonius Hendrawan Ardianto</b></td><td class="tdnum">36</td></tr></table></div></div>		</div>					
+		<div id="wil6">	
+			<div class="w3-container w3-card" style="background-color:#f0dede"><table cellpadding="0" cellspacing="0"><tr><td class="tddesc"><span class="wilayah">WILAYAH 6</span><br/><span class="darkgreyfont">Koordinator: </span><b>Robertus Handoyo Windoe</b></td><td class="tdicon"><a href="javascript:ShowPhotoBox('Robertus Handoyo Windoe','img/person/robertus-handoyo-windoe1.jpg','KOORDINATOR WILAYAH','Wilayah 6')"><img class="iconcircle" src="img/person/robertus-handoyo-windoe1.jpg"/></td></tr></table><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring4118.html?&amp;k=ignatius1';"><img class="iconsquare" src="img/person/cecilia-pudjiastuti.jpg"></td><td class="tddesc"  onclick="location.href='kring4118.html?&amp;k=ignatius1';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">IGNATIUS 1</span><span class="greyfont"><br />Ketua: </span><b>Cecilia Pudjiastuti</b></td><td class="tdnum">37</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring5f63.html?&amp;k=ignatius2';"><img class="iconsquare" src="img/person/budi-harsanto.jpg"></td><td class="tddesc"  onclick="location.href='kring5f63.html?&amp;k=ignatius2';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">IGNATIUS 2</span><span class="greyfont"><br />Ketua: </span><b>Markus T Budi Harsanto</b></td><td class="tdnum">38</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kringfa36.html?&amp;k=philipus';"><img class="iconsquare" src="img/person/albertus-agung-rianto.jpg"></td><td class="tddesc"  onclick="location.href='kringfa36.html?&amp;k=philipus';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">PHILIPUS</span><span class="greyfont"><br />Ketua: </span><b>Albertus Agung Rianto</b></td><td class="tdnum">39</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kringfa4d.html?&amp;k=ldm';"><img class="iconsquare" src="img/person/donna-sirait.jpg"></td><td class="tddesc"  onclick="location.href='kringfa4d.html?&amp;k=ldm';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">LUISA DE MARILLAC</span><span class="greyfont"><br />Ketua: </span><b>Veronica Donna Sirait</b></td><td class="tdnum">40</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring456a.html?&amp;k=bonfilio1';"><img class="iconsquare" src="img/person/didimus-deddy-rusfendi.jpg"></td><td class="tddesc"  onclick="location.href='kring456a.html?&amp;k=bonfilio1';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">BONFILIO 1</span><span class="greyfont"><br />Ketua: </span><b>Didimus Deddy Rusfendi</b></td><td class="tdnum">41</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kring6ef3.html?&amp;k=bonfilio2';"><img class="iconsquare" src="img/person/yosaphat-waluya.jpg"></td><td class="tddesc"  onclick="location.href='kring6ef3.html?&amp;k=bonfilio2';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">BONFILIO 2</span><span class="greyfont"><br />Ketua: </span><b>Yosaphat Waluya</b></td><td class="tdnum">42</td></tr></table></div><div class="w3-panel w3-card" ><table cellpadding="0" cellspacing="0"><tr><td class="tdicon" onclick="location.href='kringd90e.html?&amp;k=gennaro';"><img class="iconsquare" src="img/person/anastasia-retno-indriani.jpg"></td><td class="tddesc"  onclick="location.href='kringd90e.html?&amp;k=gennaro';"><span class="greyfont">Lingkungan / Kring<br/></span><span class="kring">GENNARO</span><span class="greyfont"><br />Ketua: </span><b>Anastasia Retno Indriani</b></td><td class="tdnum">43</td></tr></table></div></div>		</div>	
+
+</div>			
+
+<script>
+function RefreshFrame(idframe) {
+	document.getElementById(idframe).src = document.getElementById(idframe).src;
+}
+
+</script>	
+
+<div id="div_footer"> <!-- defined in upperbase.php -->
+<table class="tabledef table100">
+	<tr>
+		<td class="tdfooter">
+			Copyright © <b>Paroki Santa Maria Dengan Tidak Bernoda Asal Tulungagung</b>
+			<br>Email: komsosparokitulungagung@gmail.com |&nbsp;Dikelola oleh :<br> 
+			<button class="btdef btabout" onclick="javascript:ShowAboutBox()">Team Web SMDTBA</button>
+			<!-- <a href="javascript:ShowAboutBox()" id="myAboutLink"><b>Team Web SMDTBA</b></a> -->
+			<a href="#top"><i id="topjump" class="fa fa-arrow-circle-up"></i></a>
+		</td>
+	</tr>
+</table>
+</div>
+
+<!-- FOOTER END -->
+
+<!-- ============================================ -->
+  <script>
+    fetch('/components/menu.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('menu-container').innerHTML = data;
+      })
+      .catch(error => console.error('Gagal memuat menu:', error));
+  </script>				
+</body>
+
+<!-- Mirrored from www.parokihtbspm.org/profil_lingkungan.php by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 15 May 2025 04:43:35 GMT -->
+</html>

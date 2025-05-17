@@ -1,0 +1,308 @@
+<!doctype html>
+<html>
+
+<head>
+  <script>
+    document.write('<meta charset="UTF-8">'); // Ini agar tidak error saat load awal
+    fetch('/components/head.html')
+      .then(response => response.text())
+      .then(html => {
+        document.head.innerHTML += html;
+      })
+      .catch(err => console.error('Gagal memuat head:', err));
+  </script>
+<title>Paroki SMDTBA - Home</title>
+</head>
+<!-- OUTER-WRAPPER BEGIN -->
+<div id="outer-wrapper">
+
+	<a name="top"></a>
+
+	<!-- HEADER PAROKI -->
+	<!-- ======================================================================= -->
+		<!-- ======================================================================= -->
+	<div class="divheaderparoki">
+		<a href="index.html"><img src="img/header-logo-1.png" style="border:0; width: 100%"></a>
+	</div>
+
+<!-- ============================================ -->
+
+
+<body onload="menusetup(0,'Homepage')">
+
+<!-- ============================================ -->
+<link rel="stylesheet" href="style.css">
+
+<script>
+function togglemenudiv() {
+    var div = document.getElementById("divmenu");
+	var caret_up = document.getElementById("caret_up");
+	var caret_down = document.getElementById("caret_down");
+
+    //div.style.display = div.style.display == "none" ? "block" : "none";
+
+	if(div.style.display == "none"){
+		div.style.display = "block";
+		caret_up.style.display = "inline";
+		caret_down.style.display = "none";
+	} else{
+		div.style.display = "none";
+		caret_up.style.display = "none";
+		caret_down.style.display = "inline";
+	}
+}
+
+function menusetup(flag,title){ //1 0, judul hlm
+	//set menu visibility
+	var div = document.getElementById("divmenu");
+	var caret_up = document.getElementById("caret_up");
+	var caret_down = document.getElementById("caret_down");
+
+	if(flag == 1){
+		div.style.display = "block";
+		caret_up.style.display = "inline";
+		caret_down.style.display = "none";
+	} else{
+		div.style.display = "none";
+		caret_up.style.display = "none";
+		caret_down.style.display = "inline";
+	}
+	
+	//set title
+	var judul = document.getElementById('menubartitle');
+	judul.textContent = title;
+}
+</script>
+
+<!-- BEGIN LAYOUT -->
+<!-- MENU BAR -->
+<div id="divmenubar">
+	<button id="btnmenu" onclick="togglemenudiv()">
+		Menu &nbsp;
+		<i id="caret_up" class="fa fa-caret-up" style="background:transparent; font-size:18px; color:white; display:none"></i>
+		<i id="caret_down" class="fa fa-th" style="background:transparent; font-size:18px; color:white; display:none"></i> <!-- fa-th-large -->
+	</button>
+	<!-- <span id="txtflag">On</span> -->
+	<span id="menubartitle">&nbsp;</span>
+</div>
+
+<!-- MENU DIV -->
+  <div id="menu-container"></div>
+
+
+<!-- <div class="divbtbar"> -->
+	<!-- </div> -->
+
+	</div> <!--div_menu-->
+</div> <!-- clip for animation -->
+
+<!-- ============================================ -->
+
+
+
+<!-- PHOTO BOX : The Modal Window -->
+<!-- ================================================================================================ -->
+<div class="modalx" id="boxModal">
+  
+  <!-- Modal content -->
+  <div class="modalx-content" style="color:black">
+
+    <table cellpadding="0" cellspacing="0">
+        <tr>
+            <td style="padding:0 8px 0 8px;">
+                <span id="boxModalTitle" style="float:left; margin-top:7px; margin-left:2px; font-family:ArchivoNarrow; font-size:12px; color:#777">&nbsp;</span>
+                <div class="closex">&#215;</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:center; padding: 0 8px 6px 8px;">
+                <img id="boxModalImage" src="img/smdtba-sharelogo.png" style="width:200px;border-radius:6px;">
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:center; padding:0 8px 0 8px;">
+                <span id="boxModalText" ><em>&nbsp;</em></span>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:center; padding:0 8px 15px 8px; font-family:ArchivoNarrow; font-size:12px; color:#8c6755">
+                <span id="boxModalSubText" ><em>&nbsp;</em></span>
+            </td>
+        </tr>        
+    </table>
+  </div>
+
+</div>
+<!-- ================================================================================================ -->
+
+
+<!-- ABOUT BOX : The Modal Window -->
+<!-- ================================================================================================ -->
+<div class='modal' id='aboutModal'>
+  <!-- Modal content -->
+  <div class='modal-content' style="color:white">
+    <div class='close'>&#215;</div>
+    <div class='modal-body'>
+        <!-- <span class='close'>&#215;</span> -->
+        <div>
+            <img src='img/smdtba-sharelogo.PNG' style='width:150px; margin: 0 0 10px 10px;'>
+        </div>
+        <span style="font-size:18px; font-weight:bold;">Team Web SMDTBA</span>
+		<span><em>komsosparokitulungagung@gmail.com</em></span>
+    </div>
+  </div>
+</div>
+
+
+<!-- SCRIPT -->
+<script>
+	/* Get the about modal */
+	var aboutmodal = document.getElementById("aboutModal");
+
+    /* Caller function */
+	function ShowAboutBox() {
+		aboutmodal.style.display = "block";
+	}
+	/* OTHER METHOD: Get the link that opens the modal */
+	/* var lnk = document.getElementById("myAboutLink");*/
+	/* When the user clicks the button, open the modal  */
+	/* lnk.onclick = function() { modal.style.display = "block";} */
+
+	/* Get the span element that closes the modal */
+	var span = document.getElementsByClassName("close")[0];
+
+	/* When the user clicks on span (x), close the modal */
+	span.onclick = function() {
+		aboutmodal.style.display = "none";
+	}
+
+    /* ******************************************************** */
+
+	/* Get the photo box modal */
+	var boxmodal = document.getElementById("boxModal");
+
+    /* Caller function */
+	function ShowPhotoBox(txt,fotopath,title,subtxt) {
+        document.getElementById("boxModalTitle").innerHTML = title;
+        document.getElementById("boxModalImage").src = fotopath;
+        document.getElementById("boxModalText").innerHTML = txt;
+        document.getElementById("boxModalSubText").innerHTML = subtxt;
+        boxmodal.style.display = "block";
+	}
+	/* OTHER METHOD: Get the link that opens the modal */
+	/* var lnk = document.getElementById("myAboutLink");*/
+	/* When the user clicks the button, open the modal  */
+	/* lnk.onclick = function() { modal.style.display = "block";} */
+
+	/* Get the span element that closes the modal */
+	var spanx = document.getElementsByClassName("closex")[0];
+
+	/* When the user clicks on span (x), close the modal */
+	spanx.onclick = function() {
+		boxmodal.style.display = "none";
+	}
+
+    /* ******************************************************** */
+
+	/* When the user clicks anywhere outside of the modal, close it */
+	window.onclick = function(event) {
+		if (event.target == aboutmodal) {
+			aboutmodal.style.display = "none";
+		}
+		if (event.target == boxmodal) {
+			boxmodal.style.display = "none";
+		}        
+	}
+
+</script>
+
+<!-- END OF LINTANG ABOUT MODAL WINDOW -->
+
+
+
+<!-- ============================================ -->
+	<div class='par'>	
+	<br>
+		<span class="header">JADWAL MISA</span>
+		<p>
+			<b>Harian</b>
+			<br><br>Senin - Rabu (Gereja SMDTBA Tulungagung): 05.30 WIB<br>
+			Kamis (Kapel Susteran): 05.30 WIB<br>
+			Jumat (Gereja SMDTBA Tulungagung): 18.00 WIB<br>
+			<br>
+			<b>Mingguan</b>
+			<br><br>Sabtu<br>
+			18.00 WIB di Gereja SMDTBA Tulungagung<br>
+			16.00 WIB di Stasi St. Maria Rejotangan<br>
+			18.00 WIB di Stasi Gembala yang baik Ngunut<br>
+			<br>Minggu<br>
+			07.00 WIB di Gereja SMDTBA Tulungagung<br>
+			07.00 WIB di Stasi St. Maria Trenggalek<br>
+			10.00 WIB di Stasi Kalangbret (Minggu I & III)<br>
+			11.00 WIB di Stasi St. Maria Dongko (Minggu I & III)<br>
+			11.00 WIB di Stasi Sendang (Minggu II)<br>
+		</p>
+
+		<span class="header">ALAMAT</span>
+		<p>
+			Alamat: Jl. Ahmad Yani Tim. Gg. IV No.1, Bago, Kec. Tulungagung, Kabupaten Tulungagung, Jawa Timur 66218<br />
+		
+			<i class="fa fa-whatsapp" aria-hidden="true" style="color: green"></i>&nbsp;WhatsApp : <a href="https://wa.me/6285183068895" target="_blank">0851-8306-8895</a><br>
+			
+			<!--E-mail: <a href="mailto:&#104;&#116;&#98;&#115;&#112;&#109;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;">&#104;&#116;&#98;&#115;&#112;&#109;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;</a><br />-->
+			E-mail: <a href="mailto:komsosparokitulungagung@gmail.com">komsosparokitulungagung@gmail.com</a><br />
+			
+			Website: <a href="index.html" target="_blank">www.parokitulungagung.my.id</a><br>
+			Instagram: <a href="https://www.instagram.com/komsosparokitulungagung" target="_blank">@komsosparokitulungagung</a><br>
+			YouTube: <a href="https://www.youtube.com/@KomsosParokiTulungagung" target="_blank">SMDTBA</a>
+			<!-- <a href="https://maps.app.goo.gl/fGCLWSZajhVe8LPAA" target="_blank"><img src="img/googlemaps.png" width="60" height="60"/><br>Lihat Lokasi (Google Maps)</a> -->
+		</p>
+
+		<span class="header">SEKRETARIAT</span>
+		<p>
+			Sekretaris Paroki :<br><b>Yosafat Mario Surya A.P.P</b><br />
+			<i class="fa fa-whatsapp" aria-hidden="true" style="color: green"></i>
+			WhatsApp : <a href="https://wa.me/6287777979537" target="_blank">0877-7797-9537</a><br />
+			Sekretariat buka pagi pk. 08:00 - 12:00<br>dan sore pk. 17:00 - 19:00.<br>Khusus hari Rabu sekretariat tutup.
+		</p>
+		
+		<a href="https://www.instagram.com/komsosparokitulungagung"><img src="img/instagram.png" alt="Instagram Paroki"></a>
+		<a href="https://www.youtube.com/@KomsosParokiTulungagung"><img src="img/youtube.png" alt="Youtube Paroki"></a>
+
+		<div class='panelmap'>
+				<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3950.3508227604375!2d111.90251617507136!3d-8.065652780600404!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e78e2e039c8b6f5%3A0x596dee2ec5880aea!2sGereja%20Katolik%20Santa%20Maria%20Dengan%20Tidak%20Bernoda%20Asal%2C%20Tulungagung!5e0!3m2!1sen!2sid!4v1747287054482!5m2!1sen!2sid" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+		</div>
+	</div>
+
+</div> 
+
+<!-- ======================================================================= -->
+<!-- ======================================================================= -->
+
+<div id="div_footer"> <!-- defined in upperbase.php -->
+<table class="tabledef table100">
+	<tr>
+		<td class="tdfooter">
+			Copyright © <b>Paroki Santa Maria Dengan Tidak Bernoda Asal Tulungagung</b>
+			<br>Email: komsosparokitulungagung@gmail.com |&nbsp;Dikelola oleh :<br> 
+			<button class="btdef btabout" onclick="javascript:ShowAboutBox()">Team Web SMDTBA</button>
+			<!-- <a href="javascript:ShowAboutBox()" id="myAboutLink"><b>Team Web SMDTBA</b></a> -->
+			<a href="#top"><i id="topjump" class="fa fa-arrow-circle-up"></i></a>
+		</td>
+	</tr>
+</table>
+</div>
+
+<!-- FOOTER END -->
+
+<!-- ============================================ -->
+  <script>
+    fetch('components/menu.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('menu-container').innerHTML = data;
+      })
+      .catch(error => console.error('Gagal memuat menu:', error));
+  </script>
+</body>
+</html>
