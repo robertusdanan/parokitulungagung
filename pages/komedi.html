@@ -1,0 +1,47 @@
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   KoMedi (Komsos Merchandise Division)
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css">
+
+ </head>
+ <body class="bg-gray-50 min-h-screen flex flex-col">
+
+<div id="header-katalog"></div>
+
+<div id="katalog-list"></div>
+
+  <footer class="bg-white border-t mt-12">
+   <div class="container mx-auto px-4 py-6 text-center text-gray-600 text-sm">
+   Copyright © KoMeDi (Komsos Merchandise Division)
+   </div>
+  </footer>
+   <script>
+    fetch('/components/listkatalog/kataloglist.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('katalog-list').innerHTML = html;
+      })
+      .catch(err => {
+        console.error('Gagal memuat list katalog:', err);
+      });
+  </script>
+  <script>
+    fetch('/components/headerkatalog.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('header-katalog').innerHTML = html;
+      })
+      .catch(err => {
+        console.error('Gagal memuat list katalog:', err);
+      });
+  </script>
+ </body>
+</html>
