@@ -32,7 +32,7 @@ ul.tabs li a
         
 ul.tabs li a:visited
 {
-    color: #000;
+    color: #000000;
 }
         
 ul.tabs li a:hover
@@ -46,9 +46,9 @@ ul.tabs li.selected a, ul.tabs li.selected a:hover
     position: relative;
     top: 0px;
     font-weight:bold;
-    background: white;
+    background: #7e715e;
     border: 1px solid #B7B7B7;
-    border-bottom-color: white;
+    border-bottom-color: #7e715e;
 }
         
         
@@ -61,7 +61,7 @@ ul.tabs li.selected a:hover
 div.tabcontents
 {
     border: 1px solid #B7B7B7; padding: 8px;
-    background-color:#FFF;
+    background-color:#7e715e;
     border-radius: 0 3px 3px 3px;
 }
 
