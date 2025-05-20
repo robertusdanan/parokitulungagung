@@ -145,8 +145,10 @@
 }
 
 .divtombol {
-	width: 25%;
-	float:left;	
+  aspect-ratio: 1 / 1;
+  width: 110px; /* atau ukuran lain sesuai kebutuhan */
+  max-width: 100%;
+  display: inline-block;
 }
 
 .tbtombol {
