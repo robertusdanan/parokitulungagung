@@ -231,10 +231,6 @@ function menusetup(flag,title){ //1 0, judul hlm
 	<div style="margin-bottom: 1em"><table cellpadding="0" cellspacing="0"><tr><td class="tdiconheadline"><img class="iconheadline" 
 		src="/img/icon/icon_square_ai.png" ></td><td style="padding-left:0.2em"><span class="headline_title">ASISTEN IMAM</span><br/>
 			<span class="headline_subtitle_green">PERIODE 2023-2028</span></td></tr></table></div>
-	<ul class="tabs" data-persist="true">
-		<li><a href="#pageperson">Daftar Asisten Imam</a></li>
-
-	</ul>
 
 	<div class="tabcontents" style="box-shadow: 0 2px 4px 0 rgba(0,0,0,0.08), 0 2px 6px 0 rgba(0,0,0,0.08)">
 		<div id="pageperson">
@@ -248,26 +244,61 @@ function menusetup(flag,title){ //1 0, judul hlm
   <option value="all" selected>- Semua Lingkungan -</option>
 </select>
 
+
 <div id="konten-asistenimam"></div>
 <script>
+let profiles=[]
   // Load konten asistenimam.html
-  fetch('/components/asistenimam.html')
-    .then(res => res.text())
-    .then(html => {
-      const container = document.getElementById('konten-asistenimam');
+  fetch('https://opensheet.elk.sh/1Q0N_S10XVngXDReVapVhDh6ZwnoFcGxvbeUJjAxOZYI/Sheet1')
+    .then(res => res.json())
+    .then(data => {
+      
+	const html = data.filter (item=>{
+		const nama = item['Nama']
+		const wilayah = item['Asal Lingk / Stasi']
+		return nama && wilayah
+	
+	})
+	.sort((a,b)=>{
+if(a[`Nama`]>b[`Nama`]) return 1
+if(a[`Nama`]<b[`Nama`]) return -1
+return 0 		
+	})
+	.map((item)=>{
+		profiles.push(item)
+		const nama = item['Nama']
+		const wilayah = item['Asal Lingk / Stasi']
+	return`<div id="${wilayah}" class="w3-panel w3-card w3-whitewash">
+  <table cellpadding="0" cellspacing="0"><tr>
+    <td class="tdicon">
+      <a href="javascript:ShowPhotoBox('${nama}','/img/person/${nama?.replace(' ','-')}.jpg','ASISTEN IMAM','${wilayah}')">
+        <img class="iconsquare" src="/img/person/${nama?.replace(' ','-')}.jpg">
+      </a>
+    </td>
+    <td class="tddesc">
+      <span class="nama">${nama}</span><br>${wilayah}
+    </td><table</div>`
+	}) .join(``) 
+const container = document.getElementById('konten-asistenimam');
       container.innerHTML = html;
 
       // Setelah dimuat, isi dropdown <select> berdasarkan id div
       const select = document.getElementById('kringselect');
+	window. tmpwilayah=[]   
+	  profiles.forEach ((item)=>{
+		const nama = item['Nama']
+		const wilayah = item['Asal Lingk / Stasi']
+	if(tmpwilayah.includes(wilayah))return
+	tmpwilayah.push (wilayah)
+	})
       const divs = container.querySelectorAll('div[id]');
-      divs.forEach(div => {
-        const id = div.id;
-        const label = div.querySelector('.nama')?.textContent?.trim().split(' ')[0] || id; // ambil nama pertama, atau id
+      tmpwilayah.forEach((div,i) => {
+        const id = `w${i}`;
 
         // Buat <option>
         const option = document.createElement('option');
         option.value = id;
-        option.textContent = formatLabel(id);
+        option.textContent = tmpwilayah[i];
         select.appendChild(option);
       });
     })
@@ -279,14 +310,6 @@ function menusetup(flag,title){ //1 0, judul hlm
   }
 
   // Fungsi select_kring tetap bisa kamu definisikan seperti sebelumnya
-  function select_kring() {
-    const val = document.getElementById("kringselect").value;
-    const konten = document.getElementById("konten-asistenimam").children;
-
-    for (const el of konten) {
-      el.style.display = (val === "all" || el.id === val) ? "" : "none";
-    }
-  }
 </script>
 
 			</div>
@@ -306,17 +329,30 @@ function menusetup(flag,title){ //1 0, judul hlm
 
 
 <script>
-function hideshowdiv(divID, flag){ /* "#divID", 1 or 0 */ 
-  	const div = document.querySelectorAll(divID);
-	var n;
-	for(let i=0;i<div.length;i++){    
-		if(flag == 1){
-			//div[i].style.visibility='visible'; 
-			div[i].style.display='block'; // ternyata jgn pakai visibility, pakai display agar spacenya juga free, tdk cuma invisible !!!
-		}else{
-			div[i].style.display='none';
-		}
-  	}
+function hideshowdiv(val){ /* "#divID", 1 or 0 */ 
+  const wil= tmpwilayah [val.replace(`w`,``)]
+  const data = profiles.filter((item)=>{
+		const nama = item['Nama']
+		const wilayah = item['Asal Lingk / Stasi']
+console.log (wilayah,wil)
+	return wilayah === wil
+	})	.map((item)=>{
+		const nama = item['Nama']
+		const wilayah = item['Asal Lingk / Stasi']
+		console.log (item)
+	return`<div id="${wilayah}" class="w3-panel w3-card w3-whitewash">
+  <table cellpadding="0" cellspacing="0"><tr>
+    <td class="tdicon">
+      <a href="javascript:ShowPhotoBox('${nama}','/img/person/${nama?.replace(' ','-')}.jpg','ASISTEN IMAM','${wilayah}')">
+        <img class="iconsquare" src="/img/person/${nama?.replace(' ','-')}.jpg">
+      </a>
+    </td>
+    <td class="tddesc">
+      <span class="nama">${nama}</span><br>${wilayah}
+    </td><table</div>`
+	}) .join(``) 
+	const container = document.getElementById('konten-asistenimam');
+      container.innerHTML = data;
 }	
 
 function hideshowallkring(flag) {
@@ -324,7 +360,7 @@ function hideshowallkring(flag) {
   const divs = document.querySelectorAll('#konten-asistenimam > div[id]');
 
   divs.forEach(div => {
-    hideshowdiv(`#${div.id}`, flag);
+    // hideshowdiv(`#${div.id}`, flag);
   });
 }
 
@@ -333,11 +369,9 @@ function select_kring() {
 	if (val == "all") {
 		hideshowallkring(1);
 	} else{
-		//document.getElementById("demo").innerHTML = "You selected: " + val;
 		hideshowallkring(0);
-		var divID = "#" + val;
-		hideshowdiv(divID, 1);
-		//document.getElementById("demo").innerHTML = "You selected: " + divID;
+		hideshowdiv(val);
+
 	}
 }
 
