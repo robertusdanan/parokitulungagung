@@ -1,0 +1,109 @@
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Detail Baju - Katalog Baju
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css">
+ </head>
+ <body class="bg-gray-50 min-h-screen flex flex-col">
+  <div id="header-katalog"></div>
+
+<main class="container mx-auto px-4 py-10 flex-grow max-w-4xl">
+  <a class="inline-flex items-center text-indigo-600 hover:text-indigo-800 mb-6" href="/pages/komedi.html">
+    <i class="fas fa-arrow-left mr-2"></i> Kembali ke Katalog
+  </a>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Detail Produk</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+
+<main class="container mx-auto px-4 py-10 flex-grow" id="produk-detail">
+  <p>Memuat data produk...</p>
+</main>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+  async function loadProdukDetail() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const kode = urlParams.get('kode'); // e.g., ?kode=DB001
+
+    if (!kode) {
+      document.getElementById("produk-detail").innerHTML = "<p class='text-red-600'>Kode produk tidak ditemukan.</p>";
+      return;
+    }
+
+    try {
+      const response = await axios.get("https://opensheet.elk.sh/17wqbq_SCdfePCk_3firXNuKt_4r_kzMDmOJbGdN6Bbk/detail-katalog");
+      const data = response.data.find(item => item.Code === kode);
+
+      if (!data) {
+        document.getElementById("produk-detail").innerHTML = "<p class='text-red-600'>Produk tidak ditemukan.</p>";
+        return;
+      }
+
+      document.getElementById("produk-detail").innerHTML = `
+        <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row">
+          <img src="${data.Image || 'https://via.placeholder.com/400x300?text=No+Image'}" 
+               alt="${data.Title || 'Produk'}" 
+               class="w-full md:w-1/2 h-full object-cover">
+          <div class="p-6 flex flex-col justify-between md:w-1/2">
+            <div>
+              <h2 class="text-3xl font-bold text-gray-900 mb-4">${data.Title || '-'}</h2>
+              <p class="text-gray-700 mb-6 leading-relaxed">${data.Description || '-'}</p>
+            </div>
+            <div>
+              <p class="text-2xl font-extrabold text-indigo-600 mb-6">Rp ${parseInt(data.Price || 0).toLocaleString('id-ID')}</p>
+              <a href="${data.Link}" target="_blank" rel="noopener noreferrer"
+                class="w-full block text-center bg-green-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-md transition-colors duration-300">
+                Whatsapp
+              </a>
+              </br>
+              <a href="${data.Shopee}" target="_blank" rel="noopener noreferrer"
+                class="w-full block text-center bg-orange-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-md transition-colors duration-300">
+                Shopee
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+    } catch (error) {
+      console.error("Gagal memuat detail produk:", error);
+      document.getElementById("produk-detail").innerHTML = "<p class='text-red-600'>Gagal memuat data produk.</p>";
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", loadProdukDetail);
+</script>
+
+</body>
+</html>
+
+</main>
+  <footer class="bg-white border-t mt-12">
+   <div class="container mx-auto px-4 py-6 text-center text-gray-600 text-sm">
+    Copyright © KoMeDi (Komsos Merchandise Division)
+   </div>
+  </footer>
+     <script>
+    fetch('/components/headerkatalog.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('header-katalog').innerHTML = html;
+      })
+      .catch(err => {
+        console.error('Gagal memuat list katalog:', err);
+      });
+      </script>
+ </body>
+</html>

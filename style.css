@@ -1171,3 +1171,31 @@ biru {color:#03c}
 .w3-panel.w3-card {
   background-color: #f7e0be !important;
 }
+.accordion {
+  background-color: #e9d4b6;
+  color: black;
+  cursor: pointer;
+  padding: 10px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-weight: bold;
+}
+.panel {
+  display: none;
+  background-color: #f7e3c1;
+  padding: 10px;
+}
+.card {
+  display: flex;
+  background: #fce8c6;
+  margin-bottom: 5px;
+  padding: 8px;
+  border-radius: 5px;
+}
+.iconsquare {
+  width: 48px;
+  height: 48px;
+  margin-right: 10px;
+}

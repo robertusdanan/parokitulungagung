@@ -219,35 +219,121 @@ function menusetup(flag,title){ //1 0, judul hlm
 		<span class="headline_subtitle">3 WILAYAH, 4 STASI dan 13 LINGKUNGAN</span><br/>
 		<div class="headline_ket">Berikut Pengurus Periode 2024-2027</div></td></tr></table>
 
-	<ul class="tabs" data-persist="true">
-		<li><a href="#wil1">WIL 1</a></li>
-		<li><a href="#wil2">WIL 2</a></li>
-		<li><a href="#wil3">WIL 3</a></li>
-		<li><a href="#sts">STASI</a></li>
-	</ul>
+<ul class="tabs" data-persist="true">
+  <li><a href="#wil1">WIL 1</a></li>
+  <li><a href="#wil2">WIL 2</a></li>
+  <li><a href="#wil3">WIL 3</a></li>
+  <li><a href="#sts">STASI</a></li>
+  <li><a href="#pkkt">PKKT</a></li>
+</ul>
 
-<div class="tabcontents" style="box-shadow: 0 2px 4px 0 rgba(0,0,0,0.08), 0 2px 6px 0 rgba(0,0,0,0.08)">
-
-		<div id="wil1">
-			<div id="wilayah-1">
-    		<p>Memuat wilayah...</p>
-		</div>	
-</div>	
-		<div id="wil2">
-			<div id="wilayah-2">
-    		<p>Memuat wilayah...</p>
-		</div>	
-</div>	
-		<div id="wil3">
-			<div id="wilayah-3">
-    		<p>Memuat wilayah...</p>
-		</div>	
+<div class="tabcontents" style="box-shadow: 0 2px 4px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.08)">
+  <div id="wil1"><div id="wilayah-1"><p>Memuat wilayah...</p></div></div>
+  <div id="wil2"><div id="wilayah-2"><p>Memuat wilayah...</p></div></div>
+  <div id="wil3"><div id="wilayah-3"><p>Memuat wilayah...</p></div></div>
+  <div id="sts"><div id="stasi"><p>Memuat stasi...</p></div></div>
+  <div id="pkkt"><div id="pkkt"><p>Memuat pkkt...</p></div></div>
 </div>
-		<div id="sts">
-			<div id="stasi">
-    		<p>Memuat stasi...</p>
-		</div>	
-</div>	
+<script>
+const sheetUrl = 'https://opensheet.elk.sh/1Q0N_S10XVngXDReVapVhDh6ZwnoFcGxvbeUJjAxOZYI/daftar_wilayah';
+
+function getFotoFromNama(nama) {
+  // Hilangkan titik, ganti spasi lebih dari satu dengan tanda hubung
+  return "/img/person/" + nama.trim().replace(/\./g, "").replace(/\s+/g, "-") + ".jpg";
+}
+
+function ShowPhotoBox(nama, src, bidang, posisi) {
+  // Isi modal foto dengan data yang diberikan dan tampilkan modal
+  document.getElementById("boxModalTitle").textContent = nama;
+  document.getElementById("boxModalImage").src = src;
+  document.getElementById("boxModalText").textContent = bidang || "";
+  document.getElementById("boxModalSubText").textContent = posisi || "";
+  document.getElementById("boxModal").style.display = "block";
+}
+
+function createCard(item, index) {
+  const foto = getFotoFromNama(item.Ketua);
+  const pkkt = item.PKKT?.trim();
+  const lingkungan = item.Lingkungan?.trim();
+
+  const lingkunganHtml = lingkungan ? `<div><b>${lingkungan}</b></div>` : "";
+
+  return `
+<div class="w3-panel w3-card" style="background-color: #fbe9d7; cursor:pointer;">
+  <table cellpadding="0" cellspacing="0" style="width:100%">
+    <tr>
+      <td style="width:50px; vertical-align:top;">
+        <img class="iconsquare" src="${foto}" style="width:40px;height:40px;border-radius:5px"
+          onclick="ShowPhotoBox('${item.Ketua}', '${foto}', '${lingkungan || ''}', 'Ketua')" />
+      </td>
+      <td style="padding-left:10px">
+        ${lingkunganHtml}
+        <div>
+          Ketua: 
+          <a href="javascript:void(0)" 
+             onclick="ShowPhotoBox('${item.Ketua}', '${foto}', '${lingkungan || ''}', 'Ketua')">
+            <b>${item.Ketua}</b>
+          </a>
+        </div>
+        ${pkkt ? `<div>PKKT: <span style="color:darkgreen;font-weight:bold">${pkkt}</span></div>` : ""}
+      </td>
+      <td style="width:20px;text-align:right;color:#888">${index + 1}</td>
+    </tr>
+  </table>
+</div>
+
+  `;
+}
+
+
+function renderWilayah(idContainer, data) {
+  if (data.length === 0) {
+    document.getElementById(idContainer).innerHTML = "<p>Tidak ada data.</p>";
+    return;
+  }
+
+  const namaWilayah = data[0].Wilayah;
+  const koordinator = data[0].Koordinator?.trim();
+  const fotoKoordinator = koordinator ? getFotoFromNama(koordinator) : null;
+
+  const header = `
+<div class="w3-container w3-card w3-pale-yellow" style="padding:10px; margin-bottom:10px; display: flex; justify-content: space-between; align-items: center;">
+  <div>
+    <h3 style="margin:0">${namaWilayah}</h3>
+    ${koordinator ? `<p style="margin:0">
+      Koordinator: 
+      <a href="javascript:void(0)" 
+         onclick="ShowPhotoBox('${koordinator}', '${fotoKoordinator}', '${namaWilayah}', 'Koordinator')">
+        <b>${koordinator}</b>
+      </a>
+    </p>` : ""}
+  </div>
+  ${fotoKoordinator ? `<img src="${fotoKoordinator}" style="width:40px; height:40px; border-radius:5px; object-fit: cover;" 
+        onclick="ShowPhotoBox('${koordinator}', '${fotoKoordinator}', '${namaWilayah}', 'Koordinator')">` : ""}
+</div>
+  `;
+
+  const cards = data.map((item, i) => createCard(item, i)).join("");
+  document.getElementById(idContainer).innerHTML = header + cards;
+}
+
+
+
+
+fetch(sheetUrl)
+  .then(res => res.json())
+  .then(data => {
+    renderWilayah("wilayah-1", data.filter(d => d.Wilayah === "Wilayah 1"));
+    renderWilayah("wilayah-2", data.filter(d => d.Wilayah === "Wilayah 2"));
+    renderWilayah("wilayah-3", data.filter(d => d.Wilayah === "Wilayah 3"));
+    renderWilayah("stasi",      data.filter(d => d.Wilayah === "Stasi"));
+	renderWilayah("pkkt",       data.filter(d => d.Wilayah === "PKKT"));
+  })
+  .catch(err => {
+    console.error("Gagal memuat data:", err);
+    document.getElementById("wilayah-1").innerHTML = "<p>Gagal memuat data.</p>";
+  });
+</script>
 
 </div>			
 
@@ -283,34 +369,9 @@ function RefreshFrame(idframe) {
       })
       .catch(error => console.error('Gagal memuat menu:', error));
   </script>
-  <script>
-    fetch('/components/listprofillingkungan/wilayah1.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('wilayah-1').innerHTML = data;
-        })
-  </script>
-  <script>
-    fetch('/components/listprofillingkungan/wilayah2.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('wilayah-2').innerHTML = data;
-        })
-  </script>
-  <script>
-    fetch('/components/listprofillingkungan/wilayah3.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('wilayah-3').innerHTML = data;
-        })
-  </script>
-    <script>
-    fetch('/components/listprofillingkungan/stasi.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('stasi').innerHTML = data;
-        })
-  </script>																			
+
+
+															
 </body>
 
 </html>
