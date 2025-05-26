@@ -1,0 +1,688 @@
+<?php
+session_start();
+
+// Cek apakah file ini diakses langsung melalui URL
+if (!isset($_SERVER['HTTP_REFERER']) || strpos($_SERVER['HTTP_REFERER'], 'login.php') === false) {
+exit('Mau Ngapain?');
+}
+
+// Pastikan user sudah login
+if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+    header("Location: ../login.php");
+    exit;
+}
+?>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8" />
+
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+
+  <title>Invoice KoMeDi</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <link
+
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+
+    rel="stylesheet"
+
+  />
+
+  <link
+
+    href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap"
+
+    rel="stylesheet"
+
+  />
+
+  <style>
+
+body {
+
+      font-family: Arial, sans-serif;
+
+    }
+
+    .handwritten {
+
+      font-family: "Indie Flower", cursive;
+
+      font-weight: 500;
+
+    }
+
+    .equal-height {
+
+      flex: 1;
+
+      display: flex;
+
+      flex-direction: column;
+
+    }
+
+    .note-area {
+
+      border: 1px solid #000;
+
+      padding: 8px;
+
+      border-radius: 4px;
+
+      background-color: #f9f9f9;
+
+      min-height: 50px;
+
+    }
+
+@media print {
+
+  @page {
+
+    size: landscape;
+
+    margin: 0; /* Mengatur margin halaman menjadi 0 */
+
+  }
+
+  body {
+
+    margin: 0;
+
+  }
+
+  /* Sembunyikan elemen yang tidak diinginkan saat mencetak */
+
+  a {
+
+    display: none; /* Menyembunyikan semua link */
+
+  }
+
+  /* Sembunyikan footer atau elemen lain yang tidak diinginkan */
+
+  .footer {
+
+    display: none; /* Menyembunyikan elemen dengan kelas 'footer' */
+
+  }
+
+  /* Atur area cetak */
+
+  .print-area {
+
+    position: relative;
+
+    width: 100%;
+
+    height: 100%;
+
+    overflow: hidden; /* Menghindari overflow */
+
+  }
+.header-row, .header-row * {
+  border-color: #000000 !important; /* abu-abu gelap, lebih soft */
+  border-style: solid !important;
+  border-width: 1px !important;
+  box-sizing: border-box;
+}
+}
+
+  </style>
+<style>
+@media print {
+  button[onclick="submitInvoice()"],
+  button[onclick="window.print()"],
+   #message {
+    display: none !important;
+  }
+}
+</style>
+<style>
+  /* Override background color saat tombol disabled */
+  button:disabled {
+    background-color: #9ca3af; /* abu-abu, Tailwind gray-400 */
+    cursor: not-allowed; /* tanda tidak bisa diklik */
+    /* Optional: hilangkan efek hover saat disabled */
+  }
+</style>
+  <script>
+    const correctPassword = "Komedi0106"; // Ganti dengan password kamu
+
+    function checkPassword() {
+      const userInput = prompt("Masukkan password untuk mengakses halaman ini:");
+      if (userInput !== correctPassword) {
+        alert("Password salah. Akses ditolak.");
+        window.location.href = "https://parokitulungagung.my.id"; // Redirect ke halaman lain
+      }
+    }
+
+    window.onload = checkPassword;
+  </script>
+</head>
+
+<body class="p-4 bg-white">
+
+  <div class="max-w-5xl mx-auto border border-black">
+
+    <div class="flex flex-wrap border-b border-black text-[11px] leading-tight">
+
+      <div class="flex items-center border-r border-black w-full sm:w-1/2 px-2 py-1 gap-4">
+
+        <img
+
+          src="/img/icon/icon_komedi.png"
+
+          alt="Official Komedi Komsos Merchandise Division Paroki Tulungagung logo"
+
+          class="h-12 w-auto"
+
+          width="70"
+
+          height="50"
+
+        />
+
+        <div class="flex flex-col text-[11px] leading-tight">
+
+          <div class="flex items-center gap-1">
+
+            <i class="fas fa-phone-alt"></i>
+
+            <input type="text" id="phone" aria-label="Phone number" value="‪+62 851-8306-8895‬" oninput="updateField('phoneDisplay', 'phone')" class=" w-full" />
+
+          </div>
+
+          <div class="flex items-center gap-1">
+
+            <i class="fas fa-envelope"></i>
+
+            <span>komsosmerchandise@gmail.com</span>
+
+          </div>
+
+          <div class="flex items-center gap-1">
+
+            <i class="fas fa-envelope-open-text"></i>
+
+            <span>komsosparokitulungagung</span>
+
+          </div>
+
+          <div class="flex items-center gap-1">
+
+            <i class="fas fa-map-marker-alt"></i>
+
+            <span>Paroki Tulungagung</span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      
+
+      <div class="flex w-full sm:w-1/2 ">
+
+        
+
+        <div class="equal-height border-r border-black w-1/2 text-[11px] max-w-[70px] ">
+
+          <div class="border border-black text-black text-center font-semibold">
+
+            Terima TGL
+
+          </div>
+
+          <input type="text" id="receiveDate" aria-label="Receive date" value="" oninput="updateField('receiveDateDisplay', 'receiveDate')" class="border-b border-black text-center handwritten leading-none py-[1px] w-full" />
+
+          <div class="border border-black text-black text-center font-semibold">
+
+            Selesai TGL
+
+          </div>
+
+          <input type="text" id="finishDate" aria-label="Finish date" value="" oninput="updateField('finishDateDisplay', 'finishDate')" class=" text-center handwritten leading-none py-[1px] w-full" />
+
+        </div>
+
+        <div class="equal-height w-1/2 text-[11px] max-w-[240px] flex flex-col ">
+
+          <div class="flex border-b border-black flex-1">
+
+            <div class="text-black font-semibold px-1 py-0.5 w-20 border-r border-black">
+
+              Nama
+
+            </div>
+
+            <input type="text" id="name" aria-label="Name" value="" oninput="updateField('nameDisplay', 'name')" class="flex-1 handwritten px-1 py-0.5" />
+
+          </div>
+
+          <div class="flex border-b border-black flex-1">
+
+            <div class="text-black font-semibold px-1 py-0.5 w-20 border-r border-black ">
+
+              No. Tlp/HP
+
+            </div>
+
+            <input type="text" id="phoneNumber" aria-label="Phone number" value="" oninput="updateField('phoneNumberDisplay', 'phoneNumber')" class="flex-1 px-1 py-0.5 handwritten" />
+
+          </div>
+
+<div class="flex  flex-1 ">
+  <div class="text-black font-semibold px-1 py-0.5 w-20 border-r border-black header-row">
+    Alamat
+  </div>
+
+  <textarea id="address" aria-label="Address"
+    oninput="adjustFontSize(this); updateField('addressDisplay', 'address');"
+    class="flex-1 px-1 py-0.5 text-black resize-none overflow-hidden leading-snug handwritten header-row"
+    style="font-size: 16px; min-height: 1.5rem; "></textarea>
+</div>
+
+        </div>
+
+<div class="equal-height w-1/2 text-[11px] max-w-[200px] px-1 flex flex-col space-y-1">
+  <div class="border border-black text-black text-center font-semibold">
+    Kode Nota
+  </div>
+  <input type="text" id="noteCode" readonly class="note-area w-full text-center font-mono bg-gray-100 text-lg" />
+
+
+</div>
+
+
+      </div>
+
+    </div>
+
+
+
+    <div class="grid grid-cols-12 border-b border-black text-[13px] font-semibold text-center  text-black">
+
+      <div class="col-span-7 border-r border-black py-1">KETERANGAN</div>
+
+      <div class="col-span-1 border-r border-black py-1">Qty.</div>
+
+      <div class="col-span-2 border-r border-black py-1">Harga</div>
+
+      <div class="col-span-2 py-1">Jumlah</div>
+
+    </div>
+
+
+
+    <!-- Table rows -->
+
+<div id="inputRowsContainer">
+
+  <!-- Baris 1 -->
+
+  <div class="grid grid-cols-12 border-b border-black text-[13px] handwritten input-row">
+
+    <div class="col-span-7 border-r border-black px-2 py-1 leading-tight">
+      <input type="text" id="itemDescription1" oninput="handleInput(this)" class="border-b border-black w-full" />
+    </div>
+
+  <div class="col-span-1 border-r border-black px-2 py-1 text-center">
+    <input type="number" oninput="handleCalculation()" class="quantity border-b border-black w-full text-center" />
+  </div>
+  <div class="col-span-2 border-r border-black px-2 py-1 text-center">
+    <input type="number" oninput="handleCalculation()" class="unit border-b border-black w-full text-center" />
+  </div>
+  <div class="col-span-2 px-2 py-1 text-center">
+    <input type="text" id="total1" readonly class="total border-b border-black w-full text-center bg-gray-100 cursor-not-allowed" />
+  </div>
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+  <div class="flex flex-col sm:flex-row justify-between px-2 py-2 text-[11px] leading-tight">
+
+      <div class="max-w-xs">
+
+        <p>
+
+          Periksa kembali sebelum pembayaran DP. Pemesanan tidak bisa dirubah setelah pembayaran DP
+
+        </p>
+
+        <p>DP minimal 70% dari Total Pemesanan</p>
+
+        <p>Komplain / Return cacat produksi hanya dilayani 2X24 jam</p>
+
+      </div>
+
+      <div class="w-50 mt-5 sm:mt-0">
+
+<div class="grid grid-cols-3 text-[13px] font-semibold mb-2">
+  <div class="col-span-2 text-right pr-5">Total</div>
+  <div class="text-center">
+    <input type="text" id="totalAmount" readonly class="border-b border-black w-full text-center bg-gray-100 cursor-not-allowed" />
+  </div>
+</div>
+
+<div class="grid grid-cols-3 text-[13px] font-semibold mb-2">
+  <div class="col-span-2 text-right pr-5">DP</div>
+  <div class="text-center">
+    <input type="text" id="downPayment" oninput="handleDPInput()" class="border-b border-black w-full text-center" />
+  </div>
+</div>
+
+<div class="grid grid-cols-3 text-[13px] font-semibold">
+  <div class="col-span-2 text-right pr-5">Sisa</div>
+  <div class="text-center font-semibold">
+    <input type="text" id="remaining" readonly class="border-b border-black w-full text-center bg-gray-100 cursor-not-allowed" />
+  </div>
+</div>
+
+      </div>
+
+    </div>
+
+      <div class="flex justify-end mt-4">
+          <div id="message" class="text-red-600 text-xs font-semibold"></div>
+<button id="submitBtn" onclick="submitInvoice()" class="bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600 mr-2">
+  Submit Invoice
+</button> 
+
+<button id="printBtn" onclick="window.print()" class="bg-blue-500 text-white px-4 py-2 rounded" disabled>
+  Print Invoice
+</button>
+
+<script>
+window.onload = () => {
+  adjustFontSize(document.getElementById("address"));
+};
+</script>
+<script>
+
+function printInvoice() {
+
+    window.print();
+
+    alert("Untuk mencetak tanpa header dan footer, silakan sesuaikan pengaturan cetak di browser Anda.");
+
+}
+
+</script>
+
+<script>
+
+let rowCount = 1;
+
+
+
+function handleInput(input) {
+
+  const rows = document.querySelectorAll('.input-row');
+
+  const lastRow = rows[rows.length - 1];
+
+
+
+  // Cek apakah input yang dimasukkan berasal dari baris terakhir
+
+  if (lastRow.contains(input)) {
+
+    const inputs = lastRow.querySelectorAll('input');
+
+    const anyFilled = Array.from(inputs).some(i => i.value.trim() !== "");
+
+
+
+    if (anyFilled) {
+
+      addNewRow();
+
+    }
+
+  }
+
+}
+
+
+
+function addNewRow() {
+
+  rowCount++;
+
+
+
+  const container = document.getElementById('inputRowsContainer');
+
+  const lastRow = container.querySelector('.input-row:last-child');
+
+  const newRow = lastRow.cloneNode(true);
+
+
+
+  // Update ID dan kosongkan nilai
+
+  newRow.querySelectorAll('input').forEach((input, index) => {
+
+    const baseId = input.id.replace(/\d+$/, '');
+
+    input.id = baseId + rowCount;
+
+    input.value = '';
+
+    input.setAttribute('oninput', 'handleInput(this)');
+
+  });
+
+
+
+  container.appendChild(newRow);
+
+}
+
+</script>
+
+<!-- Bagian bawah file Anda -->
+<script>
+function generateUniqueCode(length = 10) {
+  const chars = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
+  let result;
+  const existingCodes = JSON.parse(localStorage.getItem("usedCodes") || "[]");
+
+  do {
+    result = '';
+    for (let i = 0; i < length; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+  } while (existingCodes.includes(result));
+
+  // Simpan ke localStorage
+  existingCodes.push(result);
+  localStorage.setItem("usedCodes", JSON.stringify(existingCodes));
+
+  return result;
+}
+
+function initInvoice() {
+  const code = generateUniqueCode();
+  document.getElementById("noteCode").value = code;
+}
+
+window.onload = initInvoice;
+
+function submitInvoice() {
+  const submitBtn = document.getElementById('submitBtn');
+  const printBtn = document.getElementById('printBtn');
+  const code = document.getElementById("noteCode").value.trim();
+  const messageDiv = document.getElementById("message");
+
+  if (!code) {
+    messageDiv.textContent = "Kode nota tidak boleh kosong.";
+    return;
+  }
+
+  // Cek apakah kode sudah dikirim sebelumnya
+  if (localStorage.getItem("submitted_" + code) === "true") {
+    messageDiv.textContent = "✅ Invoice ini sudah pernah dikirim.";
+    messageDiv.classList.remove("text-red-600");
+    messageDiv.classList.add("text-blue-600");
+    return;
+  }
+
+  // Ambil IP terlebih dahulu
+  fetch("https://api.ipify.org?format=json")
+    .then(res => res.json())
+    .then(data => {
+      const ip = data.ip;
+
+      const formData = new FormData();
+      formData.append("code", code);
+      formData.append("ip", ip);
+
+      // Kirim data ke Apps Script
+      return fetch("https://script.google.com/macros/s/AKfycbyuAcBalKmoJhCGmWQ1cew76exWCgaKK0wFXqP_dxjSk8pesYNezB4aUQfSycUasvo/exec", {
+        method: "POST",
+        mode: "no-cors",
+        body: formData,
+      });
+    })
+    .then(() => {
+      // Simpan status pengiriman
+      localStorage.setItem("submitted_" + code, "true");
+
+      messageDiv.textContent = "✅ Invoice berhasil dikirim!";
+      messageDiv.classList.remove("text-red-600");
+      messageDiv.classList.add("text-green-600");
+    submitBtn.disabled = true;
+    submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+    printBtn.disabled = false;
+    printBtn.classList.remove('opacity-50');
+  })
+    .catch((error) => {
+      messageDiv.textContent = "❌ Gagal mengirim data. Silakan coba lagi.";
+      messageDiv.classList.remove("text-green-600");
+      messageDiv.classList.add("text-red-600");
+      console.error("Error:", error);
+    });
+}
+
+</script>
+<script>
+function adjustFontSize(el) {
+  // Reset tinggi agar bisa mengukur ulang
+  el.style.height = "auto";
+
+  // Batasi tinggi maksimal agar tidak terlalu panjang
+  el.style.height = el.scrollHeight + "px";
+
+  // Otomatis perkecil font jika terlalu panjang
+  const minHeight = 20;
+  const maxHeight = 20; // Maks tinggi textarea
+  const minFont = 10;   // Minimal font size
+  let fontSize = parseInt(window.getComputedStyle(el).fontSize);
+
+  while (el.scrollHeight > maxHeight && fontSize > minFont) {
+    fontSize--;
+    el.style.fontSize = fontSize + "px";
+    el.style.height = "auto";
+    el.style.height = el.scrollHeight + "px";
+  }
+}
+</script>
+
+<script>
+  function formatRupiah(angka) {
+    if (!angka) return '';
+    const numberString = angka.toString().replace(/[^,\d]/g, '');
+    const split = numberString.split(',');
+    let sisa = split[0].length % 3;
+    let rupiah = split[0].substr(0, sisa);
+    const ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+    if (ribuan) {
+      const separator = sisa ? '.' : '';
+      rupiah += separator + ribuan.join('.');
+    }
+    rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+    return 'Rp ' + rupiah;
+  }
+
+  function unformatRupiah(rp) {
+    return parseInt(rp.replace(/[^0-9]/g, '')) || 0;
+  }
+
+  function handleCalculation() {
+    const quantityFields = document.querySelectorAll('.quantity');
+    const unitFields = document.querySelectorAll('.unit');
+    const totalFields = document.querySelectorAll('.total');
+
+    let totalAmount = 0;
+
+    for (let i = 0; i < quantityFields.length; i++) {
+      let qty = parseInt(quantityFields[i].value) || 0;
+      let unit = unformatRupiah(unitFields[i].value);
+      let total = qty * unit;
+
+      totalFields[i].value = formatRupiah(total);
+      totalAmount += total;
+    }
+
+    document.getElementById('totalAmount').value = formatRupiah(totalAmount);
+    updateRemaining();
+  }
+
+  function handleDPInput() {
+    let dpInput = document.getElementById('downPayment').value;
+    let dp = unformatRupiah(dpInput);
+    document.getElementById('downPayment').value = formatRupiah(dp);
+    updateRemaining();
+  }
+
+  function updateRemaining() {
+    let totalAmount = unformatRupiah(document.getElementById('totalAmount').value);
+    let dp = unformatRupiah(document.getElementById('downPayment').value);
+    let remaining = totalAmount - dp;
+    document.getElementById('remaining').value = formatRupiah(remaining);
+  }
+
+  document.addEventListener('input', function (e) {
+    if (e.target.classList.contains('quantity') || e.target.classList.contains('unit')) {
+      handleCalculation();
+    }
+    if (e.target.id === 'downPayment') {
+      handleDPInput();
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    handleCalculation();
+    handleDPInput();
+  });
+</script>
+
+
+<a href="logout.php">Logout</a>
+</body>
+
+</html>
+
+
+
