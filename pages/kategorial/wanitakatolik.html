@@ -225,36 +225,119 @@ function menusetup(flag,title){ //1 0, judul hlm
 	<div style="margin-bottom: 1em"><table cellpadding="0" cellspacing="0"><tr><td class="tdiconheadline">
 		<img class="iconheadline" src="/img/icon/kategorial/wanita-katolik.png" ></td><td style="padding-left:0.2em"><span 
 			class="headline_title">Wanita Katolik</span><br/><span class="headline_subtitle">Santa Maria Dengan Tidak Bernoda Asal</span></td></tr></table></div>
-	<ul class="tabs" data-persist="true">
-		<li><a href="#tab_info">Info Kegiatan</a></li>
-		<li><a href="#tab_foto">&nbsp;Foto&nbsp;</a></li>
-	</ul>
+<ul class="tabs" data-persist="true">
+  <li id="tab_info_li"><a href="#tab_info">Info</a></li>
+  <li id="tab_detail_li"><a href="#tab_detail">Detail Kegiatan</a></li>
+  <li id="tab_foto_li"><a href="#tab_foto">Foto</a></li>
+</ul>
 
-	<div class="tabcontents" style="margin-bottom:1.2em; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.08), 0 2px 6px 0 rgba(0,0,0,0.08)">
-		<div id="tab_info">
-			<div class="defparcenter" style="padding-top:1em">
+<div class="tabcontents" style="margin-bottom:1.2em; box-shadow:0 2px 4px rgba(0,0,0,.08),0 2px 6px rgba(0,0,0,.08)">
+  <!-- Info -->
+  <div id="tab_info">
+    <div class="defparcenter" style="padding-top:1em"></div>
+    <div class="defpar" id="info"><b>Info</b><br>Memuat data…</div>
+    <div class="defpar" id="instagram">
+      <img style="width:36px;vertical-align:middle" src="/img/instagram.png" alt="Instagram">&nbsp;
+      <span>Memuat data…</span>
+    </div>
+  </div>
 
-			</div>
-			<div class="defpar">
-				<b>JADWAL :</b>
-				<br>Pertemuan rutin pada hari .... 00.00 setiap bulan di Gereja SMDTBA<br>
-			
-			</div>
-			<div class="defpar">
-				<img style="width:36px; vertical-align:middle" src="" alt="">&nbsp;
-						<a href=""> </a>
-			</div>
-           
-		</div> <!-- tab_info -->
+  <!-- Foto -->
+  <div id="tab_foto">
+    <div class="defparcenter" id="foto_content"><br>Memuat foto…<br><br></div>
+  </div>
 
-		<div id="tab_foto">
-			<div class="defparcenter">
-				<br>Belum ada foto.<br><br>
-			</div>
-		</div> <!-- tab_foto -->
-	</div> <!--tabcontents-->
-
+  <!-- Detail Kegiatan -->
+  <div id="tab_detail">
+    <div class="defpar" id="detail_content"><br>Memuat detail…<br><br></div>
+  </div>
 </div>
+
+<script>
+fetch("https://opensheet.elk.sh/1NpmeZl40zvUTBhLbon_6rbS26Z1mhARdBqPCCr_5VLw/wanita_katolik")
+  .then(r => r.json())
+  .then(d => {
+    const e = d[0];
+
+    // Fungsi konversi: ganti baris kosong jadi <p>, dan baris lainnya jadi <br>
+ 
+const formatStyledText = (text) => {
+  if (!text) return "-";
+  const lines = text.split(/\r?\n/);
+  let html = "";
+  let listOpen = false;
+
+  for (let line of lines) {
+    line = line.trim();
+
+    if (line === "") {
+      if (listOpen) {
+        html += "</ul>";
+        listOpen = false;
+      }
+      html += "<br>";
+      continue;
+    }
+
+    // Bold
+    line = line.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+
+    // Center align
+    if (line.startsWith(">")) {
+      if (listOpen) {
+        html += "</ul>";
+        listOpen = false;
+      }
+      html += `<div style="text-align:center">${line.substring(1).trim()}</div>`;
+      continue;
+    }
+
+    // List
+    if (line.startsWith("- ")) {
+      if (!listOpen) {
+        html += "<ul>";
+        listOpen = true;
+      }
+      html += `<li>${line.substring(2)}</li>`;
+      continue;
+    } else {
+      if (listOpen) {
+        html += "</ul>";
+        listOpen = false;
+      }
+      html += `<p>${line}</p>`;
+    }
+  }
+
+  if (listOpen) html += "</ul>";
+  return html;
+};
+
+
+    // Info
+    document.getElementById("info").innerHTML =
+      `<div style="color:#f5debb">${formatStyledText(e.info)}</div>`;
+
+    // Instagram
+    document.getElementById("instagram").innerHTML =
+      `<img style="width:36px;vertical-align:middle" src="/img/instagram.png" alt="Instagram">&nbsp;
+       <a href="" target="">${e.instagram_handle}</a>`;
+
+    // Foto
+    document.getElementById("foto_content").innerHTML =
+      `<div style="color:#f5debb"><br><a href="${e.link_foto}" target="_blank">Lihat galeri foto di Google Photos</a><br><br></div>`;
+
+    // Detail
+    document.getElementById("detail_content").innerHTML = 
+	`<div style="color:#f5debb">${formatStyledText(e.detail_kegiatan)}</div>`;
+  })
+  .catch(err => {
+    console.error(err);
+    ["info","instagram","foto_content","detail_content"].forEach(id => {
+      document.getElementById(id).innerHTML = "Gagal memuat data.";
+    });
+  });
+</script>
 
 <!-- BACK BUTTON -->
 <div style="width:100%; padding-bottom:1em; text-align:center" >

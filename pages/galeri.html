@@ -30,7 +30,7 @@
 	</div>
 
 <!-- ============================================ -->
-<body onload="menusetup(0,'Galeri Foto')">
+<!-- <body onload="menusetup(0,'Galeri Foto')"> -->
 
 <!-- ============================================ -->
 <link rel="stylesheet" href="/style.css">
@@ -65,7 +65,7 @@ function menusetup(flag,title){ //1 0, judul hlm
 		caret_up.style.display = "inline";
 		caret_down.style.display = "none";
 	} else{
-		div.style.display = "none";
+		// div.style.display = "none";
 		caret_up.style.display = "none";
 		caret_down.style.display = "inline";
 	}
@@ -252,6 +252,137 @@ function menusetup(flag,title){ //1 0, judul hlm
 	</div>
 </div>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const apiURL = "https://opensheet.elk.sh/1Q0N_S10XVngXDReVapVhDh6ZwnoFcGxvbeUJjAxOZYI/galeri_foto";
+
+  const warnaBulan = {
+    "Januari": "#e0e9ee", "Februari": "#eee0e0", "Maret": "#e0e9ee",
+    "April": "#eee0e0", "Mei": "#e1eee0", "Juni": "#e0e9ee",
+    "Juli": "#eee0e0", "Agustus": "#e1eee0", "September": "#e0e9ee",
+    "Oktober": "#eee0e0", "November": "#e1eee0", "Desember": "#e0e9ee"
+  };
+  // Fungsi bantu untuk mengubah nama bulan
+function formatTanggalIndo(tanggalStr) {
+  const bulanIndo = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+  ];
+
+  const [tahun, bulan, tanggal] = tanggalStr.split("-"); // pisah "2024-12-24"
+  const namaBulan = bulanIndo[parseInt(bulan, 10) - 1]; // ubah "12" jadi "Desember"
+  return `${parseInt(tanggal, 10)} ${namaBulan} ${tahun}`;
+}
+
+
+  fetch(apiURL)
+    .then(res => res.json())
+
+    .then(data => {
+      // Pisahkan data berdasarkan tahun
+      const tahunData = { "2024": {}, "2025": {} };
+	console.log (data)
+      data.forEach(item => {
+        const tahun = item.Tanggal?.slice(0, 4); // Ambil 4 digit pertama dari tanggal
+        if (tahunData[tahun]) {
+          const bulan = item.Bulan || "Lainnya";
+          if (!tahunData[tahun][bulan]) tahunData[tahun][bulan] = [];
+          tahunData[tahun][bulan].push(item);
+        }
+      });
+
+      Object.entries(tahunData).forEach(([tahun, bulanMap]) => {
+        const container = document.getElementById(`galeri-container-${tahun}`);
+        if (!container) return;
+
+        container.innerHTML = ""; // Bersihkan loader
+
+        const bulanUrut = Object.keys(bulanMap).sort((a, b) => {
+          const bulanIndo = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                             "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+          return bulanIndo.indexOf(a) - bulanIndo.indexOf(b);
+        });
+
+        bulanUrut.forEach(bulan => {
+          const details = document.createElement("details");
+          const summary = document.createElement("summary");
+          summary.innerHTML = `
+  <b>
+    <span style="color:#f5debb">${bulan} ${tahun}</span>
+  </b>
+  <span style="color:#191970"> (selengkapnya klik disini) </span> <br></br>
+`;
+          details.appendChild(summary);
+
+          const galeriBulan = document.createElement("div");
+          galeriBulan.className = "galeri-bulan";
+
+          const containerDiv = document.createElement("div");
+          containerDiv.className = "w3-container w3-card";
+          containerDiv.style.padding = "14px 8px 8px 8px";
+          containerDiv.style.borderRadius = "6px";
+          containerDiv.style.backgroundColor = warnaBulan[bulan] || "#e0e0e0";
+
+          const spanBulan = document.createElement("span");
+          spanBulan.className = "bulan";
+          spanBulan.innerHTML = ``;
+          containerDiv.appendChild(spanBulan);
+
+          bulanMap[bulan].forEach(item => {
+            const panelDiv = document.createElement("div");
+            panelDiv.className = "w3-panel w3-card";
+            panelDiv.style.cursor = "pointer";
+            panelDiv.onclick = () => {
+              window.open(item.Link, '_blank', 'noopener');
+            };
+
+            const table = document.createElement("table");
+            table.cellPadding = "0";
+            table.cellSpacing = "0";
+
+            const tr = document.createElement("tr");
+
+            const tdIcon = document.createElement("td");
+            tdIcon.className = "tdicon";
+            const img = document.createElement("img");
+            img.className = "iconsquare";
+            img.src = `/public/galeri/${item.Gambar}`;
+            tdIcon.appendChild(img);
+
+            const tdDesc = document.createElement("td");
+            tdDesc.className = "tddesc";
+            const spanDate = document.createElement("span");
+            spanDate.className = "datefont";
+            spanDate.innerHTML = `${formatTanggalIndo(item.Tanggal)}<br/>`;
+            const spanKring = document.createElement("span");
+            spanKring.className = "kring";
+            spanKring.textContent = item.Judul;
+            const spanGrey = document.createElement("span");
+            spanGrey.className = "greyfont";
+            spanGrey.innerHTML = `<br/>Foto: ${item.Foto}`;
+            tdDesc.appendChild(spanDate);
+            tdDesc.appendChild(spanKring);
+            tdDesc.appendChild(spanGrey);
+
+            tr.appendChild(tdIcon);
+            tr.appendChild(tdDesc);
+            table.appendChild(tr);
+            panelDiv.appendChild(table);
+            containerDiv.appendChild(panelDiv);
+          });
+
+          galeriBulan.appendChild(containerDiv);
+          details.appendChild(galeriBulan);
+          container.appendChild(details);
+        });
+      });
+    })
+    .catch(err => {
+      console.error("Gagal mengambil data:", err);
+    });
+});
+</script>
+
 </div> 
 
 <!-- ======================================================================= -->
@@ -282,20 +413,7 @@ function menusetup(flag,title){ //1 0, judul hlm
       })
       .catch(error => console.error('Gagal memuat menu:', error));
   </script>			
-<script>
-    fetch('/components/listgaleri/galeri2025.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('galeri-container-2025').innerHTML = data;
-        })
-</script>
-<script>
-    fetch('/components/listgaleri/galeri2024.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('galeri-container-2024').innerHTML = data;
-        })
-</script>
+
 </body>
 
 </html>

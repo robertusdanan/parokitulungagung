@@ -9,7 +9,7 @@
   </script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="/style.css">
 
  </head>
  <body class="bg-gray-50 min-h-screen flex flex-col">
@@ -23,16 +23,161 @@
    Copyright © KoMeDi (Komsos Merchandise Division)
    </div>
   </footer>
-   <script>
-    fetch('/components/listkatalog/kataloglist.html')
-      .then(response => response.text())
-      .then(html => {
-        document.getElementById('katalog-list').innerHTML = html;
-      })
-      .catch(err => {
-        console.error('Gagal memuat list katalog:', err);
+<main class="container mx-auto px-4 py-10 flex-grow">
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-8">
+    <input type="text" id="searchInput" placeholder="Cari produk..." class="p-2 rounded border">
+    <input type="number" id="minPrice" placeholder="Harga Min" class="p-2 rounded border">
+    <input type="number" id="maxPrice" placeholder="Harga Maks" class="p-2 rounded border">
+    <select id="categorySelect" class="p-2 rounded border">
+      <option value="">Semua Kategori</option>
+    </select>
+  </div>
+
+  <div id="katalog-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4"></div>
+  <div id="pagination" class="flex justify-center items-center gap-4 mt-6"></div>
+
+</main>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+  let katalogData = [];
+  let filteredData = [];
+  let currentPage = 1;
+  const itemsPerPage = 6;
+
+  async function loadKatalog() {
+    try {
+      const res = await axios.get("https://opensheet.elk.sh/17wqbq_SCdfePCk_3firXNuKt_4r_kzMDmOJbGdN6Bbk/katalog");
+      katalogData = res.data;
+
+      if (!Array.isArray(katalogData) || katalogData.length === 0) {
+        console.warn("Data katalog kosong atau tidak sesuai format.");
+        return;
+      }
+
+      const kategoriSet = new Set(katalogData.map(item => item.Category));
+      const categorySelect = document.getElementById("categorySelect");
+      kategoriSet.forEach(cat => {
+        if (cat) {
+          const option = document.createElement("option");
+          option.value = cat;
+          option.textContent = cat;
+          categorySelect.appendChild(option);
+        }
       });
-  </script>
+
+      filteredData = katalogData;
+      renderKatalog(filteredData);
+    } catch (error) {
+      console.error("Gagal memuat data katalog:", error);
+    }
+  }
+
+  function renderKatalog(data) {
+    const container = document.getElementById("katalog-container");
+    container.innerHTML = '';
+
+    const totalPages = Math.ceil(data.length / itemsPerPage);
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const pageItems = data.slice(start, end);
+
+    pageItems.forEach(item => {
+      const price = parseInt(item.Price);
+      const priceFormatted = isNaN(price) ? 'Rp -' : `Rp ${price.toLocaleString('id-ID')}`;
+      const imageSrc = item.Image || 'https://via.placeholder.com/400x300?text=No+Image';
+
+      const card = document.createElement('div');
+      card.className = "bg-white rounded-lg shadow-md overflow-hidden flex flex-col";
+
+      card.innerHTML = `
+        <img src="${imageSrc}" alt="${item.Title || 'Produk'}" class="w-full h-64 object-cover">
+        <div class="p-4 flex flex-col flex-grow">
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">${item.Title || '-'}</h3>
+          <p class="text-gray-700 flex-grow mb-4">
+            Code: ${item.Code || '-'} <br> ${item.Description || '-'}
+          </p>
+<a onclick="saveStateAndGoToDetail('${item.Link || '#'}')" class="hover:text-lg font-bold text-gray-600 cursor-pointer">
+  Detail (klik disini)
+</a>
+          <p class="text-lg font-bold text-indigo-600">${priceFormatted}</p>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+
+    renderPagination(totalPages);
+  }
+
+  function renderPagination(totalPages) {
+    const pagination = document.getElementById("pagination");
+    pagination.innerHTML = `
+      <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Prev</button>
+      <span>Halaman ${currentPage} dari ${totalPages}</span>
+      <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Next</button>
+    `;
+  }
+
+  function changePage(page) {
+    currentPage = page;
+    renderKatalog(filteredData);
+  }
+
+  function filterKatalog() {
+    const keyword = document.getElementById("searchInput").value.toLowerCase();
+    const min = parseInt(document.getElementById("minPrice").value) || 0;
+    const max = parseInt(document.getElementById("maxPrice").value) || Infinity;
+    const category = document.getElementById("categorySelect").value;
+
+    filteredData = katalogData.filter(item => {
+      const price = parseInt(item.Price);
+      const matchKeyword =
+        (item.Title && item.Title.toLowerCase().includes(keyword)) ||
+        (item.Description && item.Description.toLowerCase().includes(keyword));
+      const matchPrice = !isNaN(price) && price >= min && price <= max;
+      const matchCategory = category === '' || item.Category === category;
+
+      return matchKeyword && matchPrice && matchCategory;
+    });
+
+    currentPage = 1; // Reset ke halaman pertama saat filter diubah
+    renderKatalog(filteredData);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+  const savedState = JSON.parse(localStorage.getItem("katalogState"));
+  if (savedState) {
+    document.getElementById("searchInput").value = savedState.search;
+    document.getElementById("minPrice").value = savedState.minPrice;
+    document.getElementById("maxPrice").value = savedState.maxPrice;
+    document.getElementById("categorySelect").value = savedState.category;
+    currentPage = savedState.currentPage || 1;
+    localStorage.removeItem("katalogState");
+  }
+
+  loadKatalog();
+    document.getElementById("searchInput").addEventListener("input", filterKatalog);
+    document.getElementById("minPrice").addEventListener("input", filterKatalog);
+    document.getElementById("maxPrice").addEventListener("input", filterKatalog);
+    document.getElementById("categorySelect").addEventListener("change", filterKatalog);
+  });
+  function saveStateAndGoToDetail(link) {
+    const state = {
+      currentPage,
+      search: document.getElementById("searchInput").value,
+      minPrice: document.getElementById("minPrice").value,
+      maxPrice: document.getElementById("maxPrice").value,
+      category: document.getElementById("categorySelect").value,
+    };
+    localStorage.setItem("katalogState", JSON.stringify(state));
+    window.location.href = `/components/detailproduk.html?kode=${link}`;
+  }
+</script>
+
+
   <script>
     fetch('/components/headerkatalog.html')
       .then(response => response.text())

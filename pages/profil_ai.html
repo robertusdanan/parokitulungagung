@@ -15,7 +15,11 @@
 <!-- TABCONTENT -->
 <script src="/tabcontent.js" type="text/javascript"></script>
 <link href="/tabcontent.css" rel="stylesheet" type="/text/css" />
-
+<style>
+  #konten-asistenimam {
+    display: none;
+  }
+</style>
 <title>Asisten Imam</title>
 </head>
 <!-- OUTER-WRAPPER BEGIN -->
@@ -241,15 +245,20 @@ function menusetup(flag,title){ //1 0, judul hlm
 				<label for="kringselect" style="font-size:14px;">Lingkungan / Stasi : </label>
 
 <select id="kringselect" onchange="select_kring()">
-  <option value="all" selected>- Semua Lingkungan -</option>
+  <option value="default">-- Pilih Lingkungan / Stasi --</option>
 </select>
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 414f9b8e69059ea19ebe024d462d2259dd52aab0
 <div id="konten-asistenimam"></div>
 
 <script>
 let profiles=[]
   // Load konten asistenimam.html
-  fetch('https://opensheet.elk.sh/1Q0N_S10XVngXDReVapVhDh6ZwnoFcGxvbeUJjAxOZYI/Sheet1')
+  fetch('https://opensheet.elk.sh/1Q0N_S10XVngXDReVapVhDh6ZwnoFcGxvbeUJjAxOZYI/daftar_asisten_imam')
     .then(res => res.json())
     .then(data => {
       
@@ -264,21 +273,31 @@ if(a[`Nama`]>b[`Nama`]) return 1
 if(a[`Nama`]<b[`Nama`]) return -1
 return 0 		
 	})
-	.map((item)=>{
-		profiles.push(item)
-		const nama = item['Nama']
-		const wilayah = item['Asal Lingk / Stasi']
-	return`<div id="${wilayah}" class="w3-panel w3-card w3-whitewash">
-  <table cellpadding="0" cellspacing="0"><tr>
-    <td class="tdicon">
-      <a href="javascript:ShowPhotoBox('${nama}','/img/person/${nama?.replace(' ','-')}.jpg','ASISTEN IMAM','${wilayah}')">
-        <img class="iconsquare" src="/img/person/${nama?.replace(' ','-')}.jpg">
-      </a>
-    </td>
-    <td class="tddesc">
-      <span class="nama">${nama}</span><br>${wilayah}
-    </td><table</div>`
-	}) .join(``) 
+.map((item) => {
+  profiles.push(item)
+  const nama = item['Nama']
+  const wilayah = item['Asal Lingk / Stasi']
+  const foto = `/img/person/${nama?.replace(/ /g, "-")}.jpg`
+
+  return `
+    <div id="${wilayah}" class="w3-panel w3-card w3-whitewash">
+      <table cellpadding="0" cellspacing="0">
+        <tr>
+          <td class="tdicon">
+            <a href="javascript:ShowPhotoBox('${nama}','${foto}','ASISTEN IMAM','${wilayah}')">
+              <img class="iconsquare" src="${foto}">
+            </a>
+          </td>
+          <td class="tddesc">
+            <a href="javascript:ShowPhotoBox('${nama}','${foto}','ASISTEN IMAM','${wilayah}')"style="font-weight:bold">
+              <span class="nama">${nama}</span>
+            </a><br>${wilayah}
+          </td>
+        </tr>
+      </table>
+    </div>`
+})
+ .join(``) 
 const container = document.getElementById('konten-asistenimam');
       container.innerHTML = html;
 
@@ -329,31 +348,44 @@ const container = document.getElementById('konten-asistenimam');
 
 
 <script>
-function hideshowdiv(val){ /* "#divID", 1 or 0 */ 
+function hideshowdiv(val){ 
+  document.getElementById('konten-asistenimam').style.display = 'block'; // Tampilkan
+
   const wil= tmpwilayah [val.replace(`w`,``)]
   const data = profiles.filter((item)=>{
-		const nama = item['Nama']
-		const wilayah = item['Asal Lingk / Stasi']
-console.log (wilayah,wil)
-	return wilayah === wil
-	})	.map((item)=>{
-		const nama = item['Nama']
-		const wilayah = item['Asal Lingk / Stasi']
-		console.log (item)
-	return`<div id="${wilayah}" class="w3-panel w3-card w3-whitewash">
-  <table cellpadding="0" cellspacing="0"><tr>
-    <td class="tdicon">
-      <a href="javascript:ShowPhotoBox('${nama}','/img/person/${nama?.replace(' ','-')}.jpg','ASISTEN IMAM','${wilayah}')">
-        <img class="iconsquare" src="/img/person/${nama?.replace(' ','-')}.jpg">
-      </a>
-    </td>
-    <td class="tddesc">
-      <span class="nama">${nama}</span><br>${wilayah}
-    </td><table</div>`
-	}) .join(``) 
-	const container = document.getElementById('konten-asistenimam');
-      container.innerHTML = data;
-}	
+    const nama = item['Nama']
+    const wilayah = item['Asal Lingk / Stasi']
+    return wilayah === wil
+  })	
+  .map((item) => {
+    const nama = item['Nama']
+    const wilayah = item['Asal Lingk / Stasi']
+    const foto = `/img/person/${nama?.replace(/ /g, "-")}.jpg`
+
+    return `
+      <div id="${wilayah}" class="w3-panel w3-card w3-whitewash">
+        <table cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="tdicon">
+              <a href="javascript:ShowPhotoBox('${nama}','${foto}','ASISTEN IMAM','${wilayah}')">
+                <img class="iconsquare" src="${foto}">
+              </a>
+            </td>
+            <td class="tddesc">
+              <a href="javascript:ShowPhotoBox('${nama}','${foto}','ASISTEN IMAM','${wilayah}')" style="font-weight:bold">
+                <span class="nama">${nama}</span>
+              </a><br>${wilayah}
+            </td>
+          </tr>
+        </table>
+      </div>
+    `
+  })
+  .join(``) 
+
+  const container = document.getElementById('konten-asistenimam');
+  container.innerHTML = data;
+}
 
 function hideshowallkring(flag) {
   // Ambil semua div dalam kontainer asistenimam
@@ -365,15 +397,19 @@ function hideshowallkring(flag) {
 }
 
 function select_kring() {
-	var val = document.getElementById("kringselect").value;
-	if (val == "all") {
-		hideshowallkring(1);
-	} else{
-		hideshowallkring(0);
-		hideshowdiv(val);
+  var val = document.getElementById("kringselect").value;
+  const container = document.getElementById('konten-asistenimam');
 
-	}
+  if (val === "" || val === "default") {
+    container.style.display = 'none'; // Sembunyikan jika belum pilih apa pun
+    container.innerHTML = ''; // Kosongkan juga kontennya
+  } else {
+    container.style.display = 'block';
+    hideshowallkring(0);
+    hideshowdiv(val);
+  }
 }
+
 
 function setupselection(){
 	document.getElementById("kringselect").value = "all";
