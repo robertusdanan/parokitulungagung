@@ -12,6 +12,53 @@
       .catch(err => console.error('Gagal memuat head:', err));
   </script>
 <title>Paroki SMDTBA - Home</title>
+<style>.iconsquare {
+  width: 48px;
+  height: 48px;
+  margin-right: 10px;
+}
+.romo-section {
+  text-align: center;
+  padding-top: 40px;
+  padding-bottom: 20px;
+}
+
+.romo-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.romo-card {
+  background-color: #dcc5a3;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  width: 200px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.romo-card:hover {
+  transform: translateY(-5px);
+}
+
+.romo-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.romo-name {
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 1rem;
+  color: #444;
+  font-family: 'Poppins', sans-serif;
+}</style>
 </head>
 <!-- OUTER-WRAPPER BEGIN -->
 <div id="outer-wrapper">
@@ -22,7 +69,7 @@
 	<!-- ======================================================================= -->
 		<!-- ======================================================================= -->
 	<div class="divheaderparoki">
-		<a href="/"><img src="img/header-logo-1.png" style="border:0; width: 100%"></a>
+		<a href="/"><img src="/img/header-logo-1.png" style="border:0; width: 100%"></a>
 	</div>
 
 <!-- ============================================ -->
@@ -31,7 +78,7 @@
 <body onload="menusetup(0,'Homepage')">
 
 <!-- ============================================ -->
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="/style.css">
 
 <script>
 function togglemenudiv() {
@@ -116,7 +163,7 @@ function menusetup(flag,title){ //1 0, judul hlm
         </tr>
         <tr>
             <td style="text-align:center; padding: 0 8px 6px 8px;">
-                <img id="boxModalImage" src="img/smdtba-sharelogo.png" style="width:200px;border-radius:6px;">
+                <img id="boxModalImage" src="/img/smdtba-sharelogo.png" style="width:200px;border-radius:6px;">
             </td>
         </tr>
         <tr>
@@ -145,7 +192,7 @@ function menusetup(flag,title){ //1 0, judul hlm
     <div class='modal-body'>
         <!-- <span class='close'>&#215;</span> -->
         <div>
-            <img src='img/smdtba-sharelogo.PNG' style='width:150px; margin: 0 0 10px 10px;'>
+            <img src='/img/smdtba-sharelogo.PNG' style='width:150px; margin: 0 0 10px 10px;'>
         </div>
         <span style="font-size:18px; font-weight:bold;">Team Web SMDTBA</span>
 		<span><em>komsosparokitulungagung@gmail.com</em></span>
@@ -221,6 +268,19 @@ function menusetup(flag,title){ //1 0, judul hlm
 
 
 <!-- ============================================ -->
+ <div class="romo-section">
+  <span class="header">ROMO PAROKI</span>
+  <div class="romo-wrapper">
+    <div class="romo-card">
+      <img src="/img/person/RD-Thomas-Aquino-Djoko-Noegroho.jpg" alt="RD Thomas Aquino Djoko Noegroho">
+      <p class="romo-name">RD Thomas Aquino Djoko Noegroho</p>
+    </div>
+    <div class="romo-card">
+      <img src="/img/person/RD-Yohanes-Setiawan-Romo-Yose.jpg" alt="RD Yohanes Setiawan">
+      <p class="romo-name">RD Yohanes Setiawan</p>
+    </div>
+  </div>
+</div>
 	<div class='par'>	
 	<br>
 		<span class="header">JADWAL MISA</span>
@@ -266,8 +326,8 @@ function menusetup(flag,title){ //1 0, judul hlm
 			Sekretariat buka pagi pk. 08:00 - 14:00<br>Khusus hari Rabu sekretariat tutup.
 		</p>
 		
-		<a href="https://www.instagram.com/komsosparokitulungagung"><img src="img/instagram.png" alt="Instagram Paroki"></a>
-		<a href="https://www.youtube.com/@KomsosParokiTulungagung"><img src="img/youtube.png" alt="Youtube Paroki"></a>
+		<a href="https://www.instagram.com/komsosparokitulungagung"><img src="/img/instagram.png" alt="Instagram Paroki"></a>
+		<a href="https://www.youtube.com/@KomsosParokiTulungagung"><img src="/img/youtube.png" alt="Youtube Paroki"></a>
 
 		<div class='panelmap'>
 				<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3950.3508227604375!2d111.90251617507136!3d-8.065652780600404!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e78e2e039c8b6f5%3A0x596dee2ec5880aea!2sGereja%20Katolik%20Santa%20Maria%20Dengan%20Tidak%20Bernoda%20Asal%2C%20Tulungagung!5e0!3m2!1sen!2sid!4v1747287054482!5m2!1sen!2sid" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -297,7 +357,7 @@ function menusetup(flag,title){ //1 0, judul hlm
 
 <!-- ============================================ -->
   <script>
-    fetch('components/menu.html')
+    fetch('/components/menu.html')
       .then(response => response.text())
       .then(data => {
         document.getElementById('menu-container').innerHTML = data;

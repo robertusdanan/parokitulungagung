@@ -1,14 +1,70 @@
 <?php
-session_start();
-
-// Cek apakah file ini diakses langsung melalui URL
 if (!isset($_SERVER['HTTP_REFERER']) || strpos($_SERVER['HTTP_REFERER'], 'login.php') === false) {
-exit('Mau Ngapain?');
-}
+    ?>
+    <!DOCTYPE html>
+    <html lang="id">
+    <head>
+        <meta charset="UTF-8">
+        <title>Akses Ditolak</title>
+        <style>
+            * {
+                box-sizing: border-box;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
 
-// Pastikan user sudah login
-if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    header("Location: ../login.php");
+            body {
+                margin: 0;
+                padding: 0;
+                background: #f5f7fa;
+                height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .error-box {
+                background: #fff;
+                padding: 2rem;
+                border-radius: 12px;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+                text-align: center;
+                max-width: 400px;
+            }
+
+            h1 {
+                color: #d32f2f;
+                margin-bottom: 1rem;
+            }
+
+            p {
+                color: #555;
+                margin-bottom: 1.5rem;
+            }
+
+            a {
+                display: inline-block;
+                padding: 0.6rem 1.2rem;
+                background-color: #007bff;
+                color: #fff;
+                text-decoration: none;
+                border-radius: 6px;
+                transition: background 0.3s;
+            }
+
+            a:hover {
+                background-color: #0056b3;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="error-box">
+            <h1>🚫 Mau Ngapain! </h1>
+            <p>lebih sakit mana, sakit hati apa sakit gigi?</p>
+            <a href="login.php">Kembali ke Login</a>
+        </div>
+    </body>
+    </html>
+    <?php
     exit;
 }
 ?>
@@ -157,19 +213,6 @@ body {
     /* Optional: hilangkan efek hover saat disabled */
   }
 </style>
-  <script>
-    const correctPassword = "Komedi0106"; // Ganti dengan password kamu
-
-    function checkPassword() {
-      const userInput = prompt("Masukkan password untuk mengakses halaman ini:");
-      if (userInput !== correctPassword) {
-        alert("Password salah. Akses ditolak.");
-        window.location.href = "https://parokitulungagung.my.id"; // Redirect ke halaman lain
-      }
-    }
-
-    window.onload = checkPassword;
-  </script>
 </head>
 
 <body class="p-4 bg-white">

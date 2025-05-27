@@ -11,6 +11,62 @@
       .catch(err => console.error('Gagal memuat head:', err));
   </script>
 <title>Liputan Berita</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    #framecontent {
+      width: 100%;
+      height: 80vh;
+      border: none;
+    }
+	   .bottom-bar {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background-color: #f0f0f0;
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      font-family: Arial, sans-serif;
+      font-size: 0.9rem;
+      z-index: 1000;
+    }
+
+    .form-container {
+      margin: 0;
+    }
+
+    .form-container h3 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .whatsapp-contact a {
+      text-decoration: none;
+      color: #007BFF;
+      font-weight: bold;
+    }
+
+    .whatsapp-contact i {
+      margin-right: 0.25rem;
+    }
+
+    @media screen and (max-width: 480px) {
+      .bottom-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        left: 10px;
+        right: 10px;
+      }
+    }
+
+  </style>
 </head>
 <!-- OUTER-WRAPPER BEGIN -->
 <div id="outer-wrapper">
@@ -227,7 +283,15 @@ function loadPage(strURL) {
 <!-- <iframe class="framecontent" scrolling="no" src="frame_content.html" ></iframe>  -->
 
 <!--<iframe id="framecontent" src="https://parokismdtbatulungagung.blogspot.com/?m=1"></iframe>-->
-
+<div class="bottom-bar">
+  <div class="form-container">
+    <h3>Tertarik menjadi Kontributor?</h3>
+  </div>
+  <div class="whatsapp-contact">
+    <i class="fa fa-whatsapp" aria-hidden="true" style="color: green;"></i>
+ <img style="width:25px;vertical-align:middle" src="/img/whatsapp.png" alt="Whatsapp">&nbsp; <a href="https://wa.me/6285183068895" target="_blank">(Daftar Disini)</a>
+  </div>
+</div>
 <iframe id='framecontent' src=https://parokismdtbatulungagung.blogspot.com/?m=1></iframe>
 
 
