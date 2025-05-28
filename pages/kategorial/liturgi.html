@@ -262,6 +262,13 @@ function menusetup(flag,title){ //1 0, judul hlm
   <div id="tab_info">
     <div class="defparcenter" style="padding-top:1em"></div>
     <div class="defpar" id="info"><b>Info</b><br>Memuat data…</div>
+<<<<<<< HEAD
+=======
+    <div class="defpar" id="instagram">
+      <img style="width:36px;vertical-align:middle" src="/img/instagram.png" alt="Instagram">&nbsp;
+      <span>Memuat data…</span>
+    </div>
+>>>>>>> 4863dc7e33a738d50cd9623e7ae1ed88d47a7d90
   </div>
 
   <!-- Foto -->
@@ -358,6 +365,14 @@ const formatStyledText = (text, koordinatorFotoMap = {}) => {
     document.getElementById("info").innerHTML =
   `<div class="grid-bidang" style="color:#f5debb">${formatStyledText(e.info)}</div>`;
 
+<<<<<<< HEAD
+=======
+    // Instagram
+    document.getElementById("instagram").innerHTML =
+      `<img style="width:36px;vertical-align:middle" src="/img/instagram.png" alt="Instagram">&nbsp;
+       <a href="" target="">${e.instagram_handle}</a>`;
+
+>>>>>>> 4863dc7e33a738d50cd9623e7ae1ed88d47a7d90
     // Foto
     document.getElementById("foto_content").innerHTML =
       `<div style="color:#f5debb"><br><a href="${e.link_foto}" target="_blank">Lihat galeri foto di Google Photos</a><br><br></div>`;
