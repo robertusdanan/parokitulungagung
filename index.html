@@ -2,16 +2,132 @@
 <html>
 
 <head>
-  <script>
-    document.write('<meta charset="UTF-8">'); // Ini agar tidak error saat load awal
-    fetch('/components/head.html')
-      .then(response => response.text())
-      .then(html => {
-        document.head.innerHTML += html;
-      })
-      .catch(err => console.error('Gagal memuat head:', err));
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Website resmi Gereja Katolik Santa Maria Dengan Tidak Bernoda Asal (SMDTBA) Tulungagung. Informasi jadwal misa, alamat, dan kegiatan paroki.">
+  <meta name="keywords" content="Gereja Katolik Tulungagung, SMDTBA, Paroki Tulungagung, Jadwal Misa Tulungagung, Romo Tulungagung, Sekretariat Gereja Tulungagung, Katolik Tulungagung, Gereja Katolik Tulungagung">
+  <meta name="author" content="Paroki SMDTBA Tulungagung">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph (untuk Facebook, WhatsApp, dll) -->
+  <meta property="og:title" content="Paroki SMDTBA - Tulungagung">
+  <meta property="og:description" content="Informasi Paroki Santa Maria dengan Tidak Bernoda Asal. Jadwal misa, romo, sekretariat, dan lokasi.">
+  <meta property="og:image" content="https://www.parokitulungagung.org/img/smdtba-sharelogo.png">
+  <meta property="og:url" content="https://www.parokitulungagung.org">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Paroki SMDTBA - Tulungagung">
+  <meta name="twitter:description" content="Informasi lengkap Paroki SMDTBA Tulungagung.">
+  <meta name="twitter:image" content="https://www.parokitulungagung.org/img/smdtba-sharelogo.png">
 <title>Paroki SMDTBA - Home</title>
+<style>.iconsquare {
+  width: 48px;
+  height: 48px;
+  margin-right: 10px;
+}
+.romo-section {
+  text-align: center;
+  padding-top: 40px;
+  padding-bottom: 20px;
+  overflow-x: auto;
+}
+
+.romo-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: nowrap;
+  margin-top: 20px;
+  overflow-x: auto;
+  padding: 0 16px;
+}
+
+.romo-card {
+  background-color: #dcc5a3;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  width: 200px;
+  flex-shrink: 0;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.romo-card:hover {
+  transform: translateY(-5px);
+}
+
+.romo-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.romo-name {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 1rem;
+  color: #444;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Responsif - Sesuaikan ukuran kartu di mobile */
+@media (max-width: 768px) {
+  .romo-card {
+    width: 140px;
+    padding: 10px;
+  }
+
+  .romo-wrapper {
+    gap: 20px;
+    justify-content: flex-start;
+  }
+  .romo-name {
+    font-size: 0.85rem;
+  }
+}
+@media (max-width: 480px) {
+  .romo-card {
+    width: 140px;
+    padding: 10px;
+  }
+
+  .romo-wrapper {
+    gap: 20px;
+    justify-content: flex-start;
+  }
+  .romo-name {
+    font-size: 0.85rem;
+  }
+}
+.googlemap-wrapper {
+  max-width: 600px;
+  margin: 2rem auto;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  background-color: #fff;
+  padding: 0;
+}
+
+.googlemap-wrapper iframe {
+  width: 600px;
+  height: 300px;
+  border: none;
+  display: block;
+}
+.par h1 {
+  font-size: 2em;
+  text-align: center;
+  color: #7e715e; /* Sesuaikan dengan warna tema */
+}
+</style>
 </head>
 <!-- OUTER-WRAPPER BEGIN -->
 <div id="outer-wrapper">
@@ -22,7 +138,7 @@
 	<!-- ======================================================================= -->
 		<!-- ======================================================================= -->
 	<div class="divheaderparoki">
-		<a href="/"><img src="img/header-logo-1.png" style="border:0; width: 100%"></a>
+		<a href="/"><img src="/img/header-logo-1.png" style="border:0; width: 100%"></a>
 	</div>
 
 <!-- ============================================ -->
@@ -31,7 +147,7 @@
 <body onload="menusetup(0,'Homepage')">
 
 <!-- ============================================ -->
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="/style.css">
 
 <script>
 function togglemenudiv() {
@@ -72,6 +188,7 @@ function menusetup(flag,title){ //1 0, judul hlm
 	var judul = document.getElementById('menubartitle');
 	judul.textContent = title;
 }
+
 </script>
 
 <!-- BEGIN LAYOUT -->
@@ -116,7 +233,7 @@ function menusetup(flag,title){ //1 0, judul hlm
         </tr>
         <tr>
             <td style="text-align:center; padding: 0 8px 6px 8px;">
-                <img id="boxModalImage" src="img/smdtba-sharelogo.png" style="width:200px;border-radius:6px;">
+                <img id="boxModalImage" src="/img/smdtba-sharelogo.png" style="width:200px;border-radius:6px;">
             </td>
         </tr>
         <tr>
@@ -134,25 +251,6 @@ function menusetup(flag,title){ //1 0, judul hlm
 
 </div>
 <!-- ================================================================================================ -->
-
-
-<!-- ABOUT BOX : The Modal Window -->
-<!-- ================================================================================================ -->
-<div class='modal' id='aboutModal'>
-  <!-- Modal content -->
-  <div class='modal-content' style="color:white">
-    <div class='close'>&#215;</div>
-    <div class='modal-body'>
-        <!-- <span class='close'>&#215;</span> -->
-        <div>
-            <img src='img/smdtba-sharelogo.PNG' style='width:150px; margin: 0 0 10px 10px;'>
-        </div>
-        <span style="font-size:18px; font-weight:bold;">Team Web SMDTBA</span>
-		<span><em>komsosparokitulungagung@gmail.com</em></span>
-    </div>
-  </div>
-</div>
-
 
 <!-- SCRIPT -->
 <script>
@@ -218,12 +316,26 @@ function menusetup(flag,title){ //1 0, judul hlm
 
 <!-- END OF LINTANG ABOUT MODAL WINDOW -->
 
-
-
+<div class="par">
+  <h1>Paroki Santa Maria Dengan Tidak Bernoda Asal </br>Tulungagung</h1>
+</div>
 <!-- ============================================ -->
+ <div class="romo-section">
+<h2><span class="header">ROMO PAROKI</span></h2>
+  <div class="romo-wrapper">
+    <div class="romo-card">
+      <img src="/img/person/RD-Thomas-Aquino-Djoko-Noegroho.jpg" alt="Foto Romo Thomas Aquino Djoko Noegroho">
+      <p class="romo-name">RD Thomas Aquino Djoko Noegroho</p>
+    </div>
+    <div class="romo-card">
+      <img src="/img/person/RD-Yohanes-Setiawan.jpg" alt="Foto Romo Yohanes Setiawan">
+      <p class="romo-name">RD Yohanes Setiawan</p>
+    </div>
+  </div>
+</div>
 	<div class='par'>	
 	<br>
-		<span class="header">JADWAL MISA</span>
+<h2><span class="header">JADWAL MISA</span></h2>
 		<p>
 			<b>Harian</b>
 			<br><br>Senin - Rabu (Gereja SMDTBA Tulungagung): 05.30 WIB<br>
@@ -243,14 +355,14 @@ function menusetup(flag,title){ //1 0, judul hlm
 			11.00 WIB di Stasi Sendang (Minggu II)<br>
 		</p>
 
-		<span class="header">ALAMAT</span>
+<h2><span class="header">ALAMAT</span></h2>
 		<p>
 			Alamat: Jl. Ahmad Yani Tim. Gg. IV No.1, Bago, Kec. Tulungagung, Kabupaten Tulungagung, Jawa Timur 66218<br />
 		
 			<i class="fa fa-whatsapp" aria-hidden="true" style="color: green"></i>&nbsp;WhatsApp : <a href="https://wa.me/6285183068895" target="_blank">0851-8306-8895</a><br>
 			
 			<!--E-mail: <a href="mailto:&#104;&#116;&#98;&#115;&#112;&#109;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;">&#104;&#116;&#98;&#115;&#112;&#109;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;</a><br />-->
-			E-mail: <a href="mailto:komsosparokitulungagung@gmail.com">komsosparokitulungagung@gmail.com</a><br />
+			E-mail: <a href="mailto:komedi@parokitulungagung.org">komedi@parokitulungagung.org</a><br />
 			
 			Website: <a href="/" target="">www.parokitulungagung.org</a><br>
 			Instagram: <a href="https://www.instagram.com/komsosparokitulungagung" target="_blank">@komsosparokitulungagung</a><br>
@@ -258,19 +370,21 @@ function menusetup(flag,title){ //1 0, judul hlm
 			<!-- <a href="https://maps.app.goo.gl/fGCLWSZajhVe8LPAA" target="_blank"><img src="img/googlemaps.png" width="60" height="60"/><br>Lihat Lokasi (Google Maps)</a> -->
 		</p>
 
-		<span class="header">SEKRETARIAT</span>
+<h2><span class="header">SEKRETARIAT PAROKI</span></h2>
 		<p>
-			Sekretaris Paroki :<br><b>Edi Wandowo</b><br />
+			<b>Edi Wandowo</b></br>
 			<i class="fa fa-whatsapp" aria-hidden="true" style="color: green"></i>
 			WhatsApp : <a href="https://wa.me/628563678844" target="_blank">0856-3678-844</a><br />
-			Sekretariat buka pagi pk. 08:00 - 14:00<br>Khusus hari Rabu sekretariat tutup.
+			Sekretariat buka pagi pk. 08:00 - 14:00<br>Khusus hari rabu Sekretariat tutup.
 		</p>
-		
-		<a href="https://www.instagram.com/komsosparokitulungagung"><img src="img/instagram.png" alt="Instagram Paroki"></a>
-		<a href="https://www.youtube.com/@KomsosParokiTulungagung"><img src="img/youtube.png" alt="Youtube Paroki"></a>
 
-		<div class='panelmap'>
-				<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3950.3508227604375!2d111.90251617507136!3d-8.065652780600404!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e78e2e039c8b6f5%3A0x596dee2ec5880aea!2sGereja%20Katolik%20Santa%20Maria%20Dengan%20Tidak%20Bernoda%20Asal%2C%20Tulungagung!5e0!3m2!1sen!2sid!4v1747287054482!5m2!1sen!2sid" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+		<div class='googlemap-wrapper'>
+		  <iframe 
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3950.3508227604375!2d111.90251617507136!3d-8.065652780600404!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e78e2e039c8b6f5%3A0x596dee2ec5880aea!2sGereja%20Katolik%20Santa%20Maria%20Dengan%20Tidak%20Bernoda%20Asal%2C%20Tulungagung!5e0!3m2!1sen!2sid!4v1747287054482!5m2!1sen!2sid"
+    allowfullscreen=""
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade">
+  </iframe>
 		</div>
 	</div>
 
@@ -278,26 +392,40 @@ function menusetup(flag,title){ //1 0, judul hlm
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
+<div id="footer-placeholder"></div>
+<script>
+  fetch('/components/footer.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('footer-placeholder').innerHTML = data;
+    })
+    .catch(error => {
+      console.error('Gagal memuat footer:', error);
+    });
+</script>
+<script>
+  function ShowAboutBox() {
+    document.getElementById("aboutModal").style.display = "block";
+  }
 
-<div id="div_footer"> <!-- defined in upperbase.php -->
-<table class="tabledef table100">
-	<tr>
-		<td class="tdfooter">
-			Copyright © <b>Paroki Santa Maria Dengan Tidak Bernoda Asal Tulungagung</b>
-			<br>Email: komsosparokitulungagung@gmail.com |&nbsp;Dikelola oleh :<br> 
-			<button class="btdef btabout" onclick="javascript:ShowAboutBox()">Team Web SMDTBA</button>
-			<!-- <a href="javascript:ShowAboutBox()" id="myAboutLink"><b>Team Web SMDTBA</b></a> -->
-			<a href="#top"><i id="topjump" class="fa fa-arrow-circle-up"></i></a>
-		</td>
-	</tr>
-</table>
-</div>
+  function CloseAboutBox() {
+    document.getElementById("aboutModal").style.display = "none";
+  }
+
+  // Tutup modal saat klik di luar modal
+  window.onclick = function(event) {
+    const modal = document.getElementById("aboutModal");
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  }
+</script>
 
 <!-- FOOTER END -->
 
 <!-- ============================================ -->
   <script>
-    fetch('components/menu.html')
+    fetch('/components/menu.html')
       .then(response => response.text())
       .then(data => {
         document.getElementById('menu-container').innerHTML = data;

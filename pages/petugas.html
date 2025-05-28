@@ -17,6 +17,114 @@
 <link href="/tabcontent.css" rel="stylesheet" type="text/css" />
 
 <title>Jadwal Petugas Liturgi</title>
+<style>
+	.scroll-wrapper {
+  position: relative;
+}
+	.tabs {
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  margin: 0;
+  padding: 0 10px;
+  list-style: none;
+  border-bottom: 0px solid #ccc;
+  gap: 1px;
+  scroll-snap-type: x mandatory;
+}
+
+.tabs li {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+
+.tabs a {
+  display: inline-block;
+  padding: 10px 14px;
+  background: #f5debb;
+  color: #333;
+  text-decoration: none;
+  border-radius: 6px 6px 0 0;
+  font-size: 14px;
+  border: 1px solid #c2ac8d;
+  border-bottom: none;
+  white-space: normal; /* biarkan teks turun baris jika perlu */
+  text-align: center;
+  min-width: 80px;
+}
+
+.tab_dua_baris {
+  line-height: 1.2;
+  font-size: 13px;
+}
+.scroll-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: white;
+  color: #c2ac8d;
+  border: none;
+  padding: 6px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 2;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.scroll-left {
+  left: 0;
+}
+
+.scroll-right {
+  right: 0;
+}
+
+.scroll-button svg {
+  width: 16px;
+  height: 16px;
+}
+/* Optional: scroll bar styling */
+
+.jadwal-card {
+  background: #f5debb;
+  border-left: 4px solid #c2ac8d;
+  margin: 10px 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  font-family: "Segoe UI", sans-serif;
+}
+
+.jadwal-card h4 {
+  margin: 0 0 4px;
+  font-size: 16px;
+  color: #000000;
+}
+
+.jadwal-card span {
+  font-size: 14px;
+  color: #000000;
+}
+.tag-section {
+  margin-bottom: 2em;
+}
+.tag-section h3 {
+  font-size: 1.1em;
+  margin-bottom: 0.5em;
+  color: #dcc5a3;
+}
+.jadwal-grid {
+  display: grid;
+  gap: 1em;
+}
+.jadwal-card {
+  padding: 1em;
+  border: 1px solid #dcc5a3;
+  border-radius: 8px;
+  background-color: #dcc5a3;
+}
+
+</style>
 </head>
 <!-- OUTER-WRAPPER BEGIN -->
 <div id="outer-wrapper">
@@ -131,150 +239,186 @@ function menusetup(flag,title){ //1 0, judul hlm
   </div>
 
 </div>
-<!-- ================================================================================================ -->
 
 
-<!-- ABOUT BOX : The Modal Window -->
-<!-- ================================================================================================ -->
-<div class='modal' id='aboutModal'>
-  <!-- Modal content -->
-  <div class='modal-content' style="color:white">
-    <div class='close'>&#215;</div>
-    <div class='modal-body'>
-        <!-- <span class='close'>&#215;</span> -->
-        <div>
-            <img src='/img/smdtba-sharelogo.PNG' style='width:150px; margin: 0 0 10px 10px;'>
-        </div>
-        <span style="font-size:18px; font-weight:bold;">Team Web SMDTBA</span>
-		<span><em>komsosparokitulungagung@gmail.com</em></span>
-    </div>
+
+<div style="padding:6px">
+  <div style="margin-bottom: 1em">
+    <table cellpadding="0" cellspacing="0">
+      <tr>
+        <td class="tdiconheadline">
+          <img class="iconheadline" src="/img/icon/icon_square_petugas.png">
+        </td>
+        <td style="padding-left:0.2em">
+          <span class="headline_title">JADWAL PETUGAS LITURGI</span><br/>
+          <div class="headline_ket">TAHUN 2025 - GEREJA SMDTBA</div>
+        </td>
+      </tr>
+    </table>
   </div>
+
+<div class="scroll-wrapper">
+  <button class="scroll-button scroll-left" aria-label="Scroll left">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+
+  <button class="scroll-button scroll-right" aria-label="Scroll right">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <ul class="tabs" data-persist="true">
+    <li><a href="#koor" class="tab_dua_baris">Koor</a></li>
+    <li><a href="#pemazmur">Pemazmur</a></li>
+    <li><a href="#lektor">Lektor</a></li>		
+    <li><a href="#asistenimam" class="tab_dua_baris">Asisten Imam</a></li>
+    <li><a href="#dekorasialtar" class="tab_dua_baris">Dekorasi Altar</a></li>
+    <li><a href="#organis">Organis</a></li>
+    <li><a href="#saranlagu" class="tab_dua_baris">Saran Lagu</a></li>
+    <li><a href="#sarandoa">Saran Doa</a></li>
+  </ul>
 </div>
 
+<div class="tabcontents" style="box-shadow: 0 2px 4px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.08)">
+  <div id="loading-indicator" style="text-align:center; padding: 1em;">
+    <span>⏳Memuat data jadwal...</span>
+  </div>
 
-<!-- SCRIPT -->
+  <div id="koor"></div>
+  <div id="pemazmur"></div>
+  <div id="lektor"></div>
+  <div id="asistenimam"></div>
+  <div id="dekorasialtar"></div>
+  <div id="organis"></div>
+  <div id="saranlagu"></div>
+  <div id="sarandoa"></div>
+</div>
+</div>
+
 <script>
-	/* Get the about modal */
-	var aboutmodal = document.getElementById("aboutModal");
+document.addEventListener("DOMContentLoaded", function () {
+  const tabs = document.querySelector(".tabs");
+  const btnLeft = document.querySelector(".scroll-left");
+  const btnRight = document.querySelector(".scroll-right");
 
-    /* Caller function */
-	function ShowAboutBox() {
-		aboutmodal.style.display = "block";
-	}
-	/* OTHER METHOD: Get the link that opens the modal */
-	/* var lnk = document.getElementById("myAboutLink");*/
-	/* When the user clicks the button, open the modal  */
-	/* lnk.onclick = function() { modal.style.display = "block";} */
+  function updateButtons() {
+    btnLeft.style.display = tabs.scrollLeft > 0 ? "block" : "none";
+    const maxScroll = tabs.scrollWidth - tabs.clientWidth;
+    btnRight.style.display = tabs.scrollLeft < maxScroll ? "block" : "none";
+  }
 
-	/* Get the span element that closes the modal */
-	var span = document.getElementsByClassName("close")[0];
+  function scrollTabs(distance) {
+    tabs.scrollBy({ left: distance, behavior: 'smooth' });
+  }
 
-	/* When the user clicks on span (x), close the modal */
-	span.onclick = function() {
-		aboutmodal.style.display = "none";
-	}
+  btnLeft.addEventListener("click", () => scrollTabs(-150));
+  btnRight.addEventListener("click", () => scrollTabs(150));
+  tabs.addEventListener("scroll", updateButtons);
+  window.addEventListener("resize", updateButtons);
 
-    /* ******************************************************** */
+  updateButtons(); // inisialisasi
+});
+</script>
 
-	/* Get the photo box modal */
-	var boxmodal = document.getElementById("boxModal");
+<script>
+document.getElementById('loading-indicator').style.display = 'block';
 
-    /* Caller function */
-	function ShowPhotoBox(txt,fotopath,title,subtxt) {
+fetch('https://opensheet.elk.sh/1Q0N_S10XVngXDReVapVhDh6ZwnoFcGxvbeUJjAxOZYI/petugas')
+  .then(res => res.json())
+  .then(data => {
+    const kategoriMap = {};
+
+    data.forEach(row => {
+      const { kategori, tanggal, keterangan, tag } = row;
+      if (!kategori || !tanggal || !keterangan) return;
+
+      if (!kategoriMap[kategori]) kategoriMap[kategori] = {};
+      const tagKey = tag || 'Tanpa Tag';
+
+      if (!kategoriMap[kategori][tagKey]) kategoriMap[kategori][tagKey] = [];
+
+      kategoriMap[kategori][tagKey].push(`
+        <div class="jadwal-card">
+          <h4>${tanggal}</h4>
+          <span>${keterangan.replace(/\n/g, '<br>')}</span>
+        </div>
+      `);
+    });
+
+    for (const kategori in kategoriMap) {
+      const el = document.getElementById(kategori);
+      if (el) {
+        let htmlContent = '';
+        for (const tagName in kategoriMap[kategori]) {
+          htmlContent += `
+            <div class="tag-section">
+              <h3>${tagName}</h3>
+              <div class="jadwal-grid">
+                ${kategoriMap[kategori][tagName].join('')}
+              </div>
+            </div>
+          `;
+        }
+        el.innerHTML = htmlContent;
+      }
+    }
+
+    document.getElementById('loading-indicator').style.display = 'none'; // Sembunyikan loading
+  })
+  .catch(err => {
+    console.error("Gagal memuat data:", err);
+    document.getElementById('loading-indicator').innerHTML = '❌ Gagal memuat data.';
+  });
+</script>
+
+
+<div id="footer-placeholder"></div>
+<script>
+  fetch('/components/footer.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('footer-placeholder').innerHTML = data;
+
+      // Setelah footer dimuat, baru cari elemen-elemennya
+      const aboutmodal = document.getElementById("aboutModal");
+      const boxmodal = document.getElementById("boxModal");
+
+      const span = document.querySelector("#aboutModal .close");
+      if (span && aboutmodal) {
+        span.onclick = function () {
+          aboutmodal.style.display = "none";
+        };
+      }
+
+      const spanx = document.querySelector("#boxModal .closex");
+      if (spanx && boxmodal) {
+        spanx.onclick = function () {
+          boxmodal.style.display = "none";
+        };
+      }
+
+      window.onclick = function(event) {
+        if (event.target == aboutmodal) {
+          aboutmodal.style.display = "none";
+        }
+        if (event.target == boxmodal) {
+          boxmodal.style.display = "none";
+        }
+      }
+
+      // Buat fungsi global agar bisa dipanggil dari tombol
+      window.ShowAboutBox = function () {
+        aboutmodal.style.display = "block";
+      };
+
+      window.ShowPhotoBox = function (txt, fotopath, title, subtxt) {
         document.getElementById("boxModalTitle").innerHTML = title;
         document.getElementById("boxModalImage").src = fotopath;
         document.getElementById("boxModalText").innerHTML = txt;
         document.getElementById("boxModalSubText").innerHTML = subtxt;
         boxmodal.style.display = "block";
-	}
-	/* OTHER METHOD: Get the link that opens the modal */
-	/* var lnk = document.getElementById("myAboutLink");*/
-	/* When the user clicks the button, open the modal  */
-	/* lnk.onclick = function() { modal.style.display = "block";} */
-
-	/* Get the span element that closes the modal */
-	var spanx = document.getElementsByClassName("closex")[0];
-
-	/* When the user clicks on span (x), close the modal */
-	spanx.onclick = function() {
-		boxmodal.style.display = "none";
-	}
-
-    /* ******************************************************** */
-
-	/* When the user clicks anywhere outside of the modal, close it */
-	window.onclick = function(event) {
-		if (event.target == aboutmodal) {
-			aboutmodal.style.display = "none";
-		}
-		if (event.target == boxmodal) {
-			boxmodal.style.display = "none";
-		}        
-	}
-
+      };
+    })
+    .catch(err => console.error("Gagal memuat footer:", err));
 </script>
-
-<!-- END OF LINTANG ABOUT MODAL WINDOW -->
-
-
-
-<!-- ============================================ -->
-<!-- ============================================ -->
-
-
-
-<div style="padding:6px">
-	<div style="margin-bottom: 1em"><table cellpadding="0" cellspacing="0"><tr><td class="tdiconheadline"><img class="iconheadline" src="/img/icon/icon_square_petugas.png" ></td><td style="padding-left:0.2em"><span class="headline_title">JADWAL PETUGAS LITURGI</span><br/><div class="headline_ket">TAHUN 2025 - GEREJA SMDTBA</div></td></tr></table></div>
-	<ul class="tabs" data-persist="true">
-		<li><a href="#padsu" class="tab_dua_baris">Paduan Suara</a></li>
-		<li><a href="#pemazmur">Pemazmur</a></li>
-		<li><a href="#lektor">Lektor</a></li>		
-		<li><a href="#amongumat" class="tab_dua_baris">Among Umat</a></li>
-		<li><a href="#asistenimam" class="tab_dua_baris">Asisten Imam</a></li>
-		<!--<li><a href="#misdinar">Misdinar</a></li>-->
-	</ul>
-
-	<div class="tabcontents" style="box-shadow: 0 2px 4px 0 rgba(0,0,0,0.08), 0 2px 6px 0 rgba(0,0,0,0.08)">
-		<div id="padsu">
-			<div class="w3-panel w3-plain-card"><a href="/public/jadwal-petugas/jadwal-padsu-mei-1.jpg"><img class="imgjadwal" src="/public/jadwal-petugas/jadwal-padsu-mei-1.jpg" /></a></div><div class="w3-panel w3-plain-card"><a href="public/jadwal-petugas/jadwal-padsu-juni.jpg"><img class="imgjadwal" src="public/jadwal-petugas/jadwal-padsu-juni.jpg" /></a></div><div class="w3-panel w3-plain-card"><a href="public/jadwal-petugas/jadwal-padsu-juli.jpg"><img class="imgjadwal" src="public/jadwal-petugas/jadwal-padsu-juli.jpg" /></a></div><div class="w3-panel w3-plain-card"><a href="public/jadwal-petugas/jadwal-padsu-agustus.jpg"><img class="imgjadwal" src="public/jadwal-petugas/jadwal-padsu-agustus.jpg" /></a></div><div class="w3-panel w3-plain-card"><a href="public/jadwal-petugas/jadwal-padsu-september.jpg"><img class="imgjadwal" src="public/jadwal-petugas/jadwal-padsu-september.jpg" /></a></div>		</div>
-
-		<div id="pemazmur">
-			<div class="w3-panel w3-plain-card"><a href="/public/jadwal-petugas/jadwal-pemazmur-mei-2.jpg"><img class="imgjadwal" src="/public/jadwal-petugas/jadwal-pemazmur-mei-2.jpg" /></a></div><div class="w3-panel w3-plain-card"><a href="public/jadwal-petugas/jadwal-pemazmur-juni.jpg"><img class="imgjadwal" src="public/jadwal-petugas/jadwal-pemazmur-juni.jpg" /></a></div><div class="w3-panel w3-plain-card"><a href="public/jadwal-petugas/jadwal-pemazmur-juli.jpg"><img class="imgjadwal" src="public/jadwal-petugas/jadwal-pemazmur-juli.jpg" /></a></div><div class="w3-panel w3-plain-card"><a href="public/jadwal-petugas/jadwal-pemazmur-agustus.jpg"><img class="imgjadwal" src="public/jadwal-petugas/jadwal-pemazmur-agustus.jpg" /></a></div><div style="text-align:left; font-size: 12px; padding: 10px 5px 5px 5px;">Latihan tiap <b>Rabu Pk. 18.30</b> di Gereja SMDTBA</div>		</div>
-
-		<div id="lektor">
-			<div class="w3-panel w3-plain-card"><a href="/public/jadwal-petugas/jadwal-lektor-mei.jpg"><img class="imgjadwal" src="/public/jadwal-petugas/jadwal-lektor-mei.jpg" /></a></div>		
-		</div>
-
-		<div id="amongumat">
-			<div class="w3-panel w3-plain-card"><a href="/public/jadwal-petugas/jadwal-au-mei-1.jpg"><img class="imgjadwal" src="/public/jadwal-petugas/jadwal-au-mei-1.jpg" /></a></div>		
-		</div>
-		
-		<div id="asistenimam">
-			<div class="w3-panel w3-plain-card"><a href="/public/jadwal-petugas/jadwal-ai-mei.jpg"><img class="imgjadwal" src="/public/jadwal-petugas/jadwal-ai-mei.jpg" /></a></div>		
-		</div>
-
-		<!--
-		<div id="misdinar">
-					
-		</div>
-		-->
-
-	</div> <!--tabcontents-->
-</div>
-
-<div id="div_footer"> <!-- defined in upperbase.php -->
-<table class="tabledef table100">
-	<tr>
-		<td class="tdfooter">
-			Copyright © <b>Paroki Santa Maria Dengan Tidak Bernoda Asal Tulungagung</b>
-			<br>Email: komsosparokitulungagung@gmail.com |&nbsp;Dikelola oleh :<br> 
-			<button class="btdef btabout" onclick="javascript:ShowAboutBox()">Team Web SMDTBA</button>
-			<!-- <a href="javascript:ShowAboutBox()" id="myAboutLink"><b>Team Web SMDTBA</b></a> -->
-			<a href="#top"><i id="topjump" class="fa fa-arrow-circle-up"></i></a>
-		</td>
-	</tr>
-</table>
-</div>
 
 <!-- FOOTER END -->
 

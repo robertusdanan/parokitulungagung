@@ -128,123 +128,186 @@ function menusetup(flag,title){ //1 0, judul hlm
   </div>
 
 </div>
-<!-- ================================================================================================ -->
 
+<div style="padding:6px">
 
-<!-- ABOUT BOX : The Modal Window -->
-<!-- ================================================================================================ -->
-<div class='modal' id='aboutModal'>
-  <!-- Modal content -->
-  <div class='modal-content' style="color:white">
-    <div class='close'>&#215;</div>
-    <div class='modal-body'>
-        <!-- <span class='close'>&#215;</span> -->
-        <div>
-            <img src='/img/smdtba-sharelogo.PNG' style='width:150px; margin: 0 0 10px 10px;'>
-        </div>
-        <span style="font-size:18px; font-weight:bold;">Team Web SMDTBA</span>
-		<span><em>komsosparokitulungagung@gmail.com</em></span>
-    </div>
-  </div>
-</div>
+	<div style="margin-bottom: 1em"><table cellpadding="0" cellspacing="0"><tr><td class="tdiconheadline"><img class="iconheadline" src="/img/icon/icon_square_agenda.png" ></td><td style="padding-left:0.2em"><span class="headline_title">INFO DAN AGENDA</span><br/><span class="headline_subtitle_green">PAROKI SANTA MARIA DENGAN TIDAK BERNODA ASAL</span></td></tr></table></div><style>
 
-
-<!-- SCRIPT -->
-<script>
-	/* Get the about modal */
-	var aboutmodal = document.getElementById("aboutModal");
-
-    /* Caller function */
-	function ShowAboutBox() {
-		aboutmodal.style.display = "block";
-	}
-	/* OTHER METHOD: Get the link that opens the modal */
-	/* var lnk = document.getElementById("myAboutLink");*/
-	/* When the user clicks the button, open the modal  */
-	/* lnk.onclick = function() { modal.style.display = "block";} */
-
-	/* Get the span element that closes the modal */
-	var span = document.getElementsByClassName("close")[0];
-
-	/* When the user clicks on span (x), close the modal */
-	span.onclick = function() {
-		aboutmodal.style.display = "none";
-	}
-
-    /* ******************************************************** */
-
-	/* Get the photo box modal */
-	var boxmodal = document.getElementById("boxModal");
-
-    /* Caller function */
-	function ShowPhotoBox(txt,fotopath,title,subtxt) {
-        document.getElementById("boxModalTitle").innerHTML = title;
-        document.getElementById("boxModalImage").src = fotopath;
-        document.getElementById("boxModalText").innerHTML = txt;
-        document.getElementById("boxModalSubText").innerHTML = subtxt;
-        boxmodal.style.display = "block";
-	}
-	/* OTHER METHOD: Get the link that opens the modal */
-	/* var lnk = document.getElementById("myAboutLink");*/
-	/* When the user clicks the button, open the modal  */
-	/* lnk.onclick = function() { modal.style.display = "block";} */
-
-	/* Get the span element that closes the modal */
-	var spanx = document.getElementsByClassName("closex")[0];
-
-	/* When the user clicks on span (x), close the modal */
-	spanx.onclick = function() {
-		boxmodal.style.display = "none";
-	}
-
-    /* ******************************************************** */
-
-	/* When the user clicks anywhere outside of the modal, close it */
-	window.onclick = function(event) {
-		if (event.target == aboutmodal) {
-			aboutmodal.style.display = "none";
-		}
-		if (event.target == boxmodal) {
-			boxmodal.style.display = "none";
-		}        
-	}
-
-</script>
-
-<!-- END OF LINTANG ABOUT MODAL WINDOW -->
-
-
-
-<!-- ============================================ -->
-
-
-
+</style>
 
 
 <div style="padding:8px;">
-	<div class="w3-container w3-card" style="background-color:#dfe0e0"><table class="tabledef"><tr><td class="containerhead"><span class="containertitle">AGENDA &amp; INFO</span></td></tr></table><div class="w3-panel w3-card"><table width='100%' class="tabledef"><tr><td class="tddate"><div class="date"><span class="binds"></span><span class="month">Mei</span><h1 class="holiday">18</h1></div></td><td class="tdacara"><b>Misa Minggu Paskah V</b><br>Sabtu (17/5) Pk 17.00, Minggu Pk 06.30, 08.30, 10.30, dan 17.00</td></tr></table></div><div class="w3-panel w3-card"><table width='100%' class="tabledef"><tr><td class="tddate"><div class="date"><span class="binds"></span><span class="month">Mei</span><h1 class="holiday">25</h1></div></td><td class="tdacara"><b>Misa Minggu Paskah VI</b><br>Sabtu (24/5) Pk 17.00, Minggu Pk 06.30, 08.30, <b>10.30 (Misa HUP)</b>, dan 17.00</td></tr></table></div><div class="w3-panel w3-card"><table width='100%' class="tabledef"><tr><td class="tddate"><div class="date"><span class="binds"></span><span class="month">Mei</span><h1 class="holiday">29</h1></div></td><td class="tdacara"><b>Misa Hari Raya Kenaikan Tuhan</b><br>Kamis Pk 06.30, 08.30, 10.30, dan 17.00</td><td style="text-align:right"><img src="/public/icon/icon-kenaikan1.png" class="imgiconagenda" ></td></tr></table></div><div class="w3-panel w3-card"><table width='100%' class="tabledef"><tr><td class="tddate"><div class="date"><span class="binds"></span><span class="month">Mei</span><h1 class="holiday">30</h1></div></td><td class="tdacara"><b>Novena Roh Kudus 1</b><br>Jumat Pk 18.00</td><td style="text-align:right"><img src="/public/icon/icon-novena-roh-kudus.png" class="imgiconagenda" ></td></tr></table></div><div class="w3-panel w3-card"><table width='100%' class="tabledef"><tr><td class="tddate"><div class="date"><span class="binds"></span><span class="month">Mei</span><h1 class="day">31</h1></div></td><td class="tdacara"><b>Novena Roh Kudus 2</b><br>Misa Penutupan Bulan Maria | Pesta SP Maria Mengunjungi Elisabet, Sabtu Pk 17.00</td><td style="text-align:right"><img src="/public/icon/icon-novena-roh-kudus.png" class="imgiconagenda" ></td></tr></table></div><center><img border="0" style="padding-top:0.5em; max-width:100%; height:auto"src="/public/poster/2505-pemazmur.jpg" data-original-width="1080" data-original-height="1350" /></center><div class="w3-panel w3-card"><table width='100%' class="tabledef"><tr><td class="tddate"><div class="date"><span class="binds"></span><span class="month">Juni</span><h1 class="holiday">1</h1></div></td><td class="tdacara"><b>Misa Minggu Paskah VII</b><br>Minggu Pk 06.30, 08.30, 10.30, dan <b>17.00 (Novena Roh Kudus 3)</b></td><td style="text-align:right"><img src="/public/icon/icon-novena-roh-kudus.png" class="imgiconagenda" ></td></tr></table></div><div class="w3-panel w3-card"><table width='100%' class="tabledef"><tr><td class="tddate"><div class="date"><span class="binds"></span><span class="month">Juni</span><h1 class="day">2</h1></div></td><td class="tdacara"><b>Novena Roh Kudus 4</b><br>Senin Pk 18.00</td><td style="text-align:right"><img src="/public/icon/icon-novena-roh-kudus.png" class="imgiconagenda" ></td></tr></table></div><div class="w3-panel w3-card"><table width='100%' class="tabledef"><tr><td class="tddate"><div class="date"><span class="binds"></span><span class="month">Juni</span><h1 class="day">3</h1></div></td><td class="tdacara"><b>Novena Roh Kudus 5</b><br>Selasa Pk 18.00</td><td style="text-align:right"><img src="/public/icon/icon-novena-roh-kudus.png" class="imgiconagenda" ></td></tr></table></div><div class="w3-panel w3-card"><table width='100%' class="tabledef"><tr><td class="tddate"><div class="date"><span class="binds"></span><span class="month">Juni</span><h1 class="day">4</h1></div></td><td class="tdacara"><b>Novena Roh Kudus 6</b><br>Rabu Pk 18.00</td><td style="text-align:right"><img src="/public/icon/icon-novena-roh-kudus.png" class="imgiconagenda" ></td></tr></table></div><div class="w3-panel w3-card"><table width='100%' class="tabledef"><tr><td class="tddate"><div class="date"><span class="binds"></span><span class="month">Juni</span><h1 class="day">5</h1></div></td><td class="tdacara"><b>Novena Roh Kudus 7</b><br>Kamis Pk 18.00</td><td style="text-align:right"><img src="/public/icon/icon-novena-roh-kudus.png" class="imgiconagenda" ></td></tr></table></div><div class="w3-panel w3-card"><table width='100%' class="tabledef"><tr><td class="tddate"><div class="date"><span class="binds"></span><span class="month">Juni</span><h1 class="day">6</h1></div></td><td class="tdacara"><b>Misa Jumat Pertama + Novena Roh Kudus 8</b><br>Jumat Pk 18.00</td><td style="text-align:right"><img src="/public/icon/icon-novena-roh-kudus.png" class="imgiconagenda" ></td></tr></table></div><div class="w3-panel w3-card"><table width='100%' class="tabledef"><tr><td class="tddate"><div class="date"><span class="binds"></span><span class="month">Juni</span><h1 class="day">7</h1></div></td><td class="tdacara"><b>Novena Roh Kudus 9</b><br>Sabtu Pk 18.00</td><td style="text-align:right"><img src="/public/icon/icon-novena-roh-kudus.png" class="imgiconagenda" ></td></tr></table></div><div class="w3-panel w3-card"><table width='100%' class="tabledef"><tr><td class="tddate"><div class="date"><span class="binds"></span><span class="month">Juni</span><h1 class="holiday">8</h1></div></td><td class="tdacara"><b>Misa Hari Raya Pentakosta</b><br>Minggu Pk 06.30, 08.30, 10.30, dan 17.00</td><td style="text-align:right"><img src="/public/icon/icon-novena-roh-kudus.png" class="imgiconagenda" ></td></tr></table></div><div class="w3-panel w3-card"><table width='100%' class="tabledef"><tr><td class="tddate"><div class="date"><span class="binds"></span><span class="month">Juni</span><h1 class="day">13</h1></div></td><td class="tdacara"><b>Misa Ziarah & Doa Rosario Maria Fatima 2</b><br>Jumat Pk 18.00</td><td style="text-align:right"><img src="/public/icon/icon-maria-fatima.png" class="imgiconagenda" ></td></tr></table></div><div class="w3-panel w3-card"><table width='100%' class="tabledef"><tr><td class="tddate"><div class="date"><span class="binds"></span><span class="month">Juni</span><h1 class="holiday">15</h1></div></td><td class="tdacara"><b>Misa HR Tritunggal Mahakudus</b><br>Sabtu (14/6) Pk 17.00, Minggu Pk 06.30, 08.30, 10.30, dan 17.00</td></tr></table></div><div class="w3-panel w3-card"><table width='100%' class="tabledef"><tr><td class="tddate"><div class="date"><span class="binds"></span><span class="month">Juni</span><h1 class="holiday">22</h1></div></td><td class="tdacara"><b>Misa HR Tubuh dan Darah Kristus</b><br>Sabtu (21/6) Pk 17.00, Minggu Pk 06.30, 08.30, 10.30, dan 17.00</td></tr></table></div><div class="w3-panel w3-card"><table width='100%' class="tabledef"><tr><td class="tddate"><div class="date"><span class="binds"></span><span class="month">Juni</span><h1 class="holiday">29</h1></div></td><td class="tdacara"><b>Misa HR St Petrus & St Paulus</b><br>Sabtu (28/6) Pk 17.00, Minggu Pk 06.30, 08.30, <b>10.30 (Misa HUP)</b>, dan 17.00</td></tr></table></div><center><img border="0" style="padding-top:0.5em; max-width:100%; height:auto"src="/public/poster/2503-baptis-dewasa.jpg" data-original-width="1280" data-original-height="720" /></center><center><img border="0" style="padding-top:0.5em; max-width:100%; height:auto"src="/public/poster/2401-klab.jpg" data-original-width="1080" data-original-height="1080" /></center>
-</div></div>
+  <div class="w3-container w3-card" style="background-color:#dfe0e0">
+    <table class="tabledef" style="width:100%;">
+      <tr>
+        <td class="containerhead">
+        </td>
+      </tr>
+    </table>
 
+    <!-- Tab Header -->
+<div class="w3-bar tab-header" style="margin-top:10px;">
+  <button class="w3-bar-item w3-button tablink active-tab" onclick="openTab(event, 'tabdata')">Agenda</button>
+  <button class="w3-bar-item w3-button tablink" onclick="openTab(event, 'tabcanva')">Info</button>
+</div>
+
+    <!-- Tab Content: Spreadsheet -->
+<div id="tabdata" class="tabcontent" style="display:block; padding-top:10px;">
+  <!-- Konten dari spreadsheet akan tampil di sini -->
+  <div id="agenda-content"></div>
+</div>
+
+    <!-- Tab Content: Canva -->
+<div id="tabcanva" class="tabcontent" style="display:none; padding-top:10px;">
+
+  <div style="position: relative; width: 100%; padding-bottom: 56.25%; /* 16:9 ratio */ height: 0; overflow: hidden;">
+    <iframe 
+      src="https://www.canva.com/design/DAGoS6-q8Jw/MAg2Oo1OZvOpjnPGyrT6Iw/view?embed" 
+      style="position: absolute; top:0; left:0; width:100%; height:100%; border:none;" 
+      allowfullscreen>
+    </iframe>
+  </div>
+
+</div>
+
+
+<!-- CSS (Opsional Tambahan untuk Styling) -->
+<style>
+  .tabcontent { animation: fadeEffect 0.5s; }
+  @keyframes fadeEffect { from {opacity: 0;} to {opacity: 1;} }
+</style>
+
+<!-- JS Tab Switch -->
+<script>
+  function openTab(evt, tabName) {
+    var i, x, tablinks;
+    x = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < x.length; i++) x[i].style.display = "none";
+    tablinks = document.getElementsByClassName("tablink");
+    for (i = 0; i < tablinks.length; i++) tablinks[i].classList.remove("w3-blue");
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.classList.add("w3-blue");
+  }
+
+  // Load Data from Google Spreadsheet
+  fetch("https://opensheet.elk.sh/1Q0N_S10XVngXDReVapVhDh6ZwnoFcGxvbeUJjAxOZYI/info_paroki")
+    .then(response => response.json())
+    .then(data => {
+      const container = document.getElementById("agenda-content");
+      data.forEach(row => {
+        const card = document.createElement("div");
+        card.className = "w3-panel w3-card";
+        card.innerHTML = `
+          <table width='100%' class="tabledef">
+            <tr>
+              <td class="tddate">
+                <div class="date">
+                  <span class="binds"></span>
+                  <span class="month">${row.bulan}</span>
+                  <h1 class="${row.hari_libur === 'ya' ? 'holiday' : 'day'}">${row.tanggal}</h1>
+                </div>
+              </td>
+              <td class="tdacara">
+                <b>${row.judul}</b><br>${row.keterangan}
+              </td>
+              ${row.icon ? `<td style="text-align:right"><img src="${row.icon}" class="imgiconagenda"></td>` : ""}
+            </tr>
+          </table>`;
+        container.appendChild(card);
+      });
+    });
+</script>
 </div> 
+<style>
+  .tablink {
+    padding: 10px 20px;
+    border: none;
+    background-color: #f5debb;
+    transition: 0.3s;
+    font-weight: 500;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+  }
+
+  .tablink:hover {
+    background-color: #ececec;
+    border-bottom: 3px solid #ccc;
+  }
+
+  .active-tab {
+    background-color: #ffffff;
+    border-bottom: 3px solid #740000;
+    color: #740000;
+    font-weight: bold;
+  }
+
+  .tabcontent {
+    animation: fadeEffect 0.3s;
+  }
+
+  @keyframes fadeEffect {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+</style>
 <!-- OUTER-WRAPPER END -->
 
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 
-<div id="div_footer"> <!-- defined in upperbase.php -->
-<table class="tabledef table100">
-	<tr>
-		<td class="tdfooter">
-			Copyright © <b>Paroki Santa Maria Dengan Tidak Bernoda Asal Tulungagung</b>
-			<br>Email: komsosparokitulungagung@gmail.com |&nbsp;Dikelola oleh :<br> 
-			<button class="btdef btabout" onclick="javascript:ShowAboutBox()">Team Web SMDTBA</button>
-			<!-- <a href="javascript:ShowAboutBox()" id="myAboutLink"><b>Team Web SMDTBA</b></a> -->
-			<a href="#top"><i id="topjump" class="fa fa-arrow-circle-up"></i></a>
-		</td>
-	</tr>
-</table>
-</div>
+<!-- Di akhir body HTML -->
+<div id="footer-placeholder"></div>
+<script>
+  fetch('/components/footer.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('footer-placeholder').innerHTML = data;
+
+      // Setelah footer dimuat, baru cari elemen-elemennya
+      const aboutmodal = document.getElementById("aboutModal");
+      const boxmodal = document.getElementById("boxModal");
+
+      const span = document.querySelector("#aboutModal .close");
+      if (span && aboutmodal) {
+        span.onclick = function () {
+          aboutmodal.style.display = "none";
+        };
+      }
+
+      const spanx = document.querySelector("#boxModal .closex");
+      if (spanx && boxmodal) {
+        spanx.onclick = function () {
+          boxmodal.style.display = "none";
+        };
+      }
+
+      window.onclick = function(event) {
+        if (event.target == aboutmodal) {
+          aboutmodal.style.display = "none";
+        }
+        if (event.target == boxmodal) {
+          boxmodal.style.display = "none";
+        }
+      }
+
+      // Buat fungsi global agar bisa dipanggil dari tombol
+      window.ShowAboutBox = function () {
+        aboutmodal.style.display = "block";
+      };
+
+      window.ShowPhotoBox = function (txt, fotopath, title, subtxt) {
+        document.getElementById("boxModalTitle").innerHTML = title;
+        document.getElementById("boxModalImage").src = fotopath;
+        document.getElementById("boxModalText").innerHTML = txt;
+        document.getElementById("boxModalSubText").innerHTML = subtxt;
+        boxmodal.style.display = "block";
+      };
+    })
+    .catch(err => console.error("Gagal memuat footer:", err));
+</script>
+
+
 
 <!-- FOOTER END -->
 
@@ -257,6 +320,26 @@ function menusetup(flag,title){ //1 0, judul hlm
       })
       .catch(error => console.error('Gagal memuat menu:', error));
   </script>
+  <script>
+  function openTab(evt, tabName) {
+    // Sembunyikan semua tab
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+
+    // Hapus class aktif dari semua tombol
+    tablinks = document.getElementsByClassName("tablink");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].classList.remove("active-tab");
+    }
+
+    // Tampilkan tab yang dipilih & aktifkan tombolnya
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.classList.add("active-tab");
+  }
+</script>
 </body>
 
 </html>

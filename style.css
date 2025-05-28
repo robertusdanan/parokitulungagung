@@ -124,7 +124,10 @@
 }
 
 #divmenu {
-	padding:0;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 10px;
+	padding: 10px;
 	margin:3px;
 	background: transparent;
 	position: relative;
@@ -144,15 +147,49 @@
     to {top:0; opacity:1}
 }
 
+.menutombol {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 10px;
+  padding: 10px;
+  align-items: start;
+}
+
+.divtombol, .tbtombol, .tdtombol_icon, .tdtombol_text, table.tbtombol {
+  margin: 0;
+  padding: 0;
+  border-spacing: 0;
+}
+.menu-wrapper {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  padding: 1px;
+  justify-items: center;
+}
+
 .divtombol {
+  background: black;
+  color: white;
+  text-align: center;
+  border-radius: 10px;
+  padding: 10px;
   aspect-ratio: 1 / 1;
-  width: 110px; /* atau ukuran lain sesuai kebutuhan */
+  width: 90px;
+  height: 90px;
   max-width: 100%;
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
 }
 
 .tbtombol {
 	cursor: pointer;
+	width: 100%;
 	margin: 2px;
 	background-color: #fcfcfc; 
 	border-collapse: collapse;
@@ -180,10 +217,74 @@
 }
 
 .imgtombol {
-	width: 75%;
+  	width: 50px;
+  	height: 50px;
+	margin-bottom: 5px;
 	border: 0px solid #ccc; 
 	border-radius:0%; 
-	margin: 0; 
+	display: block;
+  	margin: 0 auto;
+}
+.tulisan {
+  display: block;
+  font-size: 14px;
+  margin-top: 5px;
+}
+@media (max-width: 768px) {
+  .menu-wrapper {
+    grid-template-columns: repeat(4, 1fr); /* 4 kolom */
+    gap: 5px;
+	padding: 1px;
+  }
+
+  .divtombol {
+    width: 80px;
+    height: 80px;
+    padding: 1px;
+  }
+
+  .imgtombol {
+    width: 45px;
+    height: 45px;
+    margin-bottom: 4px;
+  }
+
+  .tulisan {
+    font-size: 12px;
+  }
+}
+@media (max-width: 480px) {
+  .menu-wrapper {
+    grid-template-columns: repeat(4, 1fr); /* 4 kolom */
+    gap: 5px;
+	padding: 1px;
+  }
+
+  .divtombol {
+    width: 80px;
+    height: 80px;
+    padding: 1px;
+  }
+
+  .imgtombol {
+    width: 45px;
+    height: 45px;
+    margin-bottom: 4px;
+  }
+
+  .tulisan {
+    font-size: 12px;
+  }
+}
+@media (max-width: 768px) {
+  #divmenu {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  #divmenu {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 a.ashort, a.ashort:visited {
@@ -211,9 +312,15 @@ a.ashort:focus {
 }
 
 .tdtombol_text {
-	font-size: 16px;
-	padding: 0 0 0.9em 0;
-	line-height: 110%;
+	font-size: 0.8em;
+	padding-top: 4px;
+	padding: 0;
+	margin: 0;
+	line-height: 1.2;
+}
+
+.tbtombol {
+  height: 100%;
 }
 
 @media only screen and (min-width:768px) and (max-width:989px) {
@@ -409,12 +516,6 @@ a.ashort:focus {
 		box-shadow: 0 2px 4px 0 rgba(0,0,0,0.08), 0 2px 6px 0 rgba(0,0,0,0.08)
 	}
 
-	.panelmap {
-		margin: 0 10px 10px 10px;
-		border-radius: 6px;
-		background-color: #fff9df;
-		box-shadow: 0 2px 4px 0 rgba(0,0,0,0.18), 0 2px 6px 0 rgba(0,0,0,0.18)
-	}
 
 	#divgmaps {
 		width: 100%;
@@ -1193,9 +1294,4 @@ biru {color:#03c}
   margin-bottom: 5px;
   padding: 8px;
   border-radius: 5px;
-}
-.iconsquare {
-  width: 48px;
-  height: 48px;
-  margin-right: 10px;
 }
