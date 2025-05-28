@@ -185,90 +185,7 @@ function menusetup(flag,title){ //1 0, judul hlm
   </div>
 
 </div>
-<!-- ================================================================================================ -->
 
-
-<!-- ABOUT BOX : The Modal Window -->
-<!-- ================================================================================================ -->
-<div class='modal' id='aboutModal'>
-  <!-- Modal content -->
-  <div class='modal-content' style="color:white">
-    <div class='close'>&#215;</div>
-    <div class='modal-body'>
-        <!-- <span class='close'>&#215;</span> -->
-        <div>
-            <img src='/img/smdtba-sharelogo.PNG' style='width:150px; margin: 0 0 10px 10px;'>
-        </div>
-        <span style="font-size:18px; font-weight:bold;">Team Web SMDTBA</span>
-		<span><em>komsosparokitulungagung@gmail.com</em></span>
-    </div>
-  </div>
-</div>
-
-
-<!-- SCRIPT -->
-<script>
-	/* Get the about modal */
-	var aboutmodal = document.getElementById("aboutModal");
-
-    /* Caller function */
-	function ShowAboutBox() {
-		aboutmodal.style.display = "block";
-	}
-	/* OTHER METHOD: Get the link that opens the modal */
-	/* var lnk = document.getElementById("myAboutLink");*/
-	/* When the user clicks the button, open the modal  */
-	/* lnk.onclick = function() { modal.style.display = "block";} */
-
-	/* Get the span element that closes the modal */
-	var span = document.getElementsByClassName("close")[0];
-
-	/* When the user clicks on span (x), close the modal */
-	span.onclick = function() {
-		aboutmodal.style.display = "none";
-	}
-
-    /* ******************************************************** */
-
-	/* Get the photo box modal */
-	var boxmodal = document.getElementById("boxModal");
-
-    /* Caller function */
-	function ShowPhotoBox(txt,fotopath,title,subtxt) {
-        document.getElementById("boxModalTitle").innerHTML = title;
-        document.getElementById("boxModalImage").src = fotopath;
-        document.getElementById("boxModalText").innerHTML = txt;
-        document.getElementById("boxModalSubText").innerHTML = subtxt;
-        boxmodal.style.display = "block";
-	}
-	/* OTHER METHOD: Get the link that opens the modal */
-	/* var lnk = document.getElementById("myAboutLink");*/
-	/* When the user clicks the button, open the modal  */
-	/* lnk.onclick = function() { modal.style.display = "block";} */
-
-	/* Get the span element that closes the modal */
-	var spanx = document.getElementsByClassName("closex")[0];
-
-	/* When the user clicks on span (x), close the modal */
-	spanx.onclick = function() {
-		boxmodal.style.display = "none";
-	}
-
-    /* ******************************************************** */
-
-	/* When the user clicks anywhere outside of the modal, close it */
-	window.onclick = function(event) {
-		if (event.target == aboutmodal) {
-			aboutmodal.style.display = "none";
-		}
-		if (event.target == boxmodal) {
-			boxmodal.style.display = "none";
-		}        
-	}
-
-</script>
-
-<!-- END OF LINTANG ABOUT MODAL WINDOW -->
 
 
 
@@ -280,34 +197,58 @@ function loadPage(strURL) {
 }  	
 </script>
 
-<!-- <iframe class="framecontent" scrolling="no" src="frame_content.html" ></iframe>  -->
-
-<!--<iframe id="framecontent" src="https://parokismdtbatulungagung.blogspot.com/?m=1"></iframe>-->
-<div class="bottom-bar">
-  <div class="form-container">
-    <h3>Tertarik menjadi Kontributor?</h3>
-  </div>
-  <div class="whatsapp-contact">
-    <i class="fa fa-whatsapp" aria-hidden="true" style="color: green;"></i>
- <img style="width:25px;vertical-align:middle" src="/img/whatsapp.png" alt="Whatsapp">&nbsp; <a href="https://wa.me/6285183068895" target="_blank">(Daftar Disini)</a>
-  </div>
-</div>
 <iframe id='framecontent' src=https://historiaparokitulungagung.blogspot.com/?m=1></iframe>
 
 
-<div id="div_footer"> <!-- defined in upperbase.php -->
-<table class="tabledef table100">
-	<tr>
-		<td class="tdfooter">
-			Copyright © <b>Paroki Santa Maria Dengan Tidak Bernoda Asal Tulungagung</b>
-			<br>Email: komsosparokitulungagung@gmail.com |&nbsp;Dikelola oleh :<br> 
-			<button class="btdef btabout" onclick="javascript:ShowAboutBox()">Team Web SMDTBA</button>
-			<!-- <a href="javascript:ShowAboutBox()" id="myAboutLink"><b>Team Web SMDTBA</b></a> -->
-			<a href="#top"><i id="topjump" class="fa fa-arrow-circle-up"></i></a>
-		</td>
-	</tr>
-</table>
-</div>
+<div id="footer-placeholder"></div>
+<script>
+  fetch('/components/footer.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('footer-placeholder').innerHTML = data;
+
+      // Setelah footer dimuat, baru cari elemen-elemennya
+      const aboutmodal = document.getElementById("aboutModal");
+      const boxmodal = document.getElementById("boxModal");
+
+      const span = document.querySelector("#aboutModal .close");
+      if (span && aboutmodal) {
+        span.onclick = function () {
+          aboutmodal.style.display = "none";
+        };
+      }
+
+      const spanx = document.querySelector("#boxModal .closex");
+      if (spanx && boxmodal) {
+        spanx.onclick = function () {
+          boxmodal.style.display = "none";
+        };
+      }
+
+      window.onclick = function(event) {
+        if (event.target == aboutmodal) {
+          aboutmodal.style.display = "none";
+        }
+        if (event.target == boxmodal) {
+          boxmodal.style.display = "none";
+        }
+      }
+
+      // Buat fungsi global agar bisa dipanggil dari tombol
+      window.ShowAboutBox = function () {
+        aboutmodal.style.display = "block";
+      };
+
+      window.ShowPhotoBox = function (txt, fotopath, title, subtxt) {
+        document.getElementById("boxModalTitle").innerHTML = title;
+        document.getElementById("boxModalImage").src = fotopath;
+        document.getElementById("boxModalText").innerHTML = txt;
+        document.getElementById("boxModalSubText").innerHTML = subtxt;
+        boxmodal.style.display = "block";
+      };
+    })
+    .catch(err => console.error("Gagal memuat footer:", err));
+</script>
 
 <!-- FOOTER END -->
 
