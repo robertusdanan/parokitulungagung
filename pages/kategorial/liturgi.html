@@ -15,7 +15,33 @@
 <script src="/tabcontent.js" type="text/javascript"></script>
 <link href="/tabcontent.css" rel="stylesheet" type="text/css" />
 
-<title>Pemazmur SMDTBA</title>
+<title>Liturgi SMDTBA</title>
+<style>
+.grid-bidang {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.grid-bidang > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.grid-bidang img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+}
+@media (max-width: 768px) {
+  .grid-bidang {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
 </head>
 <!-- OUTER-WRAPPER BEGIN -->
 <div id="outer-wrapper">
@@ -223,8 +249,8 @@ function menusetup(flag,title){ //1 0, judul hlm
 
 <div style="padding:6px">
 	<div style="margin-bottom: 1em"><table cellpadding="0" cellspacing="0"><tr><td class="tdiconheadline">
-		<img class="iconheadline" src="/img/icon/kategorial/pemazmur.png" ></td><td style="padding-left:0.2em"><span 
-			class="headline_title">Pemazmur</span><br/><span class="headline_subtitle">Santa Maria Dengan Tidak Bernoda Asal</span></td></tr></table></div>
+		<img class="iconheadline" src="/img/icon/kategorial/liturgi.png" ></td><td style="padding-left:0.2em"><span 
+			class="headline_title">Liturgi</span><br/><span class="headline_subtitle">Santa Maria Dengan Tidak Bernoda Asal</span></td></tr></table></div>
 <ul class="tabs" data-persist="true">
   <li id="tab_info_li"><a href="#tab_info">Info</a></li>
   <li id="tab_detail_li"><a href="#tab_detail">Detail Kegiatan</a></li>
@@ -254,14 +280,14 @@ function menusetup(flag,title){ //1 0, judul hlm
 </div>
 
 <script>
-fetch("https://opensheet.elk.sh/1NpmeZl40zvUTBhLbon_6rbS26Z1mhARdBqPCCr_5VLw/pemazmur")
+fetch("https://opensheet.elk.sh/1NpmeZl40zvUTBhLbon_6rbS26Z1mhARdBqPCCr_5VLw/liturgi")
   .then(r => r.json())
   .then(d => {
     const e = d[0];
 
     // Fungsi konversi: ganti baris kosong jadi <p>, dan baris lainnya jadi <br>
  
-const formatStyledText = (text) => {
+const formatStyledText = (text, koordinatorFotoMap = {}) => {
   if (!text) return "-";
   const lines = text.split(/\r?\n/);
   let html = "";
@@ -269,7 +295,6 @@ const formatStyledText = (text) => {
 
   for (let line of lines) {
     line = line.trim();
-
     if (line === "") {
       if (listOpen) {
         html += "</ul>";
@@ -292,7 +317,25 @@ const formatStyledText = (text) => {
       continue;
     }
 
-    // List
+    // Deteksi baris koordinator: "Bidang: Nama"
+    const matchKoord = line.match(/^(.+?):\s*(.+)$/);
+    if (matchKoord) {
+      const bidang = matchKoord[1].trim();
+      const nama = matchKoord[2].trim();
+      const key = nama.toLowerCase().replace(/\s+/g, "_"); // contoh: "Pak Bintoro" => "pak_bintoro"
+      const img = koordinatorFotoMap[key] || `/img/person/${nama.includes(" ") ? nama.replace(/\s+/g, "-") : nama}.jpg`;
+
+      html += `
+        <div style="margin-bottom:10px; display:flex; align-items:center; gap:10px">
+          <img src="${img}" alt="${nama}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;cursor:pointer"
+               onclick="ShowPhotoBox('${nama}', '${img}', '${bidang}', 'Koordinator ${bidang}')">
+          <span><strong>${bidang}:</strong> ${nama}</span>
+        </div>
+      `;
+      continue;
+    }
+
+    // List biasa
     if (line.startsWith("- ")) {
       if (!listOpen) {
         html += "<ul>";
@@ -300,13 +343,13 @@ const formatStyledText = (text) => {
       }
       html += `<li>${line.substring(2)}</li>`;
       continue;
-    } else {
-      if (listOpen) {
-        html += "</ul>";
-        listOpen = false;
-      }
-      html += `<p>${line}</p>`;
     }
+
+    if (listOpen) {
+      html += "</ul>";
+      listOpen = false;
+    }
+    html += `<p>${line}</p>`;
   }
 
   if (listOpen) html += "</ul>";
@@ -314,9 +357,10 @@ const formatStyledText = (text) => {
 };
 
 
+
     // Info
     document.getElementById("info").innerHTML =
-      `<div style="color:#f5debb">${formatStyledText(e.info)}</div>`;
+  `<div class="grid-bidang" style="color:#f5debb">${formatStyledText(e.info)}</div>`;
 
     // Instagram
     document.getElementById("instagram").innerHTML =
