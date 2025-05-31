@@ -18,15 +18,7 @@
   <a class="inline-flex items-center text-indigo-600 hover:text-indigo-800 mb-6" href="/pages/komedi.html">
     <i class="fas fa-arrow-left mr-2"></i> Kembali ke Katalog
   </a>
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Detail Produk</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
+
 
 <main class="container mx-auto px-4 py-10 flex-grow" id="produk-detail">
   <p>Memuat data produk...</p>
@@ -36,7 +28,7 @@
 <script>
   async function loadProdukDetail() {
     const urlParams = new URLSearchParams(window.location.search);
-    const kode = urlParams.get('kode'); // e.g., ?kode=DB001
+    const kode = urlParams.get('kode');
 
     if (!kode) {
       document.getElementById("produk-detail").innerHTML = "<p class='text-red-600'>Kode produk tidak ditemukan.</p>";
@@ -52,39 +44,99 @@
         return;
       }
 
+      const basePrice = parseInt(data.Price);
+      const discount = parseFloat(data.Discount) || 0;
+      const discountNote = data.DiscountNote || '';
+      const discountEnd = data.DiscountEndDate ? new Date(data.DiscountEndDate) : null;
+      const now = new Date();
+
+      const hasDiscount = discount > 0 && !isNaN(basePrice) && (!discountEnd || discountEnd > now);
+      const discountedPrice = hasDiscount
+        ? Math.round(basePrice - (basePrice * discount / 100))
+        : basePrice;
+
+      const priceFormatted = `Rp ${discountedPrice.toLocaleString('id-ID')}`;
+      const originalPriceFormatted = `Rp ${basePrice.toLocaleString('id-ID')}`;
+      const countdownHTML = hasDiscount && discountEnd
+        ? `<p class="text-sm text-red-700 mt-1" id="countdown"></p>`
+        : '';
+
       document.getElementById("produk-detail").innerHTML = `
-        <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row">
-          <img src="${data.Image || 'https://via.placeholder.com/400x300?text=No+Image'}" 
-               alt="${data.Title || 'Produk'}" 
-               class="w-full md:w-1/2 h-full object-cover">
+        <div class="relative bg-white ${hasDiscount ? '' : ''} rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row">
+          <div class="relative md:w-1/2">
+            <img src="${data.Image || 'https://via.placeholder.com/400x300?text=No+Image'}" 
+                 alt="${data.Title || 'Produk'}" 
+                 class="w-full h-full object-cover">
+            ${hasDiscount ? `<div class="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded shadow">Diskon</div>` : ''}
+          </div>
           <div class="p-6 flex flex-col justify-between md:w-1/2">
             <div>
               <h2 class="text-3xl font-bold text-gray-900 mb-4">${data.Title || '-'}</h2>
-              <p class="text-gray-700 mb-6 leading-relaxed">${data.Description || '-'}</p>
+<p class="text-gray-700 mb-6 leading-relaxed">${(data.Description || '-').replace(/\n/g, '<br>')}</p>
+              ${hasDiscount ? `<p class="text-sm text-red-600 mb-1">${discountNote}</p>` : ''}
             </div>
             <div>
-              <p class="text-2xl font-extrabold text-indigo-600 mb-6">Rp ${parseInt(data.Price || 0).toLocaleString('id-ID')}</p>
-              <a href="${data.Link}" target="_blank" rel="noopener noreferrer"
-                class="w-full block text-center bg-green-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-md transition-colors duration-300">
+              ${hasDiscount
+                ? `
+                  <p class="text-gray-500 line-through text-base">${originalPriceFormatted}</p>
+                  <p class="text-2xl font-extrabold text-indigo-600">${priceFormatted}</p>
+                  ${countdownHTML}
+                `
+                : `<p class="text-2xl font-extrabold text-indigo-600">${priceFormatted}</p>`
+              }
+
+              <a href="${data.Whatsapp}" target="_blank" rel="noopener noreferrer"
+                class="w-full block text-center bg-green-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-md transition-colors duration-300 mt-4">
                 Whatsapp
               </a>
-              </br>
-              <a href="${data.Shopee}" target="_blank" rel="noopener noreferrer"
-                class="w-full block text-center bg-orange-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-md transition-colors duration-300">
-                Shopee
-              </a>
+<a href="${data.Shopee && data.Shopee.trim() !== '' ? data.Shopee : '#'}" 
+   ${data.Shopee && data.Shopee.trim() !== '' ? 'target="_blank"' : 'onclick="showShopeeModal()"'}
+   rel="noopener noreferrer"
+   class="w-full block text-center ${data.Shopee && data.Shopee.trim() !== '' ? 'bg-orange-600 hover:bg-indigo-700' : 'bg-gray-400 hover:bg-gray-500'} text-white font-semibold py-3 rounded-md transition-colors duration-300 mt-2">
+  Shopee
+</a>
+
             </div>
           </div>
         </div>
       `;
+
+      if (hasDiscount && discountEnd) {
+        updateCountdown(discountEnd);
+        setInterval(() => updateCountdown(discountEnd), 60000);
+      }
+
     } catch (error) {
       console.error("Gagal memuat detail produk:", error);
       document.getElementById("produk-detail").innerHTML = "<p class='text-red-600'>Gagal memuat data produk.</p>";
     }
   }
 
+  function updateCountdown(endDate) {
+    const now = new Date();
+    const diff = endDate - now;
+    const el = document.getElementById("countdown");
+
+    if (!el) return;
+
+    if (diff <= 0) {
+      el.textContent = "Promo berakhir";
+      return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    el.textContent = `Berakhir dalam ${days}h ${hours}j ${minutes}m`;
+  }
+
   document.addEventListener("DOMContentLoaded", loadProdukDetail);
 </script>
+
+  <a href="/components/sizeguidekomedi.html" class="inline-block bg-indigo-600 text-white font-medium px-5 py-2 rounded-lg hover:bg-indigo-700 transition-all duration-200 shadow-sm">
+    Lihat Panduan Ukuran
+  </a>
+</div>
 
 </body>
 </html>
@@ -105,5 +157,23 @@
         console.error('Gagal memuat list katalog:', err);
       });
       </script>
+      
+      <div id="shopeeModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+  <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm text-center">
+    <h2 class="text-xl font-semibold mb-4 text-gray-800">Produk belum tersedia di Shopee</h2>
+    <p class="text-gray-600 mb-6">Silakan hubungi admin langsung melalui WhatsApp untuk informasi lebih lanjut.</p>
+    <a href="https://wa.me/6285183068895" target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md font-semibold transition">Chat WhatsApp</a>
+    <button onclick="closeShopeeModal()" class="mt-4 block mx-auto text-gray-500 hover:text-gray-700">Tutup</button>
+  </div>
+</div>
+<script>
+  function showShopeeModal() {
+    document.getElementById('shopeeModal').classList.remove('hidden');
+  }
+
+  function closeShopeeModal() {
+    document.getElementById('shopeeModal').classList.add('hidden');
+  }
+</script>
  </body>
 </html>

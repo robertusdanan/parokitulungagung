@@ -15,14 +15,18 @@
  <body class="bg-gray-50 min-h-screen flex flex-col">
 
 <div id="header-katalog"></div>
+<div class="bg-gradient-to-r from-indigo-50 via-white to-indigo-50 border-y border-indigo-200 py-6 px-6 text-center shadow-sm">
+  <p class="text-lg sm:text-xl font-semibold text-gray-800">
+    Menerima pesanan <span class="text-indigo-600">Desain Kaos Custom</span> untuk 
+    <span class="italic">event, komunitas, maupun seragam</span>. </br>
+    Tersedia juga <span class="text-indigo-600">Totebag & Tas Serut</span> dengan 
+    <span class="italic">desain eksklusif sesuai keinginan Anda!</span>
+  </p>
+</div>
 
 <div id="katalog-list"></div>
 
-  <footer class="bg-white border-t mt-12">
-   <div class="container mx-auto px-4 py-6 text-center text-gray-600 text-sm">
-   Copyright © KoMeDi (Komsos Merchandise Division)
-   </div>
-  </footer>
+ 
 <main class="container mx-auto px-4 py-10 flex-grow">
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-8">
     <input type="text" id="searchInput" placeholder="Cari produk..." class="p-2 rounded border">
@@ -73,44 +77,78 @@
     }
   }
 
-  function renderKatalog(data) {
-    const container = document.getElementById("katalog-container");
-    container.innerHTML = '';
+function renderKatalog(data) {
+  const container = document.getElementById("katalog-container");
+  container.innerHTML = '';
 
-    const totalPages = Math.ceil(data.length / itemsPerPage);
-    if (currentPage > totalPages) currentPage = totalPages;
-    if (currentPage < 1) currentPage = 1;
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+  if (currentPage > totalPages) currentPage = totalPages;
+  if (currentPage < 1) currentPage = 1;
 
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    const pageItems = data.slice(start, end);
+  const start = (currentPage - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  const pageItems = data.slice(start, end);
 
-    pageItems.forEach(item => {
-      const price = parseInt(item.Price);
-      const priceFormatted = isNaN(price) ? 'Rp -' : `Rp ${price.toLocaleString('id-ID')}`;
-      const imageSrc = item.Image || 'https://via.placeholder.com/400x300?text=No+Image';
+  pageItems.forEach(item => {
+    const basePrice = parseInt(item.Price);
+    const discount = parseFloat(item.Discount) || 0;
+    const discountNote = item.DiscountNote || '';
+    const discountEnd = item.DiscountEndDate ? new Date(item.DiscountEndDate) : null;
+    const now = new Date();
 
-      const card = document.createElement('div');
-      card.className = "bg-white rounded-lg shadow-md overflow-hidden flex flex-col";
+    const hasDiscount = discount > 0 && !isNaN(basePrice) && (!discountEnd || discountEnd > now);
+    const discountedPrice = hasDiscount
+      ? Math.round(basePrice - (basePrice * discount / 100))
+      : basePrice;
 
-      card.innerHTML = `
+    const priceFormatted = isNaN(discountedPrice) ? 'Rp -' : `Rp ${discountedPrice.toLocaleString('id-ID')}`;
+    const originalPriceFormatted = `Rp ${basePrice.toLocaleString('id-ID')}`;
+    const imageSrc = item.Image || 'https://via.placeholder.com/400x300?text=No+Image';
+
+    const countdownHTML = hasDiscount && discountEnd
+      ? `<p class="text-sm text-red-700 mt-1" data-countdown="${item.DiscountEndDate}"></p>`
+      : '';
+
+    const card = document.createElement('div');
+    card.className = `relative bg-white rounded-lg shadow-md overflow-hidden flex flex-col transition-all duration-300 ${
+      hasDiscount ? 'border-2' : ''
+    }`;
+
+    card.innerHTML = `
+      <div class="relative">
         <img src="${imageSrc}" alt="${item.Title || 'Produk'}" class="w-full h-64 object-cover">
-        <div class="p-4 flex flex-col flex-grow">
-          <h3 class="text-xl font-semibold text-gray-900 mb-2">${item.Title || '-'}</h3>
-          <p class="text-gray-700 flex-grow mb-4">
-            Code: ${item.Code || '-'} <br> ${item.Description || '-'}
-          </p>
-<a onclick="saveStateAndGoToDetail('${item.Link || '#'}')" class="hover:text-lg font-bold text-gray-600 cursor-pointer">
-  Detail (klik disini)
-</a>
-          <p class="text-lg font-bold text-indigo-600">${priceFormatted}</p>
-        </div>
-      `;
-      container.appendChild(card);
-    });
+        ${hasDiscount ? `<div class="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded shadow">Diskon</div>` : ''}
+      </div>
+      <div class="p-4 flex flex-col flex-grow">
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">${item.Title || '-'}</h3>
+        <p class="text-gray-700 flex-grow mb-4">
+          Code: ${item.Code || '-'} <br> ${item.Description || '-'}
+        </p>
+        <a onclick="saveStateAndGoToDetail('${item.Link || '#'}')" class="hover:text-lg font-bold text-gray-600 cursor-pointer mb-2">
+          Detail (klik disini)
+        </a>
 
-    renderPagination(totalPages);
-  }
+        ${
+          hasDiscount
+            ? `
+              <p class="text-sm text-red-600 font-medium mb-1">${discountNote}</p>
+              <p class="text-gray-500 line-through text-sm">${originalPriceFormatted}</p>
+              <p class="text-lg font-bold text-indigo-600">${priceFormatted}</p>
+              ${countdownHTML}
+            `
+            : `<p class="text-lg font-bold text-indigo-600">${priceFormatted}</p>`
+        }
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+
+  renderPagination(totalPages);
+  initializeCountdowns();
+}
+
+
 
   function renderPagination(totalPages) {
     const pagination = document.getElementById("pagination");
@@ -175,8 +213,28 @@
     localStorage.setItem("katalogState", JSON.stringify(state));
     window.location.href = `/components/detailproduk.html?kode=${link}`;
   }
-</script>
+  function initializeCountdowns() {
+  const countdownEls = document.querySelectorAll('[data-countdown]');
+  countdownEls.forEach(el => {
+    const endDate = new Date(el.getAttribute('data-countdown'));
+    function updateCountdown() {
+      const now = new Date();
+      const diff = endDate - now;
+      if (diff <= 0) {
+        el.textContent = "Promo berakhir";
+        return;
+      }
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      el.textContent = `Berakhir dalam ${days}h ${hours}j ${minutes}m`;
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 60000); // update tiap menit
+  });
+}
 
+</script>
 
   <script>
     fetch('/components/headerkatalog.html')
@@ -188,5 +246,10 @@
         console.error('Gagal memuat list katalog:', err);
       });
   </script>
+   <footer class="bg-white border-t mt-12">
+   <div class="container mx-auto px-4 py-6 text-center text-gray-600 text-sm">
+   Copyright © KoMeDi (Komsos Merchandise Division)
+   </div>
+  </footer>
  </body>
 </html>

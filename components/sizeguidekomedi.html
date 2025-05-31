@@ -1,0 +1,113 @@
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Detail Baju - Katalog Baju
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css">
+ </head>
+ <body class="bg-gray-50 min-h-screen flex flex-col">
+  <div id="header-katalog"></div>
+
+<main class="container mx-auto px-4 py-10 flex-grow max-w-4xl">
+  <a class="inline-flex items-center text-indigo-600 hover:text-indigo-800 mb-6" href="/pages/komedi.html">
+    <i class="fas fa-arrow-left mr-2"></i> Kembali ke Katalog
+  </a>
+    
+  <div class="max-w-5xl mx-auto px-4 py-10">
+    <h1 class="text-4xl font-bold mb-8 text-center text-indigo-700">Panduan Ukuran</h1>
+
+    <!-- T-Shirt Size Guide -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-semibold mb-4">T-Shirt</h2>
+      <div class="grid md:grid-cols-2 gap-8 items-center">
+        <img src="/img/katalog/kaos.jpg" alt="Panduan Ukuran Kaos" class="rounded-lg shadow-md border">
+        <table class="w-full text-sm text-left border border-gray-300 rounded-lg overflow-hidden">
+          <thead class="bg-indigo-600 text-white">
+            <tr>
+              <th class="px-4 py-2">Ukuran</th>
+              <th class="px-4 py-2">Lebar (cm)</th>
+              <th class="px-4 py-2">Panjang (cm)</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr><td class="px-4 py-2">XS</td><td class="px-4 py-2">45</td><td class="px-4 py-2">64</td></tr>
+            <tr><td class="px-4 py-2">S</td><td class="px-4 py-2">48</td><td class="px-4 py-2">67</td></tr>
+            <tr><td class="px-4 py-2">M</td><td class="px-4 py-2">50</td><td class="px-4 py-2">70</td></tr>
+            <tr><td class="px-4 py-2">L</td><td class="px-4 py-2">53</td><td class="px-4 py-2">73</td></tr>
+            <tr><td class="px-4 py-2">XL</td><td class="px-4 py-2">56</td><td class="px-4 py-2">75</td></tr>
+            <tr><td class="px-4 py-2">XXL</td><td class="px-4 py-2">59</td><td class="px-4 py-2">77</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Polo Shirt Size Guide -->
+    <section>
+      <h2 class="text-2xl font-semibold mb-4">Polo Shirt</h2>
+      <div class="grid md:grid-cols-2 gap-8 items-center">
+        <img src="/img/katalog/polo.jpg" alt="Panduan Ukuran Polo" class="rounded-lg shadow-md border">
+        <table class="w-full text-sm text-left border border-gray-300 rounded-lg overflow-hidden">
+          <thead class="bg-indigo-600 text-white">
+            <tr>
+              <th class="px-4 py-2">Ukuran</th>
+              <th class="px-4 py-2">Lebar (cm)</th>
+              <th class="px-4 py-2">Panjang (cm)</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr><td class="px-4 py-2">XS</td><td class="px-4 py-2">46</td><td class="px-4 py-2">65</td></tr>
+            <tr><td class="px-4 py-2">S</td><td class="px-4 py-2">49</td><td class="px-4 py-2">68</td></tr>
+            <tr><td class="px-4 py-2">M</td><td class="px-4 py-2">50</td><td class="px-4 py-2">71</td></tr>
+            <tr><td class="px-4 py-2">L</td><td class="px-4 py-2">53</td><td class="px-4 py-2">74</td></tr>
+            <tr><td class="px-4 py-2">XL</td><td class="px-4 py-2">56</td><td class="px-4 py-2">76</td></tr>
+            <tr><td class="px-4 py-2">XXL</td><td class="px-4 py-2">59</td><td class="px-4 py-2">78</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
+
+</main>
+  <footer class="bg-white border-t mt-12">
+   <div class="container mx-auto px-4 py-6 text-center text-gray-600 text-sm">
+    Copyright © KoMeDi (Komsos Merchandise Division)
+   </div>
+  </footer>
+     <script>
+    fetch('/components/headerkatalog.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('header-katalog').innerHTML = html;
+      })
+      .catch(err => {
+        console.error('Gagal memuat list katalog:', err);
+      });
+      </script>
+      
+      <div id="shopeeModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+  <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm text-center">
+    <h2 class="text-xl font-semibold mb-4 text-gray-800">Produk belum tersedia di Shopee</h2>
+    <p class="text-gray-600 mb-6">Silakan hubungi admin langsung melalui WhatsApp untuk informasi lebih lanjut.</p>
+    <a href="https://wa.me/6285183068895" target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md font-semibold transition">Chat WhatsApp</a>
+    <button onclick="closeShopeeModal()" class="mt-4 block mx-auto text-gray-500 hover:text-gray-700">Tutup</button>
+  </div>
+</div>
+<script>
+  function showShopeeModal() {
+    document.getElementById('shopeeModal').classList.remove('hidden');
+  }
+
+  function closeShopeeModal() {
+    document.getElementById('shopeeModal').classList.add('hidden');
+  }
+</script>
+ </body>
+</html>

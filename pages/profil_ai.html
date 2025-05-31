@@ -139,6 +139,95 @@ function menusetup(flag,title){ //1 0, judul hlm
   </div>
 
 </div>
+<!-- ================================================================================================ -->
+
+
+<!-- ABOUT BOX : The Modal Window -->
+<!-- ================================================================================================ -->
+<div class='modal' id='aboutModal'>
+  <!-- Modal content -->
+  <div class='modal-content' style="color:white">
+    <div class='close'>&#215;</div>
+    <div class='modal-body'>
+        <!-- <span class='close'>&#215;</span> -->
+        <div>
+            <img src='/img/smdtba-sharelogo.PNG' style='width:150px; margin: 0 0 10px 10px;'>
+        </div>
+        <span style="font-size:18px; font-weight:bold;">Team Web SMDTBA</span>
+		<span><em>komsosparokitulungagung@gmail.com</em></span>
+    </div>
+  </div>
+</div>
+
+
+<!-- SCRIPT -->
+<script>
+	/* Get the about modal */
+	var aboutmodal = document.getElementById("aboutModal");
+
+    /* Caller function */
+	function ShowAboutBox() {
+		aboutmodal.style.display = "block";
+	}
+	/* OTHER METHOD: Get the link that opens the modal */
+	/* var lnk = document.getElementById("myAboutLink");*/
+	/* When the user clicks the button, open the modal  */
+	/* lnk.onclick = function() { modal.style.display = "block";} */
+
+	/* Get the span element that closes the modal */
+	var span = document.getElementsByClassName("close")[0];
+
+	/* When the user clicks on span (x), close the modal */
+	span.onclick = function() {
+		aboutmodal.style.display = "none";
+	}
+
+    /* ******************************************************** */
+
+	/* Get the photo box modal */
+	var boxmodal = document.getElementById("boxModal");
+
+    /* Caller function */
+	function ShowPhotoBox(txt,fotopath,title,subtxt) {
+        document.getElementById("boxModalTitle").innerHTML = title;
+        document.getElementById("boxModalImage").src = fotopath;
+        document.getElementById("boxModalText").innerHTML = txt;
+        document.getElementById("boxModalSubText").innerHTML = subtxt;
+        boxmodal.style.display = "block";
+	}
+	/* OTHER METHOD: Get the link that opens the modal */
+	/* var lnk = document.getElementById("myAboutLink");*/
+	/* When the user clicks the button, open the modal  */
+	/* lnk.onclick = function() { modal.style.display = "block";} */
+
+	/* Get the span element that closes the modal */
+	var spanx = document.getElementsByClassName("closex")[0];
+
+	/* When the user clicks on span (x), close the modal */
+	spanx.onclick = function() {
+		boxmodal.style.display = "none";
+	}
+
+    /* ******************************************************** */
+
+	/* When the user clicks anywhere outside of the modal, close it */
+	window.onclick = function(event) {
+		if (event.target == aboutmodal) {
+			aboutmodal.style.display = "none";
+		}
+		if (event.target == boxmodal) {
+			boxmodal.style.display = "none";
+		}        
+	}
+
+</script>
+
+<!-- END OF LINTANG ABOUT MODAL WINDOW -->
+
+
+
+<!-- ============================================ -->
+<!-- ============================================ -->
 
 
 <div style="padding:6px">

@@ -162,11 +162,7 @@
 }
 .menu-wrapper {
   display: grid;
-<<<<<<< HEAD
   grid-template-columns: repeat(7, 1fr);
-=======
-  grid-template-columns: repeat(12, 1fr);
->>>>>>> 4863dc7e33a738d50cd9623e7ae1ed88d47a7d90
   gap: 5px;
   padding: 1px;
   justify-items: center;

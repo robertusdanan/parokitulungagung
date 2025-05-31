@@ -204,8 +204,8 @@ if (ketua.Nama || wakil.Nama) {
         ${wakil.Nama ? `Wakil: <b>${wakil.Nama}</b>` : ''}
       </div>
       <div style="display: flex; gap: 10px;">
-        ${wakil.Nama ? `<img class="iconcircle" src="${imgWakil}" onclick="ShowPhotoBox('${wakil.Nama}','${imgWakil}','${bidang}','Wakil')">` : ''}
         ${ketua.Nama ? `<img class="iconcircle" src="${imgKetua}" onclick="ShowPhotoBox('${ketua.Nama}','${imgKetua}','${bidang}','Ketua')">` : ''}
+        ${wakil.Nama ? `<img class="iconcircle" src="${imgWakil}" onclick="ShowPhotoBox('${wakil.Nama}','${imgWakil}','${bidang}','Wakil')">` : ''}
       </div>
     </div>
   `;

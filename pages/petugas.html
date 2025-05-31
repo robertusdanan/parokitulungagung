@@ -98,16 +98,11 @@
 .jadwal-card h4 {
   margin: 0 0 4px;
   font-size: 16px;
-<<<<<<< HEAD
   color: #000000;
-=======
-  color: #333;
->>>>>>> 4863dc7e33a738d50cd9623e7ae1ed88d47a7d90
 }
 
 .jadwal-card span {
   font-size: 14px;
-<<<<<<< HEAD
   color: #000000;
 }
 .tag-section {
@@ -129,10 +124,6 @@
   background-color: #dcc5a3;
 }
 
-=======
-  color: #666;
-}
->>>>>>> 4863dc7e33a738d50cd9623e7ae1ed88d47a7d90
 </style>
 </head>
 <!-- OUTER-WRAPPER BEGIN -->
@@ -264,8 +255,6 @@ function menusetup(flag,title){ //1 0, judul hlm
         </td>
       </tr>
     </table>
-<<<<<<< HEAD
-=======
   </div>
 
 <div class="scroll-wrapper">
@@ -288,39 +277,6 @@ function menusetup(flag,title){ //1 0, judul hlm
   </ul>
 </div>
 
-  <div class="tabcontents" style="box-shadow: 0 2px 4px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.08)">
-    <div id="koor"></div>
-    <div id="pemazmur"></div>
-    <div id="lektor"></div>
-    <div id="asistenimam"></div>
-    <div id="dekorasialtar"></div>
-    <div id="organis"></div>
-    <div id="saranlagu"></div>
-    <div id="sarandoa"></div>
->>>>>>> 4863dc7e33a738d50cd9623e7ae1ed88d47a7d90
-  </div>
-
-<div class="scroll-wrapper">
-  <button class="scroll-button scroll-left" aria-label="Scroll left">
-    <svg viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </button>
-
-  <button class="scroll-button scroll-right" aria-label="Scroll right">
-    <svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </button>
-  <ul class="tabs" data-persist="true">
-    <li><a href="#koor" class="tab_dua_baris">Koor</a></li>
-    <li><a href="#pemazmur">Pemazmur</a></li>
-    <li><a href="#lektor">Lektor</a></li>		
-    <li><a href="#asistenimam" class="tab_dua_baris">Asisten Imam</a></li>
-    <li><a href="#dekorasialtar" class="tab_dua_baris">Dekorasi Altar</a></li>
-    <li><a href="#organis">Organis</a></li>
-    <li><a href="#saranlagu" class="tab_dua_baris">Saran Lagu</a></li>
-    <li><a href="#sarandoa">Saran Doa</a></li>
-  </ul>
-</div>
-
-<<<<<<< HEAD
 <div class="tabcontents" style="box-shadow: 0 2px 4px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.08)">
   <div id="loading-indicator" style="text-align:center; padding: 1em;">
     <span>⏳Memuat data jadwal...</span>
@@ -337,8 +293,6 @@ function menusetup(flag,title){ //1 0, judul hlm
 </div>
 </div>
 
-=======
->>>>>>> 4863dc7e33a738d50cd9623e7ae1ed88d47a7d90
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   const tabs = document.querySelector(".tabs");
@@ -365,7 +319,6 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 <script>
-<<<<<<< HEAD
 document.getElementById('loading-indicator').style.display = 'block';
 
 fetch('https://opensheet.elk.sh/1Q0N_S10XVngXDReVapVhDh6ZwnoFcGxvbeUJjAxOZYI/petugas')
@@ -386,26 +339,10 @@ fetch('https://opensheet.elk.sh/1Q0N_S10XVngXDReVapVhDh6ZwnoFcGxvbeUJjAxOZYI/pet
         <div class="jadwal-card">
           <h4>${tanggal}</h4>
           <span>${keterangan.replace(/\n/g, '<br>')}</span>
-=======
-fetch('https://opensheet.elk.sh/1Q0N_S10XVngXDReVapVhDh6ZwnoFcGxvbeUJjAxOZYI/petugas')
-  .then(res => res.json())
-  .then(data => {
-    const sections = {};
-    data.forEach(row => {
-      const { kategori, tanggal, keterangan } = row;
-      if (!kategori || !tanggal || !keterangan) return;
-
-      if (!sections[kategori]) sections[kategori] = [];
-      sections[kategori].push(`
-        <div class="jadwal-card">
-          <h4>${tanggal}</h4>
-          <span>${keterangan}</span>
->>>>>>> 4863dc7e33a738d50cd9623e7ae1ed88d47a7d90
         </div>
       `);
     });
 
-<<<<<<< HEAD
     for (const kategori in kategoriMap) {
       const el = document.getElementById(kategori);
       if (el) {
@@ -430,16 +367,6 @@ fetch('https://opensheet.elk.sh/1Q0N_S10XVngXDReVapVhDh6ZwnoFcGxvbeUJjAxOZYI/pet
     console.error("Gagal memuat data:", err);
     document.getElementById('loading-indicator').innerHTML = '❌ Gagal memuat data.';
   });
-=======
-    for (const kategori in sections) {
-      const el = document.getElementById(kategori);
-      if (el) {
-        el.innerHTML = sections[kategori].join('');
-      }
-    }
-  })
-  .catch(err => console.error("Gagal memuat data:", err));
->>>>>>> 4863dc7e33a738d50cd9623e7ae1ed88d47a7d90
 </script>
 
 
