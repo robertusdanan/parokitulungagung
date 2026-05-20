@@ -1,0 +1,65 @@
+{
+  "name": "Paroki Santa Maria Dengan Tidak Bernoda Asal Tulungagung",
+  "short_name": "Paroki Tulungagung",
+  "description": "Website resmi Gereja Katolik Paroki Santa Maria Dengan Tidak Bernoda Asal (SMDTBA) Tulungagung. Jadwal misa, agenda, artikel, dan informasi umat.",
+  "start_url": "/?utm_source=pwa",
+  "display": "standalone",
+  "background_color": "#1a1208",
+  "theme_color": "#1a1208",
+  "lang": "id",
+  "dir": "ltr",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "categories": ["religion", "community"],
+  "icons": [
+    {
+      "src": "/img/manifest/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/manifest/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/img/manifest/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/manifest/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/img/og-preview.webp",
+      "sizes": "1200x630",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "Halaman utama Paroki Tulungagung"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Jadwal Misa",
+      "short_name": "Jadwal Misa",
+      "description": "Lihat jadwal misa paroki",
+      "url": "/jadwal-misa",
+      "icons": [{ "src": "/img/manifest/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Agenda",
+      "short_name": "Agenda",
+      "description": "Agenda kegiatan paroki",
+      "url": "/agenda",
+      "icons": [{ "src": "/img/manifest/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

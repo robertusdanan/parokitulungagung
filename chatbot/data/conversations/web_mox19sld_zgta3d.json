@@ -1,0 +1,65 @@
+{
+    "session_id": "web_mox19sld_zgta3d",
+    "created_at": 1778330958,
+    "last_active": 1778331090,
+    "page_context": "https:\/\/www.parokitulungagung.org\/galeri (Galeri Foto Kegiatan Paroki Tulungagung – 157 Album Dokumentasi)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "foto babtis",
+            "timestamp": 1778331027
+        },
+        {
+            "role": "assistant",
+            "content": "💧 Berikut adalah koleksi foto Sakramen Baptis yang tersedia di galeri kami:\n\n• Baptis Bayi 2026\n• Baptis Dewasa 2026\n• Baptis Bayi 2025\n• Baptis Dewasa 2025\n• Baptis Bayi 2024\n• Baptis Dewasa 2024\n• Baptis Bayi 2023\n• Baptis Dewasa 2023\n\nJika Anda ingin mencari tahun atau momen spesifik lainnya, silakan kunjungi halaman galeri kami atau gunakan kata kunci pencarian yang lebih detail. Semoga membantu!",
+            "source": "gemini",
+            "timestamp": 1778331027
+        },
+        {
+            "role": "user",
+            "content": "Lokasi Gereja",
+            "timestamp": 1778331066
+        },
+        {
+            "role": "assistant",
+            "content": "Gereja Katolik Paroki Santa Maria Dengan Tidak Bernoda Asal (SMDTBA) Tulungagung berlokasi di:Jl. Ahmad Yani Tim. Gg. IV No.1, Bago, Tulungagung 66224Jika Anda membutuhkan bantuan navigasi atau informasi lebih lanjut, silakan hubungi Sekretariat Paroki di nomor (0355) 321727 atau melalui WhatsApp di +62 856-3678-844. Tuhan memberkati!",
+            "source": "gemini",
+            "timestamp": 1778331066
+        },
+        {
+            "role": "user",
+            "content": "Agenda Paroki",
+            "timestamp": 1778331073
+        },
+        {
+            "role": "assistant",
+            "content": "📅 Info & Agenda Paroki SMDTBA:\n\nHalaman Agenda memuat semua informasi resmi paroki:\n• Jadwal misa khusus (hari raya, novena, dll)\n• Kegiatan kategorial & komunitas\n• Pengumuman penting paroki\n• Dokumen yang bisa diunduh\n\nSelalu cek agenda untuk info terkini!",
+            "source": "kb",
+            "timestamp": 1778331073
+        },
+        {
+            "role": "user",
+            "content": "Berita Paroki",
+            "timestamp": 1778331087
+        },
+        {
+            "role": "assistant",
+            "content": "📰 Untuk artikel, berita dan informasi terbaru seputar Paroki SMDTBA, kunjungi halaman Artikel Berita kami.",
+            "source": "kb",
+            "timestamp": 1778331087
+        },
+        {
+            "role": "user",
+            "content": "Historia Gereja",
+            "timestamp": 1778331090
+        },
+        {
+            "role": "assistant",
+            "content": "📜 Historia — Sejarah Paroki SMDTBA:\n\nHalaman Historia memuat tulisan-tulisan tentang sejarah panjang Gereja Katolik Tulungagung, dari awal berdirinya hingga perkembangan saat ini. Paroki ini telah melayani lebih dari 100 tahun.",
+            "source": "kb",
+            "timestamp": 1778331090
+        }
+    ],
+    "meta": []
+}

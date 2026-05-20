@@ -1,0 +1,10 @@
+# chatbot/data/.htaccess — Blokir akses langsung ke folder data
+Options -Indexes
+Deny from all
+
+# chatbot/api/.htaccess — Izinkan hanya chatbot.php, blokir file lain
+# Letakkan file ini di folder chatbot/api/
+# Options -Indexes
+# <FilesMatch "^(?!chatbot\.php$).*$">
+#   Deny from all
+# </FilesMatch>

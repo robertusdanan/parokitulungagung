@@ -1,0 +1,42 @@
+User-agent: *
+Allow: /
+
+# Izinkan aset publik untuk Google Images & crawler
+Allow: /img/artikel/
+Allow: /img/person/
+Allow: /public/galeri/
+Allow: /css/
+Allow: /js/
+
+# ── Area admin & backend (blokir semua) ───────────────────
+Disallow: /admin/
+Disallow: /includes/
+Disallow: /cache/supabase/
+Disallow: /cache/runtime/
+
+# ── Halaman login & tools sensitif ───────────────────────
+Disallow: /login
+Disallow: /redirect.php
+Disallow: /e-ticket/upload.php
+
+# ── Sistem internal (bukan halaman publik) ────────────────
+Disallow: /srm/
+Disallow: /e-ticket/admin/
+Disallow: /analisis/
+
+# ── File internal di /pages/ — HANYA blokir yang sensitif ─
+Disallow: /pages/srm/
+Disallow: /pages/komedi/
+Disallow: /pages/test-profil-ai.php
+Disallow: /pages/error_log
+
+# ── Blokir parameter duplikat & file PHP sitemap langsung ─
+Disallow: /*?i=
+Disallow: /sitemap-article.php
+
+# ── Blokir URL parameter yang membuat duplikat halaman ────
+Disallow: /*?periode=
+Disallow: /*?hal=
+
+# ── Sitemap index (SATU titik saja — GSC baca dari sini) ──
+Sitemap: https://www.parokitulungagung.org/sitemap.php

@@ -1,0 +1,21 @@
+# admin/.htaccess — Keamanan panel admin
+# Izinkan akses ke folder admin secara normal
+Options -Indexes
+
+# Matikan display_errors agar warning/notice PHP tidak merusak response JSON API
+php_flag display_errors Off
+php_flag log_errors On
+php_value error_log "../logs/php_error.log"
+
+# Blokir akses langsung ke file PHP di folder includes dan api
+# kecuali melalui routing normal
+<FilesMatch "\.(json|sh|env|log|bak|sql)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Proteksi file sensitif
+<FilesMatch "^(service-account|config|\.env)">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>

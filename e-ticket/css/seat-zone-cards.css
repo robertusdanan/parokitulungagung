@@ -1,0 +1,251 @@
+/* ========================================
+   seat-zone-cards.css
+   Semi-transparent overlay cards for Kelas 1–3
+   Seats remain visible underneath (masked uniform)
+   No animation/shimmer — stays lightweight
+   ======================================== */
+
+/* ──────────────────────────────────────────
+   MASKED SEATS (Kelas 1-3)
+   All seats look identical — same neutral tone
+   so layout shape is visible but no sold/available info
+   ────────────────────────────────────────── */
+.seat.masked {
+    background: rgba(255, 255, 255, 1.55) !important;
+    border-color: rgba(255, 255, 255, 0.55) !important;
+    box-shadow: none !important;
+    cursor: default !important;
+    transform: none !important;
+    pointer-events: none !important;
+}
+
+/* Make the zone background slightly more visible
+   so the overall zone shape reads clearly */
+.seat-block.zone-kelas1::before,
+.seat-block.zone-kelas2::before,
+.seat-block.zone-kelas3::before {
+    opacity: 1.55;
+}
+
+/* ──────────────────────────────────────────
+   OVERLAY CARD  (.zone-overlay-card)
+   Floats absolutely over the seat grid area.
+   Uses a frosted-glass look — seats visible through it.
+   ────────────────────────────────────────── */
+.zone-overlay-card {
+    border-radius: 12px;
+    overflow: hidden;
+
+    /* Frosted glass — seats show through */
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1.5px solid rgba(255, 255, 255, 0.35);
+
+    /* Subtle lift shadow */
+    box-shadow:
+        0 2px 12px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+
+    transition:
+        background   0.25s ease,
+        box-shadow   0.25s ease,
+        border-color 0.25s ease;
+}
+
+/* Hover: slightly more opaque */
+.zone-overlay-card:hover {
+    background: rgba(255, 255, 255, 0.28);
+    box-shadow:
+        0 6px 20px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* Active / press */
+.zone-overlay-card:active {
+    transform: scale(0.98);
+    transition-duration: 0.08s;
+}
+
+/* Selected state */
+.zone-overlay-card.selected {
+    background: rgba(255, 255, 255, 0.32);
+    border-color: rgba(16, 185, 129, 0.6);
+    box-shadow:
+        0 0 0 2px rgba(16, 185, 129, 0.4),
+        0 4px 16px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* ──────────────────────────────────────────
+   INNER WRAPPER  (.zoc-inner)
+   Centred flex column holding all card content
+   ────────────────────────────────────────── */
+.zoc-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    padding: 14px 16px;
+    gap: 4px;
+    box-sizing: border-box;
+}
+
+/* ── Top row: section pill + optional check ── */
+.zoc-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    width: 100%;
+    margin-bottom: 2px;
+}
+
+.zoc-pill {
+    display: inline-block;
+    padding: 2px 11px;
+    border-radius: 30px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid;          /* colour set inline from JS */
+    color: #1f2937;
+    line-height: 1.7;
+}
+
+.zoc-checkmark {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: #fff;
+    flex-shrink: 0;
+    /* background set inline from JS */
+}
+
+/* ── Class name (large) ── */
+.zoc-name {
+    font-family: var(--font-display, 'Georgia', serif);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    -webkit-text-stroke: 0.5px black;
+}
+
+/* ── Section sub-label ── */
+.zoc-sub {
+    font-size: 0.68rem;
+    color: #4b5563;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+
+/* ── Decorative separator line ── */
+.zoc-sep {
+    width: 32px;
+    height: 1px;
+    /* background set inline from JS */
+    border-radius: 1px;
+    margin: 5px auto;
+}
+
+/* ── Availability block ── */
+.zoc-avail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+}
+
+.zoc-count {
+    font-size: 1.55rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    -webkit-text-stroke: 0.5px black;
+}
+
+.zoc-label {
+    font-size: 0.64rem;
+    color: #4b5563;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-weight: 600;
+}
+
+/* ── CTA strip ── */
+.zoc-cta {
+    margin-top: 7px;
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    padding: 4px 14px;
+    border-radius: 30px;
+    border: 1px solid;          /* colour set inline */
+    background: rgba(255, 255, 255, 0.35);
+    line-height: 1.5;
+    /* color set inline from JS */
+}
+
+/* ──────────────────────────────────────────
+   RESPONSIVE
+   ────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+    .zoc-name    { font-size: 1.25rem; }
+    .zoc-count   { font-size: 1.3rem; }
+}
+
+@media (max-width: 768px) {
+    .zone-overlay-card {
+        border-radius: 10px;
+    }
+
+    .zoc-inner {
+        padding: 10px 12px;
+        gap: 3px;
+    }
+
+    .zoc-name    { font-size: 1.1rem; }
+    .zoc-count   { font-size: 1.15rem; }
+    .zoc-cta     { font-size: 0.62rem; padding: 3px 11px; }
+}
+
+@media (max-width: 480px) {
+    .zone-overlay-card {
+        border-radius: 8px;
+    }
+
+    .zoc-inner {
+        padding: 8px 10px;
+        gap: 2px;
+    }
+
+    .zoc-name     { font-size: 0.95rem; }
+    .zoc-count    { font-size: 1rem; }
+    .zoc-pill     { font-size: 0.58rem; padding: 2px 8px; }
+    .zoc-sep      { margin: 3px auto; }
+}
+
+/* ──────────────────────────────────────────
+   PRINT — hide overlays, show seats normally
+   ────────────────────────────────────────── */
+@media print {
+    .zone-overlay-card { display: none !important; }
+    .seat.masked {
+        background: #e5e7eb !important;
+        border-color: #9ca3af !important;
+    }
+}

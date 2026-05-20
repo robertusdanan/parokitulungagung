@@ -1,0 +1,2 @@
+# Larang akses langsung ke folder data
+Deny from all

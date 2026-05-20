@@ -1,0 +1,65 @@
+{
+    "session_id": "web_mpaty53h_fs0w0x",
+    "created_at": 1779183930,
+    "last_active": 1779184050,
+    "page_context": "https:\/\/www.parokitulungagung.org\/ (Gereja Katolik Tulungagung | Paroki SMDTBA)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "Agenda Paroki",
+            "timestamp": 1779184032
+        },
+        {
+            "role": "assistant",
+            "content": "📅 Info & Agenda Paroki SMDTBA:\n\nHalaman Agenda memuat semua informasi resmi paroki:\n• Jadwal misa khusus (hari raya, novena, dll)\n• Kegiatan kategorial & komunitas\n• Pengumuman penting paroki\n• Dokumen yang bisa diunduh\n\nSelalu cek agenda untuk info terkini!",
+            "source": "kb",
+            "timestamp": 1779184032
+        },
+        {
+            "role": "user",
+            "content": "E-Lonceng",
+            "timestamp": 1779184036
+        },
+        {
+            "role": "assistant",
+            "content": "🔔 E-Lonceng adalah fitur pengumuman digital Paroki SMDTBA. Di sini Anda bisa menemukan pengumuman terbaru dan informasi penting dari paroki.",
+            "source": "kb",
+            "timestamp": 1779184036
+        },
+        {
+            "role": "user",
+            "content": "Jadwal Misa",
+            "timestamp": 1779184037
+        },
+        {
+            "role": "assistant",
+            "content": "📅 Jadwal Misa Paroki SMDTBA Tulungagung:\n\nMisa Harian:\n• Senin – Rabu: pukul 05.30\n• Kamis: 05.30 (di Susteran)\n• Jumat: 18.00\n• Sabtu: 18.00\n• Minggu: 07.00\n\nMisa Stasi:\n• Ngunut: Sabtu 18.00\n• Rejotangan: Sabtu 16.00\n• Trenggalek: Minggu 07.00\n• Kalangbret: Minggu I & II, 10.00\n• Dongko: Minggu I & II, 11.00\n• Sendang: Minggu II, 11.00",
+            "source": "kb",
+            "timestamp": 1779184037
+        },
+        {
+            "role": "user",
+            "content": "Agenda Paroki",
+            "timestamp": 1779184042
+        },
+        {
+            "role": "assistant",
+            "content": "📅 Info & Agenda Paroki SMDTBA:\n\nHalaman Agenda memuat semua informasi resmi paroki:\n• Jadwal misa khusus (hari raya, novena, dll)\n• Kegiatan kategorial & komunitas\n• Pengumuman penting paroki\n• Dokumen yang bisa diunduh\n\nSelalu cek agenda untuk info terkini!",
+            "source": "kb",
+            "timestamp": 1779184042
+        },
+        {
+            "role": "user",
+            "content": "tiket",
+            "timestamp": 1779184050
+        },
+        {
+            "role": "assistant",
+            "content": "Halo! Jika yang Anda maksud adalah tiket untuk acara \"Malam Kasih & Ngopi Bareng Bersama Romo Eko\" untuk pembangunan Griya Pastoral, Anda dapat melihat informasi lengkapnya di Artikel Berita kami.\n\nAcara tersebut akan diselenggarakan pada:\n• Jumat, 17 Juli 2026\n• Pukul 18.00 – 21.00 WIB\n• Lokasi: Crown Victoria Hotel, Tulungagung\n\nUntuk detail pembelian tiket dan informasi lebih lanjut, silakan kunjungi halaman Kontak kami agar Pengurus Gereja dapat membantu Anda. Tuhan memberkati.",
+            "source": "gemini",
+            "timestamp": 1779184050
+        }
+    ],
+    "meta": []
+}

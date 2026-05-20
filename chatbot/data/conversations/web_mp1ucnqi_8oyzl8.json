@@ -1,0 +1,65 @@
+{
+    "session_id": "web_mp1ucnqi_8oyzl8",
+    "created_at": 1778542614,
+    "last_active": 1778542864,
+    "page_context": "https:\/\/www.parokitulungagung.org\/ (Gereja Katolik Tulungagung | Paroki SMDTBA)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "E-Ticket",
+            "timestamp": 1778542614
+        },
+        {
+            "role": "assistant",
+            "content": "🎟️ E-Ticket tersedia!\n\nEvent: Malam Kasih & Ngopi Bareng Romo Eko\n📅 Jumat, 17 Juli 2026 | 18.00 – 21.00 WIB\n📍 Crown Victoria Hotel, Tulungagung\n\nHarga tiket mulai Rp 150.000. Untuk pembangunan Griya Pastoral Umat.",
+            "source": "kb",
+            "timestamp": 1778542614
+        },
+        {
+            "role": "user",
+            "content": "Kak kalau sdh pesan, kita tunjukin apa masuknya",
+            "timestamp": 1778542699
+        },
+        {
+            "role": "assistant",
+            "content": "Halo! Jika Anda sudah memesan tiket untuk acara Malam Kasih & Ngopi Bareng tersebut, Anda cukup menunjukkan QR Code atau nomor konfirmasi pemesanan yang telah dikirimkan ke email atau WhatsApp Anda saat melakukan registrasi.\n\nPastikan Anda menyiapkan bukti tersebut di ponsel Anda agar proses masuk ke lokasi acara di Crown Victoria Hotel menjadi lebih cepat dan lancar. Sampai jumpa di sana!",
+            "source": "gemini",
+            "timestamp": 1778542699
+        },
+        {
+            "role": "user",
+            "content": "Ok kak, td saya sudah upload, dibuat telpon, lsg selesai",
+            "timestamp": 1778542805
+        },
+        {
+            "role": "assistant",
+            "content": "Terima kasih banyak atas konfirmasinya! Senang mendengar proses pemesanan tiket Anda berjalan lancar.\n\nKami tunggu kehadiran Anda di acara Malam Kasih & Ngopi Bareng bersama Romo Eko. Semoga acara ini membawa berkat dan kebersamaan bagi kita semua.",
+            "source": "gemini",
+            "timestamp": 1778542805
+        },
+        {
+            "role": "user",
+            "content": "Sama\"",
+            "timestamp": 1778542836
+        },
+        {
+            "role": "assistant",
+            "content": "Sama-sama! Jika nanti ada hal lain yang ingin ditanyakan seputar jadwal kegiatan paroki atau informasi lainnya, jangan ragu untuk menghubungi saya kembali ya. Tuhan memberkati!",
+            "source": "gemini",
+            "timestamp": 1778542836
+        },
+        {
+            "role": "user",
+            "content": "Amin",
+            "timestamp": 1778542864
+        },
+        {
+            "role": "assistant",
+            "content": "Amin! 🙏",
+            "source": "gemini",
+            "timestamp": 1778542864
+        }
+    ],
+    "meta": []
+}

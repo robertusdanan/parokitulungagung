@@ -1,0 +1,18 @@
+{
+    "vvip": {
+        "open_quota": 100,
+        "closed": false
+    },
+    "vip": {
+        "open_quota": 250,
+        "closed": false
+    },
+    "kelas1": {
+        "open_quota": 350,
+        "closed": false
+    },
+    "reguler": {
+        "open_quota": 200,
+        "closed": false
+    }
+}

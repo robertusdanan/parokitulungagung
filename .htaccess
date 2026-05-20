@@ -1,0 +1,343 @@
+# =========================================================
+# CORE
+# =========================================================
+Options -Indexes
+RewriteEngine On
+
+# =========================================================
+# FORCE HTTPS
+# (Aktif kembali karena sudah tidak melalui Cloudflare proxy)
+# =========================================================
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# =========================================================
+# FORCE WWW
+# =========================================================
+RewriteCond %{HTTP_HOST} ^parokitulungagung\.org$ [NC]
+RewriteRule ^ https://www.parokitulungagung.org%{REQUEST_URI} [R=301,L]
+
+# =========================================================
+# PROTEKSI DIREKTORI CACHE RUNTIME
+# =========================================================
+<IfModule mod_authz_core.c>
+  <Directory "cache/runtime">
+    Require all denied
+  </Directory>
+</IfModule>
+
+# =========================================================
+# SITEMAP
+# =========================================================
+RewriteRule ^sitemap\.xml$             sitemap.php                       [L]
+RewriteRule ^sitemap-static\.xml$      sitemap-static.php                [L]
+RewriteRule ^sitemap-berita\.xml$      sitemap-article.php?menu=berita   [L]
+RewriteRule ^sitemap-kronik\.xml$      sitemap-article.php?menu=kronik   [L]
+RewriteRule ^sitemap-historia\.xml$    sitemap-article.php?menu=historia [L]
+RewriteRule ^sitemap-kelompok\.xml$    sitemap-kelompok.php              [L]
+RewriteRule ^sitemap-galeri-foto\.xml$ sitemap-galeri-foto.php           [L]
+
+# =========================================================
+# REDIRECT LAMA
+# =========================================================
+RewriteCond %{THE_REQUEST} \s/pages/komedi [NC]
+RewriteRule ^pages/komedi(/.*)?$ /komedi$1 [R=301,L]
+
+RewriteCond %{THE_REQUEST} \s/pages/srm [NC]
+RewriteRule ^pages/srm(/.*)?$ /srm$1 [R=301,L]
+
+# =========================================================
+# CLEAN PARAMETER (buang query tidak penting)
+# =========================================================
+RewriteCond %{QUERY_STRING} (^|&)(i|p)=[0-9]+(&|$) [NC]
+RewriteRule ^ %{REQUEST_URI}? [R=301,L]
+
+# =========================================================
+# STATIC FILE BYPASS
+# =========================================================
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule \.(css|js|jpg|jpeg|png|webp|gif|svg|ico|woff2|woff|ttf|eot|otf)$ - [L]
+
+# =========================================================
+# SERVICE WORKER
+# =========================================================
+RewriteRule ^public/pdfviewer/sw\.js$ - [L]
+
+# =========================================================
+# ARTIKEL DETAIL: /artikel/{menu}/{slug}
+# =========================================================
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^artikel/([a-z]+)/([^/]+)/?$ pages/artikel-detail.php?menu=$1&slug=$2 [L,QSA]
+
+# =========================================================
+# ARTIKEL LIST: /artikel/{menu} dan /artikel/{menu}/page/{n}
+# =========================================================
+RewriteRule ^artikel/([a-zA-Z0-9_-]+)/page/([0-9]+)/?$ pages/artikel.php?menu=$1&hal=$2 [L]
+RewriteRule ^artikel/([a-zA-Z0-9_-]+)/?$               pages/artikel.php?menu=$1        [L]
+
+# =========================================================
+# KELOMPOK KATEGORIAL: /kategorial/{slug}
+# =========================================================
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^kategorial/([a-z0-9\-]+)/?$ pages/kelompok.php?type=$1 [L,QSA]
+
+# Redirect lama /pages/kelompok?type=slug → /kategorial/slug
+RewriteCond %{THE_REQUEST} \s/pages/kelompok [NC]
+RewriteCond %{QUERY_STRING} (?:^|&)type=([a-z0-9\-]+) [NC]
+RewriteRule ^pages/kelompok\.php$ /kategorial/%1? [R=301,L]
+
+# =========================================================
+# ANALYTICS ALIAS: /analisis → GA4/analytics.html
+# =========================================================
+RewriteRule ^analisis/?$ GA4/analytics.html [L]
+
+# =========================================================
+# HALAMAN DEDICATED
+# =========================================================
+# ── Penulis / Author profile (E-E-A-T) ──────────────────────────────
+RewriteRule ^penulis/([a-z0-9\-]+)/?$ pages/penulis.php?slug=$1 [L,QSA]
+RewriteRule ^penulis/?$               pages/penulis.php          [L]
+
+RewriteRule ^agenda/?$            pages/agenda.php            [L]
+RewriteRule ^galeri/?$            pages/galeri.php            [L]
+RewriteRule ^profil-ai/?$         pages/profil-ai.php         [L]
+RewriteRule ^profil-dpp/?$        pages/profil-dpp.php        [L]
+RewriteRule ^profil-lingkungan/?$ pages/profil-lingkungan.php [L]
+RewriteRule ^kategorial/?$        pages/kategorial.php        [L]
+RewriteRule ^umkmumat/?$          pages/umkmumat.php          [L]
+RewriteRule ^e-lonceng/?$         pages/e-lonceng.php         [L]
+
+# Komponen statis
+RewriteRule ^kontak/?$            components/kontak.php            [L]
+RewriteRule ^tentang/?$           components/tentang.php           [L]
+RewriteRule ^jadwal-misa/?$       components/jadwal-misa.php       [L]
+RewriteRule ^kebijakan-privasi/?$ components/kebijakan-privasi.php [L]
+RewriteRule ^kebijakan-cookie/?$  components/kebijakan-cookie.php  [L]
+
+# =========================================================
+# SRM & KOMEDI
+# =========================================================
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^srm/?(.*)$ pages/srm/$1 [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^komedi/?(.*)$ pages/komedi/$1 [L]
+
+# =========================================================
+# CLEAN URL fallback (.php removal)
+# =========================================================
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.+?)/?$ $1.php [L,QSA]
+
+# =========================================================
+# FALLBACK ke index.php (HARUS PALING BAWAH)
+# =========================================================
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [L,QSA]
+
+# =========================================================
+# ERROR HANDLER
+# =========================================================
+ErrorDocument 400 /error.php
+ErrorDocument 401 /error.php
+ErrorDocument 403 /error.php
+ErrorDocument 404 /error.php
+ErrorDocument 405 /error.php
+ErrorDocument 408 /error.php
+ErrorDocument 429 /error.php
+ErrorDocument 500 /error.php
+ErrorDocument 502 /error.php
+ErrorDocument 503 /error.php
+ErrorDocument 504 /error.php
+ErrorDocument 505 /error.php
+
+# =========================================================
+# GZIP
+# =========================================================
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css
+  AddOutputFilterByType DEFLATE application/javascript text/javascript
+  AddOutputFilterByType DEFLATE application/json image/svg+xml
+</IfModule>
+
+# =========================================================
+# CACHE — Auto-versioning strategy
+# HTML/PHP: always revalidate (no cache)
+# CSS/JS dengan ?v=timestamp: immutable 1 tahun
+# CSS/JS tanpa ?v: revalidate setiap request
+# Gambar & font: cache panjang (jarang berubah)
+# =========================================================
+
+# ── Artikel: cache 2 jam, 5 menit di browser ────────────
+<IfModule mod_rewrite.c>
+  RewriteCond %{REQUEST_URI} ^/artikel/[a-z]+/[^/]+/?$
+  RewriteRule ^ - [E=IS_ARTIKEL:1]
+</IfModule>
+<IfModule mod_headers.c>
+  Header set Cache-Control "public, max-age=300, s-maxage=7200" env=IS_ARTIKEL
+</IfModule>
+
+# ── Halaman statis: cache 30 menit, 5 menit di browser ──
+<IfModule mod_rewrite.c>
+  RewriteCond %{REQUEST_URI} ^/(galeri|agenda|jadwal-misa|tentang|kontak|kategorial|profil-ai|profil-dpp|profil-lingkungan)/?$
+  RewriteRule ^ - [E=IS_STATIC_PAGE:1]
+</IfModule>
+<IfModule mod_headers.c>
+  Header set Cache-Control "public, max-age=300, s-maxage=1800" env=IS_STATIC_PAGE
+</IfModule>
+
+# ── Admin: jangan di-cache sama sekali ──────────────────
+<IfModule mod_rewrite.c>
+  RewriteCond %{REQUEST_URI} ^/admin
+  RewriteRule ^ - [E=IS_ADMIN:1]
+</IfModule>
+<IfModule mod_headers.c>
+  Header set Cache-Control "no-cache, no-store, must-revalidate" env=IS_ADMIN
+</IfModule>
+
+# ── HTML & PHP lainnya: jangan di-cache browser ─────────
+<IfModule mod_headers.c>
+  Header set Cache-Control "no-cache, no-store, must-revalidate"
+  Header set Pragma "no-cache"
+  Header set Expires "0"
+</IfModule>
+
+# ── CSS & JS tanpa query string: revalidate ──────────────
+<IfModule mod_headers.c>
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "public, must-revalidate, max-age=0"
+  </FilesMatch>
+</IfModule>
+
+# ── CSS & JS dengan ?v=xxx: immutable 1 tahun ────────────
+<IfModule mod_rewrite.c>
+  RewriteCond %{QUERY_STRING} v=\d+
+  RewriteCond %{REQUEST_URI} \.(css|js)$
+  RewriteRule ^ - [E=VERSIONED_ASSET:1]
+</IfModule>
+<IfModule mod_headers.c>
+  Header set Cache-Control "public, max-age=31536000, immutable" env=VERSIONED_ASSET
+</IfModule>
+
+# ── Font: cache 1 tahun ───────────────────────────────────
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType font/woff2              "access plus 1 year"
+  ExpiresByType font/woff               "access plus 1 year"
+  ExpiresByType application/font-woff2  "access plus 1 year"
+  ExpiresByType application/font-woff   "access plus 1 year"
+</IfModule>
+<FilesMatch "\.(woff2|woff|ttf|eot|otf)$">
+  <IfModule mod_headers.c>
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </IfModule>
+</FilesMatch>
+
+# ── Gambar statis: cache 6 bulan ─────────────────────────
+<IfModule mod_expires.c>
+  ExpiresByType image/webp    "access plus 6 months"
+  ExpiresByType image/jpeg    "access plus 6 months"
+  ExpiresByType image/jpg     "access plus 6 months"
+  ExpiresByType image/png     "access plus 6 months"
+  ExpiresByType image/gif     "access plus 6 months"
+  ExpiresByType image/svg+xml "access plus 6 months"
+  ExpiresByType image/x-icon  "access plus 1 year"
+</IfModule>
+
+# =========================================================
+# MIME TYPE
+# =========================================================
+<IfModule mod_mime.c>
+  AddType text/css .css
+  AddType application/javascript .js
+  AddType font/woff2 .woff2
+</IfModule>
+
+# =========================================================
+# SECURITY HEADERS
+# =========================================================
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
+  Header always set Content-Security-Policy "\
+default-src 'self';\
+script-src 'self' 'unsafe-inline' \
+  https://unpkg.com \
+  https://cdn.tailwindcss.com \
+  https://cdn.jsdelivr.net \
+  https://www.googletagmanager.com \
+  https://cdn.sheetjs.com \
+  https://cdnjs.cloudflare.com \
+  https://challenges.cloudflare.com \
+  https://static.cloudflareinsights.com \
+  https://script.google.com;\
+style-src 'self' 'unsafe-inline' \
+  https://fonts.googleapis.com \
+  https://cdn.jsdelivr.net \
+  https://cdnjs.cloudflare.com \
+  https://challenges.cloudflare.com;\
+font-src 'self' \
+  https://fonts.gstatic.com \
+  https://cdn.jsdelivr.net \
+  https://cdnjs.cloudflare.com;\
+img-src 'self' data: blob: \
+  https://rkzaathgygfjovrpdlqi.supabase.co \
+  https://*.googleusercontent.com \
+  https://photos.app.goo.gl \
+  https://lh3.googleusercontent.com \
+  https://via.placeholder.com \
+  https://www.googletagmanager.com \
+  https://www.google-analytics.com \
+  https://www.google.com \
+  https://maps.app.goo.gl \
+  https://goo.gl;\
+frame-src 'self' \
+  https://anyflip.com \
+  https://www.youtube.com \
+  https://wa.me \
+  https://www.google.com \
+  https://maps.google.com \
+  https://maps.app.goo.gl \
+  https://challenges.cloudflare.com;\
+connect-src 'self' \
+  https://rkzaathgygfjovrpdlqi.supabase.co \
+  https://www.googletagmanager.com \
+  https://www.google-analytics.com \
+  https://opensheet.elk.sh \
+  https://unpkg.com \
+  https://challenges.cloudflare.com \
+  https://static.cloudflareinsights.com \
+  https://api.ipify.org \
+  https://sheetdb.io \
+  https://script.google.com \
+  https://sheets.googleapis.com \
+  https://oauth2.googleapis.com \
+  https://www.googleapis.com;\
+object-src 'none';\
+base-uri 'self';\
+form-action 'self';\
+upgrade-insecure-requests;"
+
+  <FilesMatch "\.(pdf|PDF)$">
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Content-Disposition "inline"
+    Header set Content-Type "application/pdf"
+  </FilesMatch>
+</IfModule>
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the "ea-php82" package as the default "PHP" programming language.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php82___lsphp .php .php8 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit
