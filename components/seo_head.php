@@ -1,5 +1,5 @@
 <?php
-// ── Helper: baca file aset lokal, embed inline (mencegah error 525 Cloudflare) ──
+
 if (!function_exists('readAsset')) {
     function readAsset(string $path): string {
         $full = rtrim($_SERVER['DOCUMENT_ROOT'] ?? __DIR__ . '/../../', '/') . '/' . ltrim($path, '/');
@@ -495,6 +495,9 @@ $_vfn = function_exists('versioned') ? 'versioned' : '_vr';
   }
 })();
 </script>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3946321979629144"
+     crossorigin="anonymous"></script>
 
 <!-- Structured Data -->
 <?php foreach ($schemas as $schema): ?>

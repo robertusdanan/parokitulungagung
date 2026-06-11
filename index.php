@@ -22,6 +22,7 @@ $chatbot_path = __DIR__ . '/../chatbot/index.php';
 <html lang="id">
 <head>
 <meta charset="UTF-8">
+<?php include __DIR__ . '/../components/seo_head.php'; ?>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?php echo htmlspecialchars($site_title); ?></title>
 <meta name="description" content="<?php echo htmlspecialchars($site_description); ?>">
@@ -306,7 +307,7 @@ button.btn-login-portal .login-dot { width: 5px; height: 5px; border-radius: 50%
   width: 100%;
   height: 100vh;
   min-height: 460px;
-  max-height: 690px;
+  max-height: 650px;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -948,7 +949,7 @@ main { padding-top: 20px; padding-bottom: 32px; }
           <p class="event-banner-subtitle">Untuk Pembangunan Griya Pastoral Umat<br>Paroki Tulungagung</p>
           <div class="event-banner-meta">
             <div class="event-meta-item">📅 <span>Jumat, 17 Juli 2026</span></div>
-            <div class="event-meta-item">🕕 <span>18.00 – 21.00 WIB &nbsp;·&nbsp; Open Gate 16.00</span></div>
+            <div class="event-meta-item">🕕 <span>17.00 – 21.00 WIB &nbsp;·&nbsp; Open Gate 16.00</span></div>
             <div class="event-meta-item">📍 <span>Crown Victoria Hotel, Tulungagung</span></div>
           </div>
           <div class="event-banner-tickets">
@@ -1140,6 +1141,8 @@ main { padding-top: 20px; padding-bottom: 32px; }
         <li><a href="/jadwal-misa">Jadwal Misa</a></li>
         <li><a href="/galeri">Galeri Foto</a></li>
         <li><a href="/kontak">Kontak</a></li>
+        <li><a href="/tvdigital">TV Digital</a></li>
+        <li><a href="/babykeyboard">Baby Keyboard Fun</a></li>
         <li><a href="/kebijakan-privasi">Kebijakan Privasi</a></li>
         <li><a href="/kebijakan-cookie">Kebijakan Cookie</a></li>
       </ul>

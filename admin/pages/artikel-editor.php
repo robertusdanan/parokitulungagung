@@ -486,6 +486,17 @@ adminHeader($pageTitle, 'artikel', $user);
         </div>
         Generate OG preview WhatsApp
       </div>
+      <div class="save-step" id="step4">
+        <div class="step-icon" id="step4Icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               width="11" height="11">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="M21 21l-4.35-4.35"/>
+            <path d="M11 8v6M8 11h6"/>
+          </svg>
+        </div>
+        Generate SEO gambar (AI)
+      </div>
     </div>
 
     <button class="save-close-btn" id="saveCloseBtn" onclick="closeSaveOverlay()">
@@ -770,7 +781,7 @@ const overlay = {
     const o = this.el();
     o.className = 'save-overlay show';
     // Reset semua step
-    [1,2,3].forEach(n => {
+    [1,2,3,4].forEach(n => {
       const s = this.step(n);
       if (s) s.className = 'save-step';
     });
@@ -952,6 +963,7 @@ async function submitArtikel() {
   } catch (e) {
     overlay.setStep(2, 'error');
     overlay.setStep(3, 'error');
+    overlay.setStep(4, 'error');
     overlay.error('Koneksi gagal. Periksa jaringan Anda.');
     return;
   }
@@ -959,6 +971,7 @@ async function submitArtikel() {
   if (!res.success) {
     overlay.setStep(2, 'error');
     overlay.setStep(3, 'error');
+    overlay.setStep(4, 'error');
     overlay.error(res.error || 'Gagal menyimpan artikel.');
     return;
   }
@@ -977,6 +990,43 @@ async function submitArtikel() {
   } else {
     // Tidak ada thumbnail — step 3 dilewati
     overlay.setStep(3, 'done');
+  }
+
+  // Step 4: SEO AI — hanya untuk artikel published yang punya gambar
+  const isPublished = data.status === 'published';
+  const savedId     = res.data?.id || EDIT_ID || null;
+  const savedMenu   = menu;
+  const savedKonten = data.konten || '';
+  const hasImages   = /<img\s/i.test(savedKonten);
+
+  if (isPublished && savedId && hasImages) {
+    overlay.setStep(4, 'active');
+    try {
+      const seoRes = await fetch('/admin/api/seo-artikel.php', {
+        method:  'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          action:        'process',
+          artikel_id:    savedId,
+          artikel_menu:  savedMenu,
+          artikel_judul: data.judul,
+          artikel_tags:  data.tags || '',
+          force:         false,   // hanya generate gambar yang belum ada
+        }),
+      });
+      const seoData = await seoRes.json();
+      if (seoData.ok) {
+        overlay.setStep(4, 'done');
+      } else {
+        // SEO gagal — bukan error fatal
+        overlay.setStep(4, 'error');
+      }
+    } catch (_e) {
+      overlay.setStep(4, 'error');
+    }
+  } else {
+    // Draft / tidak ada gambar — lewati step 4
+    overlay.setStep(4, 'done');
   }
 
   await _delay(300);

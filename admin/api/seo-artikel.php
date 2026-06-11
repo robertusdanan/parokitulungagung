@@ -3,10 +3,15 @@
 ob_start();
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/functions.php';
-require_once __DIR__ . '/../includes/seo-keywords.php';
 require_once __DIR__ . '/../includes/ImageSeoGenerator.php';
 require_once __DIR__ . '/../../includes/SupabaseArticleManager.php'; // tetap di root includes
 adminBoot();
+
+// AI timeout lebih panjang — Gemini/Groq butuh waktu lebih dari request biasa
+if (!headers_sent()) {
+    @set_time_limit(120);
+    @ini_set('max_execution_time', '120');
+}
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -231,9 +236,9 @@ try {
             // Tentukan label kategori
             $menuLabel = match ($artikelMenu) {
                 'berita'   => 'Liputan Berita',
-                'kronik'   => 'Kronik SMDTBA',
+                'kronik'   => 'Kronik Gereja Katolik Tulungagung',
                 'historia' => 'Historia Gereja',
-                default    => 'Paroki SMDTBA Tulungagung',
+                default    => 'Gereja Katolik Tulungagung',
             };
 
             $artData = [
@@ -242,11 +247,13 @@ try {
                 'tags'     => $artikelTags,
                 'kategori' => $menuLabel,
                 'menu'     => $artikelMenu,
+                'konten'   => $konten,   // HTML lengkap untuk ekstraksi konteks sekitar foto
             ];
 
-            $generated = 0;
-            $skipped   = 0;
-            $errors    = [];
+            $generated  = 0;
+            $skipped    = 0;
+            $errors     = [];
+            $aiModels   = []; // track model AI yang digunakan
 
             foreach ($srcs as $src) {
                 if (!$forceRegen && isset($existingSrcs[$src])) {
@@ -255,8 +262,11 @@ try {
                 }
                 try {
                     $ok = ImageSeoGenerator::forceGenerateToSupabase($src, $artData);
-                    if ($ok) $generated++;
-                    else $errors[] = basename($src) . ': generate returned false';
+                    if ($ok) {
+                        $generated++;
+                    } else {
+                        $errors[] = basename($src) . ': generate returned false';
+                    }
                 } catch (Throwable $e) {
                     $errors[] = basename($src) . ': ' . $e->getMessage();
                 }
@@ -264,7 +274,11 @@ try {
 
             // Log aktivitas
             getLogger()->log($user, 'CREATE', 'seo-artikel',
-                "SEO generate: {$generated} gambar diproses dari \"{$artikelJudul}\"");
+                "SEO AI generate: {$generated} gambar diproses dari \"{$artikelJudul}\"");
+
+            $msgParts = ["✓ {$generated} gambar digenerate via AI"];
+            if ($skipped > 0) $msgParts[] = "{$skipped} sudah ada";
+            if (!empty($errors)) $msgParts[] = count($errors) . " error";
 
             ob_end_clean();
             apiJson([
@@ -273,7 +287,7 @@ try {
                 'skipped'   => $skipped,
                 'total_img' => count($srcs),
                 'errors'    => $errors,
-                'msg'       => "✓ {$generated} gambar digenerate, {$skipped} sudah ada",
+                'msg'       => implode(', ', $msgParts),
             ]);
         }
 

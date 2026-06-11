@@ -216,6 +216,12 @@ function fetchSupabase(
 /**
  * fetchSupabaseCached() — wrapper fetchSupabase() dengan file cache
  * TTL default 300 detik (5 menit). Cache disimpan di /cache/supabase/
+ *
+ * Strategi anti-spam:
+ * - Setiap tabel/query punya tepat 1 file cache (.json) + 1 lock (.stale).
+ *   File lama langsung di-replace (atomic via rename), tidak pernah bertambah.
+ * - GC probabilistik (1% request): hapus .stale orphan > 5 menit dan
+ *   .json yang sudah expired > 3× TTL (tidak aktif / tidak pernah di-hit lagi).
  */
 function fetchSupabaseCached(
     string $table,
@@ -231,6 +237,22 @@ function fetchSupabaseCached(
 
     if (!is_dir($cacheDir)) @mkdir($cacheDir, 0755, true);
 
+    // ── Garbage collection probabilistik (1% request) ────────────────
+    // Berjalan di background (shutdown), tidak memperlambat response.
+    if (mt_rand(1, 100) === 1) {
+        register_shutdown_function(function() use ($cacheDir, $ttl) {
+            $now = time();
+            foreach (glob($cacheDir . '/*.stale') ?: [] as $f) {
+                // Hapus .stale orphan yang stuck > 5 menit
+                if ($now - @filemtime($f) > 300) @unlink($f);
+            }
+            foreach (glob($cacheDir . '/*.json') ?: [] as $f) {
+                // Hapus .json yang expired > 3× TTL (sudah tidak aktif)
+                if ($now - @filemtime($f) > $ttl * 3) @unlink($f);
+            }
+        });
+    }
+
     $cacheExists = file_exists($cacheFile);
     $cacheAge    = $cacheExists ? (time() - filemtime($cacheFile)) : PHP_INT_MAX;
     $cached      = $cacheExists ? @json_decode(file_get_contents($cacheFile), true) : null;
@@ -241,7 +263,8 @@ function fetchSupabaseCached(
     }
 
     // ── Stale-while-revalidate ────────────────────────────────────────
-    // Cache expired tapi ada: kembalikan data lama, refresh di background
+    // Cache expired tapi ada: kembalikan data lama, refresh di background.
+    // File lama di-replace atomik (tmp → rename), bukan append/duplikat baru.
     if ($cacheExists && is_array($cached)) {
         $revalidating = file_exists($staleFile) && (time() - filemtime($staleFile)) < 30;
         if (!$revalidating) {
@@ -250,7 +273,13 @@ function fetchSupabaseCached(
                 use ($table, $filters, $order, $select, $cacheFile, $staleFile) {
                     $fresh = fetchSupabase($table, $filters, $order, $select);
                     if (is_array($fresh) && !empty($fresh)) {
-                        @file_put_contents($cacheFile, json_encode($fresh), LOCK_EX);
+                        // Tulis ke tmp dulu, lalu rename — atomic, tidak corrupt
+                        $tmp = $cacheFile . '.tmp.' . getmypid();
+                        if (@file_put_contents($tmp, json_encode($fresh), LOCK_EX) !== false) {
+                            @rename($tmp, $cacheFile);
+                        } else {
+                            @unlink($tmp);
+                        }
                     }
                     @unlink($staleFile);
                 }
@@ -262,7 +291,12 @@ function fetchSupabaseCached(
     // ── Cache miss — fetch sinkron (hanya request pertama) ───────────
     $data = fetchSupabase($table, $filters, $order, $select);
     if (is_array($data) && !empty($data)) {
-        @file_put_contents($cacheFile, json_encode($data), LOCK_EX);
+        $tmp = $cacheFile . '.tmp.' . getmypid();
+        if (@file_put_contents($tmp, json_encode($data), LOCK_EX) !== false) {
+            @rename($tmp, $cacheFile);
+        } else {
+            @unlink($tmp);
+        }
     }
     return $data;
 }
@@ -353,6 +387,12 @@ function e(?string $str): string
 /**
  * File-based cache helper — persisten di /cache/runtime/ (bukan /tmp)
  * Dipakai oleh artikel-detail, homepage, dan halaman lain yang butuh cache ringan.
+ *
+ * Strategi anti-spam:
+ * - Setiap key punya tepat 1 file. cache_set() memakai tmp→rename (atomic),
+ *   jadi file lama langsung terganti, tidak pernah duplikat.
+ * - GC probabilistik (2% saat cache_get): scan folder, hapus semua file
+ *   yang sudah expired. Berjalan di background, tidak memperlambat response.
  */
 function cache_get(string $key) {
     $dir  = rtrim($_SERVER['DOCUMENT_ROOT'] ?? __DIR__, '/') . '/cache/runtime';
@@ -360,6 +400,18 @@ function cache_get(string $key) {
     if (!file_exists($file)) return null;
     $data = @unserialize(file_get_contents($file));
     if (!$data || $data['exp'] < time()) { @unlink($file); return null; }
+
+    // GC probabilistik: 2% dari request, berjalan setelah response dikirim
+    if (mt_rand(1, 50) === 1) {
+        register_shutdown_function(function() use ($dir) {
+            $now = time();
+            foreach (glob($dir . '/p_*.cache') ?: [] as $f) {
+                $d = @unserialize(@file_get_contents($f));
+                if (!$d || $d['exp'] < $now) @unlink($f);
+            }
+        });
+    }
+
     return $data['val'];
 }
 
@@ -367,7 +419,13 @@ function cache_set(string $key, $value, int $ttl = 600): void {
     $dir  = rtrim($_SERVER['DOCUMENT_ROOT'] ?? __DIR__, '/') . '/cache/runtime';
     if (!is_dir($dir)) @mkdir($dir, 0755, true);
     $file = $dir . '/p_' . md5($key) . '.cache';
-    @file_put_contents($file, serialize(['exp' => time() + $ttl, 'val' => $value]), LOCK_EX);
+    // Tulis ke tmp dulu, lalu rename — atomic (tidak corrupt jika ada race condition)
+    $tmp = $file . '.tmp.' . getmypid();
+    if (@file_put_contents($tmp, serialize(['exp' => time() + $ttl, 'val' => $value]), LOCK_EX) !== false) {
+        @rename($tmp, $file);
+    } else {
+        @unlink($tmp);
+    }
 }
 
 /**

@@ -1,0 +1,32 @@
+[02-Jun-2026 16:40:59 Asia/Jakarta] PHP Fatal error:  Uncaught Error: Call to undefined function mb_strlen() in /home/ejtkecoh/public_html/chatbot/api/chatbot.php:43
+Stack trace:
+#0 {main}
+  thrown in /home/ejtkecoh/public_html/chatbot/api/chatbot.php on line 43
+[02-Jun-2026 16:44:19 Asia/Jakarta] PHP Fatal error:  Uncaught Error: Call to undefined function mb_strlen() in /home/ejtkecoh/public_html/chatbot/api/chatbot.php:43
+Stack trace:
+#0 {main}
+  thrown in /home/ejtkecoh/public_html/chatbot/api/chatbot.php on line 43
+[02-Jun-2026 16:44:48 Asia/Jakarta] PHP Fatal error:  Uncaught Error: Call to undefined function mb_strlen() in /home/ejtkecoh/public_html/chatbot/api/chatbot.php:43
+Stack trace:
+#0 {main}
+  thrown in /home/ejtkecoh/public_html/chatbot/api/chatbot.php on line 43
+[02-Jun-2026 16:45:34 Asia/Jakarta] PHP Fatal error:  Uncaught Error: Call to undefined function mb_strlen() in /home/ejtkecoh/public_html/chatbot/api/chatbot.php:43
+Stack trace:
+#0 {main}
+  thrown in /home/ejtkecoh/public_html/chatbot/api/chatbot.php on line 43
+[02-Jun-2026 17:03:12 Asia/Jakarta] PHP Fatal error:  Uncaught Error: Call to undefined function mb_strlen() in /home/ejtkecoh/public_html/chatbot/api/chatbot.php:43
+Stack trace:
+#0 {main}
+  thrown in /home/ejtkecoh/public_html/chatbot/api/chatbot.php on line 43
+[02-Jun-2026 17:03:19 Asia/Jakarta] PHP Fatal error:  Uncaught Error: Call to undefined function mb_strlen() in /home/ejtkecoh/public_html/chatbot/api/chatbot.php:43
+Stack trace:
+#0 {main}
+  thrown in /home/ejtkecoh/public_html/chatbot/api/chatbot.php on line 43
+[02-Jun-2026 17:03:36 Asia/Jakarta] PHP Fatal error:  Uncaught Error: Call to undefined function mb_strlen() in /home/ejtkecoh/public_html/chatbot/api/chatbot.php:43
+Stack trace:
+#0 {main}
+  thrown in /home/ejtkecoh/public_html/chatbot/api/chatbot.php on line 43
+[02-Jun-2026 17:08:13 Asia/Jakarta] PHP Fatal error:  Uncaught Error: Call to undefined function mb_strlen() in /home/ejtkecoh/public_html/chatbot/api/chatbot.php:43
+Stack trace:
+#0 {main}
+  thrown in /home/ejtkecoh/public_html/chatbot/api/chatbot.php on line 43

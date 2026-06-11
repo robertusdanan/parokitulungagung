@@ -25,8 +25,8 @@ class MailerKontak
     private string $password = '753214Arjuna';
 
     // Email tujuan admin/sekretariat
-    private string $adminEmail = 'support@parokitulungagung.org';
-    private string $adminName  = 'Support Paroki';
+    private string $adminEmail = 'sanmardtba@gmail.com';
+    private string $adminName  = 'Sekretariat Paroki';
 
     private array $log = [];
 
@@ -146,12 +146,19 @@ class MailerKontak
 
         stream_set_timeout($sock, 15);
 
-        // Baca banner 220
-        $banner = fgets($sock, 512);
-        $this->log[] = "S: " . trim($banner);
+        // Baca banner 220 (bisa multi-line: 220- ... lalu 220 spasi)
+        $bannerCode = '';
+        while (true) {
+            $line = fgets($sock, 512);
+            if ($line === false) break;
+            $this->log[] = "S: " . trim($line);
+            $bannerCode = substr(trim($line), 0, 3);
+            // Baris terakhir ditandai karakter ke-4 adalah spasi (bukan '-')
+            if (strlen($line) >= 4 && $line[3] === ' ') break;
+        }
 
-        if (!str_starts_with(trim($banner), '220')) {
-            throw new RuntimeException("MailerKontak: Banner SMTP tidak valid: " . trim($banner));
+        if ($bannerCode !== '220') {
+            throw new RuntimeException("MailerKontak: Banner SMTP tidak valid: " . $bannerCode);
         }
 
         return $sock;

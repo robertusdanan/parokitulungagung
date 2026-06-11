@@ -597,7 +597,7 @@
     <div class="ft-modal-body">
       <span class="ft-modal-label">Kontak &amp; Dukungan</span>
       <p class="ft-modal-email">support@parokitulungagung.org</p>
-      <p class="ft-modal-dev">Dikembangkan oleh <a href="/redirect.php" target="_blank">Tenaga IT Paroki Tulungagung</a></p>
+      <p class="ft-modal-dev">Dikembangkan oleh <a href="https://robertusdanan.onrender.com/">Tenaga IT Paroki Tulungagung</a></p>
     </div>
   </div>
 </div>
@@ -691,8 +691,11 @@
         <li><a href="/jadwal-misa">Jadwal Misa</a></li>
         <li><a href="/galeri">Galeri Foto</a></li>
         <li><a href="/kontak">Kontak</a></li>
+        <li><a href="/tvdigital">TV Digital</a></li>
+        <li><a href="/babykeyboard">Baby Keyboard Fun</a></li>
         <li><a href="/kebijakan-privasi">Kebijakan Privasi</a></li>
         <li><a href="/kebijakan-cookie">Kebijakan Cookie</a></li>
+        
       </ul>
     </div>
 

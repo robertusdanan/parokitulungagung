@@ -5,15 +5,18 @@ date_default_timezone_set('Asia/Jakarta');
  */
 
 // ── Load secrets dari luar public_html ──────────────────────
-// __DIR__ = /home/ejtkecoh/public_html/chatbot/api
-// dirname(__DIR__, 3) = /home/ejtkecoh
 require_once dirname(__DIR__, 3) . '/private/secrets.php';
 
-// ─── GEMINI API ───────────────────────────────────────────
-define('GEMINI_API_KEY', SECRET_GEMINI_API_KEY);
+// ─── GEMINI API KEYS ──────────────────────────────────────
+// Diambil langsung dari secrets.php (array), lalu di-expose
+// sebagai GEMINI_API_KEYS agar gemini.php bisa akses via:
+//   $keys = array_values(GEMINI_API_KEYS);
+define('GEMINI_API_KEYS', SECRET_GEMINI_API_KEYS);
 
-// ─── GROQ API (Backup jika Gemini habis token / error) ────
-define('GROQ_API_KEY',  SECRET_GROQ_API_KEY);
+// ─── GROQ API KEYS ────────────────────────────────────────
+define('GROQ_API_KEYS', SECRET_GROQ_API_KEYS);
+
+// ─── GROQ SETTINGS ────────────────────────────────────────
 define('GROQ_ENDPOINT', 'https://api.groq.com/openai/v1/chat/completions');
 
 define('GROQ_MODELS', [
@@ -25,6 +28,7 @@ define('GROQ_MODELS', [
 define('GROQ_MAX_OUTPUT_TOKENS', 250);
 define('GROQ_TEMPERATURE',       0.6);
 define('GROQ_TIMEOUT',           15);
+
 
 define('GEMINI_MODELS', [
     'gemini-3.1-flash-lite',
@@ -41,19 +45,22 @@ define('GEMINI_MODELS', [
 define('GEMINI_MAX_OUTPUT_TOKENS', 250);
 define('GEMINI_TEMPERATURE', 0.6);
 define('GEMINI_TIMEOUT', 15);
-
 /*
 |--------------------------------------------------------------------------
-| BUILD ENDPOINT
+| gemini_endpoint($model, $key)
+|--------------------------------------------------------------------------
+| Dipanggil oleh gemini.php dengan 2 argumen:
+|   $endpoint = gemini_endpoint($model, $key);
+|
+| Membangun URL lengkap endpoint Gemini untuk model & key tertentu.
 |--------------------------------------------------------------------------
 */
-function gemini_endpoint(string $model): string
+function gemini_endpoint(string $model, string $key): string
 {
-    return
-        'https://generativelanguage.googleapis.com/v1beta/models/'
+    return 'https://generativelanguage.googleapis.com/v1beta/models/'
         . $model
         . ':generateContent?key='
-        . GEMINI_API_KEY;
+        . $key;
 }
 
 // ──────────────────────────────────────────────────────────
@@ -75,7 +82,7 @@ define('MAX_MSG_LENGTH',    500);
 // ──────────────────────────────────────────────────────────
 // MEMORY
 // ──────────────────────────────────────────────────────────
-define('MAX_HISTORY',    5);
+define('MAX_HISTORY',     5);
 define('SESSION_TIMEOUT', 1800);
 
 // ──────────────────────────────────────────────────────────

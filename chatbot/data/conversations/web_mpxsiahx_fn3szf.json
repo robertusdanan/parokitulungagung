@@ -1,0 +1,21 @@
+{
+    "session_id": "web_mpxsiahx_fn3szf",
+    "created_at": 1780474436,
+    "last_active": 1780474445,
+    "page_context": "https:\/\/www.parokitulungagung.org\/galeri (Galeri Foto Kegiatan Paroki Tulungagung – 161 Album Dokumentasi)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "Lokasi Gereja",
+            "timestamp": 1780474445
+        },
+        {
+            "role": "assistant",
+            "content": "Gereja Katolik Paroki Santa Maria Dengan Tidak Bernoda Asal (SMDTBA) terletak di lokasi berikut:\nJl. Ahmad Yani Tim. Gg. IV No.1, Bago, Tulungagung 66224.\nJika Anda memerlukan bantuan lebih lanjut atau ingin menghubungi sekretariat, silakan kunjungi halaman Kontak kami. Tuhan memberkati!",
+            "source": "gemini",
+            "timestamp": 1780474445
+        }
+    ],
+    "meta": []
+}

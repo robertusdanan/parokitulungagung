@@ -46,6 +46,49 @@ $jsAll  = readAsset('js/seat-memanjang.js')
     <!-- ✅ SEMUA CSS INLINE — tidak ada request eksternal -->
     <style>
 <?= $cssAll ?>
+
+/* ================================================================
+   EXPORT PDF BUTTON
+   ================================================================ */
+.export-pdf-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    background: #6366f1;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s, transform 0.1s;
+    white-space: nowrap;
+    margin-left: auto;
+}
+.export-pdf-btn:hover {
+    background: #4f46e5;
+}
+.export-pdf-btn:active {
+    transform: scale(0.97);
+}
+.export-pdf-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+.export-pdf-btn svg {
+    flex-shrink: 0;
+}
+
+/* Spinner animasi untuk tombol saat loading */
+@keyframes exportSpinAnim {
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.export-spin {
+    animation: exportSpinAnim 0.9s linear infinite;
+}
     </style>
 </head>
 
@@ -60,10 +103,19 @@ $jsAll  = readAsset('js/seat-memanjang.js')
             <span>Kembali</span>
         </button>
         <h1 class="page-title">Pilih Tempat Duduk</h1>
+
+        <!-- ✅ TOMBOL EXPORT PDF -->
+        <button class="export-pdf-btn" id="exportPdfBtn" onclick="exportSeatLayoutPDF()">
+            <svg id="exportPdfIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 16V8M8 12l4 4 4-4"/>
+                <rect x="3" y="17" width="18" height="3" rx="1"/>
+            </svg>
+            <span id="exportBtnText">Export PDF</span>
+        </button>
     </div>
 
     <!-- MAIN CONTENT -->
-    <div class="seat-page-container">
+    <div class="seat-page-container" id="seatPageContainer">
 
         <!-- LEGEND -->
         <div class="seat-legend">
@@ -249,8 +301,8 @@ $jsAll  = readAsset('js/seat-memanjang.js')
                         </div>
 
                         <div class="input-group">
-                            <label class="input-label">Nama Lengkap</label>
-                            <input type="text" id="customerName" class="input-field" required placeholder="Masukkan nama lengkap Anda">
+                            <label class="input-label">Nama Lengkap (Kota Asal)</label>
+                            <input type="text" id="customerName" class="input-field" required placeholder="Masukkan nama + Kota asal anda">
                         </div>
 
                         <div class="input-group">
@@ -381,6 +433,309 @@ $jsAll  = readAsset('js/seat-memanjang.js')
     <!-- ✅ SEMUA JS INLINE — tidak ada request eksternal sama sekali -->
     <script>
 <?= $jsAll ?>
+
+// ================================================================
+// EXPORT SEAT LAYOUT TO PDF
+// Menggunakan html2canvas + jsPDF dari CDN (dimuat on-demand)
+// Capture seluruh layout kursi persis seperti tampilan di layar:
+//   warna zona, status terjual/tersedia, legend, instruksi — semua.
+// ================================================================
+
+function exportSeatLayoutPDF() {
+    var btn      = document.getElementById('exportPdfBtn');
+    var btnText  = document.getElementById('exportBtnText');
+    var btnIcon  = document.getElementById('exportPdfIcon');
+
+    // Tampilkan state loading
+    btn.disabled = true;
+    btnText.textContent = 'Memproses...';
+    btnIcon.innerHTML = '<path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>';
+    btnIcon.classList.add('export-spin');
+
+    // ── Muat library CDN secara on-demand ────────────────────────
+    function loadScript(src, cb) {
+        if (document.querySelector('script[src="' + src + '"]')) { cb(); return; }
+        var s    = document.createElement('script');
+        s.src    = src;
+        s.onload = cb;
+        s.onerror = function() {
+            _resetExportBtn(btn, btnText, btnIcon);
+            alert('Gagal memuat library PDF. Periksa koneksi internet Anda lalu coba lagi.');
+        };
+        document.head.appendChild(s);
+    }
+
+    // html2canvas 1.4.1 tidak support CSS color() function → pakai versi dari npm CDN
+    var H2C_SRC   = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+    var JSPDF_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+
+    loadScript(H2C_SRC, function() {
+        loadScript(JSPDF_SRC, function() {
+            _captureAndExport(btn, btnText, btnIcon);
+        });
+    });
+}
+
+// ── Reset tombol ke state semula ─────────────────────────────────
+function _resetExportBtn(btn, btnText, btnIcon) {
+    btn.disabled = false;
+    btnText.textContent = 'Export PDF';
+    btnIcon.innerHTML = '<path d="M12 16V8M8 12l4 4 4-4"/><rect x="3" y="17" width="18" height="3" rx="1"/>';
+    btnIcon.classList.remove('export-spin');
+}
+
+// ================================================================
+// SANITIZE UNSUPPORTED COLORS
+// html2canvas 1.4.x gagal parse: color(), oklch(), lab(), lch(),
+// color-mix(), dan beberapa oklch() dari Tailwind/browser defaults.
+// Solusi: walk semua elemen di cloned doc → ambil computed style →
+// timpa inline style dengan nilai rgb() / hex yang aman.
+// ================================================================
+function _sanitizeUnsupportedColors(doc) {
+    // Pola warna yang TIDAK didukung html2canvas
+    var unsafePattern = /color\(|oklch\(|oklab\(|lab\(|lch\(|color-mix\(/i;
+
+    // Property CSS warna yang perlu dicek & di-override
+    var colorProps = [
+        'color', 'backgroundColor', 'borderColor',
+        'borderTopColor', 'borderRightColor', 'borderBottomColor', 'borderLeftColor',
+        'outlineColor', 'textDecorationColor', 'caretColor',
+        'fill', 'stroke',
+    ];
+
+    // Helper: konversi nilai computed color ke rgb() literal yang aman
+    // Browser sudah resolve ke rgb() di getComputedStyle, jadi ini sebagai
+    // double-check; kalau masih ada color() → fallback ke transparent / black
+    function safeColor(val, prop) {
+        if (!val || val === 'none' || val === 'transparent' || val === 'inherit' || val === 'initial') return null;
+        if (!unsafePattern.test(val)) return null; // sudah aman, skip
+
+        // Coba baca via canvas untuk konversi (tidak selalu berhasil)
+        // Fallback cerdas berdasarkan nama property
+        if (prop === 'backgroundColor' || prop === 'background') return 'transparent';
+        if (prop === 'color') return '#1a1a1a';
+        if (prop === 'borderTopColor' || prop === 'borderRightColor' ||
+            prop === 'borderBottomColor' || prop === 'borderLeftColor' ||
+            prop === 'borderColor') return 'transparent';
+        return 'transparent';
+    }
+
+    // Walk semua elemen dalam cloned doc
+    var allEls = doc.querySelectorAll('*');
+    for (var i = 0; i < allEls.length; i++) {
+        var el = allEls[i];
+        try {
+            // Gunakan getComputedStyle dari window utama karena cloned doc
+            // mungkin tidak punya akses ke stylesheet asli
+            var cs = window.getComputedStyle(
+                document.querySelector('[id="' + el.id + '"]') || document.body
+            );
+
+            colorProps.forEach(function(prop) {
+                var raw = el.style[prop] || '';
+                if (unsafePattern.test(raw)) {
+                    var safe = safeColor(raw, prop);
+                    if (safe !== null) el.style[prop] = safe;
+                }
+            });
+        } catch(e) { /* skip elemen yang tidak bisa diakses */ }
+    }
+
+    // Patch <style> tags di dalam cloned doc:
+    // Ganti semua occurrence color(...) di inline <style> dengan fallback
+    var styleTags = doc.querySelectorAll('style');
+    for (var j = 0; j < styleTags.length; j++) {
+        var css = styleTags[j].innerHTML;
+        if (unsafePattern.test(css)) {
+            // Replace color(display-p3 ...) → fallback
+            css = css.replace(/color\([^)]+\)/g, 'inherit');
+            css = css.replace(/oklch\([^)]+\)/g, 'inherit');
+            css = css.replace(/oklab\([^)]+\)/g, 'inherit');
+            css = css.replace(/lab\([^)]+\)/g, 'inherit');
+            css = css.replace(/lch\([^)]+\)/g, 'inherit');
+            css = css.replace(/color-mix\([^)]+\)/g, 'inherit');
+            styleTags[j].innerHTML = css;
+        }
+    }
+}
+
+// ── Proses capture DOM → PDF ─────────────────────────────────────
+function _captureAndExport(btn, btnText, btnIcon) {
+
+    // Elemen yang TIDAK perlu masuk PDF
+    var excludeSelectors = [
+        '.selection-summary-bar',
+        '.selected-seats-container',
+        '#bookingModal',
+        '#classTicketModal',
+        '#warningPopup',
+        '.export-pdf-btn',
+        '.back-button',
+    ];
+
+    // Simpan & sembunyikan elemen yang dikecualikan
+    var hiddenEls      = [];
+    var originalStyles = [];
+    excludeSelectors.forEach(function(sel) {
+        var el = document.querySelector(sel);
+        if (el) {
+            hiddenEls.push(el);
+            originalStyles.push(el.style.display);
+            el.style.display = 'none';
+        }
+    });
+
+    // Simpan & perluas scroll container agar semua kursi ter-capture
+    var wrapper    = document.getElementById('seatLayoutWrapper');
+    var scrollEl   = document.querySelector('.seat-scroll-container');
+    var contentEl  = document.querySelector('.seat-layout-content');
+
+    var savedWrapper  = wrapper  ? { overflow: wrapper.style.overflow,  maxHeight: wrapper.style.maxHeight,  height: wrapper.style.height  } : null;
+    var savedScroll   = scrollEl ? { overflow: scrollEl.style.overflow, overflowX: scrollEl.style.overflowX, width: scrollEl.style.width   } : null;
+    var savedScrollLeft = scrollEl ? scrollEl.scrollLeft : 0;
+
+    if (wrapper)  { wrapper.style.overflow = 'visible'; wrapper.style.maxHeight = 'none'; wrapper.style.height = 'auto'; }
+    if (scrollEl) { scrollEl.style.overflow = 'visible'; scrollEl.style.overflowX = 'visible'; scrollEl.style.width = 'auto'; scrollEl.scrollLeft = 0; }
+
+    // Target elemen yang di-capture: seluruh page-container
+    var target = document.getElementById('seatPageContainer') || document.querySelector('.seat-page-container') || document.body;
+
+    // Tunggu sebentar agar DOM selesai reflow sebelum capture
+    setTimeout(function() {
+
+        html2canvas(target, {
+            scale            : 2,           // retina quality
+            useCORS          : true,
+            allowTaint       : true,
+            backgroundColor  : '#f8fafc',
+            scrollX          : 0,
+            scrollY          : -window.scrollY,
+            windowWidth      : Math.max(target.scrollWidth, window.innerWidth),
+            width            : target.scrollWidth,
+            height           : target.scrollHeight,
+            logging          : false,
+
+            // Konfigurasi tambahan pada clone DOM sebelum di-render
+            onclone: function(clonedDoc) {
+
+                // ── Sanitasi semua warna CSS yang tidak didukung html2canvas ──
+                _sanitizeUnsupportedColors(clonedDoc);
+
+                // Pastikan layout wrapper tidak clip di clone
+                var cWrapper = clonedDoc.getElementById('seatLayoutWrapper');
+                if (cWrapper) {
+                    cWrapper.style.overflow  = 'visible';
+                    cWrapper.style.maxHeight = 'none';
+                    cWrapper.style.height    = 'auto';
+                }
+
+                var cScroll = clonedDoc.querySelector('.seat-scroll-container');
+                if (cScroll) {
+                    cScroll.style.overflow  = 'visible';
+                    cScroll.style.overflowX = 'visible';
+                    cScroll.style.width     = 'auto';
+                }
+
+                var cContent = clonedDoc.querySelector('.seat-layout-content');
+                if (cContent) {
+                    cContent.style.transform = 'none';
+                    cContent.style.width     = 'auto';
+                    cContent.style.minWidth  = 'unset';
+                }
+
+                // Sembunyikan elemen yang dikecualikan di clone juga
+                excludeSelectors.forEach(function(sel) {
+                    var el = clonedDoc.querySelector(sel);
+                    if (el) el.style.display = 'none';
+                });
+
+                // Tampilkan judul page di clone (header tanpa tombol)
+                var cHeader = clonedDoc.querySelector('.page-header');
+                if (cHeader) {
+                    cHeader.style.paddingBottom = '12px';
+                    cHeader.style.marginBottom  = '8px';
+                }
+            }
+
+        }).then(function(canvas) {
+
+            // ── Restore semua perubahan DOM ──────────────────────
+            hiddenEls.forEach(function(el, i) { el.style.display = originalStyles[i]; });
+
+            if (wrapper && savedWrapper) {
+                wrapper.style.overflow  = savedWrapper.overflow;
+                wrapper.style.maxHeight = savedWrapper.maxHeight;
+                wrapper.style.height    = savedWrapper.height;
+            }
+            if (scrollEl && savedScroll) {
+                scrollEl.style.overflow  = savedScroll.overflow;
+                scrollEl.style.overflowX = savedScroll.overflowX;
+                scrollEl.style.width     = savedScroll.width;
+                scrollEl.scrollLeft      = savedScrollLeft;
+            }
+
+            // ── Buat PDF ─────────────────────────────────────────
+            var imgData = canvas.toDataURL('image/jpeg', 0.95);
+            var imgW    = canvas.width;
+            var imgH    = canvas.height;
+
+            // Lebar PDF = A4 (210mm), tinggi proporsional mengikuti konten
+            var pdfW = 210;
+            var pdfH = Math.ceil((imgH / imgW) * pdfW);
+            // Minimal setinggi A4 portrait
+            if (pdfH < 297) pdfH = 297;
+
+            // Inisialisasi jsPDF (UMD global)
+            var JsPDF = (window.jspdf && window.jspdf.jsPDF) ? window.jspdf.jsPDF : window.jsPDF;
+            var doc   = new JsPDF({
+                orientation : 'portrait',
+                unit        : 'mm',
+                format      : [pdfW, pdfH]
+            });
+
+            // Gambar layout kursi memenuhi seluruh halaman
+            var renderedH = (imgH / imgW) * pdfW;
+            doc.addImage(imgData, 'JPEG', 0, 0, pdfW, renderedH);
+
+            // Footer kecil: judul + tanggal cetak
+            var today = new Date().toLocaleDateString('id-ID', {
+                day   : '2-digit',
+                month : 'long',
+                year  : 'numeric'
+            });
+            doc.setFontSize(7);
+            doc.setTextColor(160, 160, 160);
+            doc.text(
+                'Layout Tempat Duduk \u2014 Berbincang Dengan Romo Eko  |  Dicetak: ' + today,
+                pdfW / 2,
+                pdfH - 3,
+                { align: 'center' }
+            );
+
+            // Simpan file
+            doc.save('layout-tempat-duduk-romo-eko.pdf');
+
+            // ── Reset tombol ─────────────────────────────────────
+            _resetExportBtn(btn, btnText, btnIcon);
+
+        }).catch(function(err) {
+            console.error('[Export PDF] html2canvas error:', err);
+
+            // Restore DOM meskipun error
+            hiddenEls.forEach(function(el, i) { el.style.display = originalStyles[i]; });
+            if (wrapper && savedWrapper) {
+                wrapper.style.overflow  = savedWrapper.overflow;
+                wrapper.style.maxHeight = savedWrapper.maxHeight;
+                wrapper.style.height    = savedWrapper.height;
+            }
+            if (scrollEl) { scrollEl.scrollLeft = savedScrollLeft; }
+
+            _resetExportBtn(btn, btnText, btnIcon);
+            alert('Gagal mengekspor PDF. Silakan coba lagi.');
+        });
+
+    }, 250); // 250ms delay — beri waktu reflow DOM
+}
     </script>
 
 </body>

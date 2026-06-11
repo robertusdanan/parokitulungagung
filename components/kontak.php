@@ -1,5 +1,78 @@
 <?php
+// ── AJAX: handle form submission ──────────────────────────────────────────
+if (
+    $_SERVER['REQUEST_METHOD'] === 'POST' &&
+    (isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+     strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+) {
+    header('Content-Type: application/json; charset=utf-8');
+    require_once '/home/ejtkecoh/private/secrets.php';
+    require_once __DIR__ . '/../includes/MailerKontak.php';
+
+    // ── Sanitasi input ────────────────────────────────────────────
+    $nama     = trim(strip_tags($_POST['nama']    ?? ''));
+    $email    = trim(strip_tags($_POST['email']   ?? ''));
+    $telepon  = trim(strip_tags($_POST['telepon'] ?? ''));
+    $subjek   = trim(strip_tags($_POST['subjek']  ?? ''));
+    $pesan    = trim(strip_tags($_POST['pesan']   ?? ''));
+    $honey    = $_POST['website'] ?? '';
+
+    // Honeypot
+    if ($honey !== '') { echo json_encode(['ok' => true]); exit; }
+
+    // Validasi dasar
+    $errors = [];
+    if (mb_strlen($nama)  < 2)                      $errors[] = 'Nama minimal 2 karakter.';
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL))  $errors[] = 'Email tidak valid.';
+    if ($subjek === '')                              $errors[] = 'Keperluan tidak boleh kosong.';
+    if (mb_strlen($pesan) < 10)                     $errors[] = 'Pesan minimal 10 karakter.';
+
+    if ($errors) {
+        echo json_encode(['ok' => false, 'msg' => implode(' ', $errors)]);
+        exit;
+    }
+
+    // ── Kirim via MailerKontak (cPanel SMTP, tanpa library) ──────
+    $teleponBaris = $telepon ? "<tr><td><strong>Telepon</strong></td><td>: {$telepon}</td></tr>" : '';
+
+    $htmlAdmin = "
+    <p>Ada pesan masuk melalui formulir kontak website:</p>
+    <table cellpadding='6' style='border-collapse:collapse;font-family:sans-serif'>
+      <tr><td><strong>Nama</strong></td><td>: {$nama}</td></tr>
+      <tr><td><strong>Email</strong></td><td>: {$email}</td></tr>
+      {$teleponBaris}
+      <tr><td><strong>Keperluan</strong></td><td>: {$subjek}</td></tr>
+    </table>
+    <p><strong>Pesan:</strong><br>" . nl2br(htmlspecialchars($pesan)) . "</p>
+    <hr>
+    <small>Dikirim melalui formulir kontak parokitulungagung.org</small>";
+
+    $htmlUser = "
+    <p>Yth. <strong>{$nama}</strong>,</p>
+    <p>Terima kasih telah menghubungi kami. Pesan Anda telah kami terima dan akan segera kami tindaklanjuti.</p>
+    <table cellpadding='6' style='border-collapse:collapse;font-family:sans-serif'>
+      <tr><td><strong>Keperluan</strong></td><td>: {$subjek}</td></tr>
+      <tr><td><strong>Pesan</strong></td><td>: " . nl2br(htmlspecialchars($pesan)) . "</td></tr>
+    </table>
+    <p>Salam,<br><strong>Sekretariat Paroki SMDTBA Tulungagung</strong></p>
+    <hr>
+    <small>Ini adalah email otomatis, mohon tidak membalas langsung email ini.</small>";
+
+    try {
+        $mailer = new MailerKontak();
+        $mailer->sendToAdmin('[Kontak Website] ' . $subjek, $htmlAdmin, $email, $nama);
+        $mailer->sendToUser($email, $nama, 'Konfirmasi pesan Anda – Paroki Tulungagung', $htmlUser);
+        echo json_encode(['ok' => true]);
+    } catch (RuntimeException $e) {
+        echo json_encode(['ok' => false, 'msg' => 'Gagal mengirim: ' . $e->getMessage()]);
+    }
+    exit;
+}
+
+// ── Lanjut render halaman biasa ───────────────────────────────────────────
 require_once __DIR__ . '/../includes/functions.php';
+require_once '/home/ejtkecoh/private/secrets.php';
+
 
 // ── SEO ─────────────────────────────────────────────────────────────────
 $seo = [
@@ -50,6 +123,10 @@ $_contactPageSchema = json_encode([
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <?php include __DIR__ . '/seo_head.php'; ?>
+
+  <!-- Google Identity Services -->
+  <meta name="google-signin-client_id" content="<?= htmlspecialchars(SECRET_GOOGLE_CLIENT_ID) ?>">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 
   <style>
   /* ── Font (sama dengan project) ── */
@@ -418,6 +495,131 @@ $_contactPageSchema = json_encode([
   .form-alert ul { margin: 6px 0 0 18px; }
   .form-alert li { margin-bottom: 2px; }
 
+  /* ── Login Gate ── */
+  .login-gate {
+    text-align: center;
+    padding: 36px 24px 32px;
+    background: #faf8f4;
+    border: 0.5px solid #e8dcc8;
+    border-radius: 10px;
+    margin-bottom: 28px;
+  }
+  .login-gate-icon {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 16px;
+    background: #fff;
+    border: 0.5px solid #e8dcc8;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .login-gate h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c2416;
+    margin-bottom: 8px;
+  }
+  .login-gate p {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    color: #9d8f7a;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .btn-google {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 24px;
+    background: #fff;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #3c4043;
+    cursor: pointer;
+    transition: background 0.15s, box-shadow 0.15s;
+  }
+  .btn-google:hover {
+    background: #f8f9fa;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  }
+  .btn-google svg { flex-shrink: 0; }
+
+  /* User info bar */
+  .user-info-bar {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: #f1f9f4;
+    border: 0.5px solid #a3d4b5;
+    border-radius: 6px;
+    margin-bottom: 20px;
+  }
+  .user-info-bar.visible { display: flex; }
+  .user-info-bar img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .user-info-bar-text {
+    flex: 1;
+    min-width: 0;
+  }
+  .user-info-bar-name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #2c2416;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .user-info-bar-email {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11.5px;
+    font-weight: 300;
+    color: #5a8a6a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .btn-logout {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    color: #9d8f7a;
+    background: none;
+    border: 0.5px solid #d4c9b0;
+    border-radius: 3px;
+    padding: 3px 10px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .btn-logout:hover { color: #8b3535; border-color: #e8c4c4; }
+
+  /* Form disabled state */
+  .form-locked .form-group input,
+  .form-locked .form-group select,
+  .form-locked .form-group textarea {
+    pointer-events: none;
+    opacity: 0.45;
+  }
+  .form-locked .btn-kirim {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
   /* Sukses state */
   .kontak-sukses {
     display: none;
@@ -630,9 +832,42 @@ $_contactPageSchema = json_encode([
     <section class="kontak-form-wrap">
       <h2 class="kontak-form-title">Kirim Pesan</h2>
       <p class="kontak-form-desc">
-        Isi formulir di bawah ini, lalu aplikasi email Anda akan terbuka otomatis dengan isi pesan yang sudah terisi.
-        Cukup klik <strong>Kirim</strong> di aplikasi email Anda.
+        Login dengan akun Gmail Anda terlebih dahulu untuk memverifikasi identitas, lalu isi formulir dan klik <strong>Kirim Pesan</strong>.
+        Pesan akan langsung terkirim ke pengurus paroki beserta alamat email Anda sebagai kontak balasan.
       </p>
+
+      <!-- Login Gate (tampil jika belum login) -->
+      <div class="login-gate" id="loginGate">
+        <div class="login-gate-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="11" width="18" height="11" rx="2" stroke="#c9a96e" stroke-width="1.5"/>
+            <path d="M7 11V7a5 5 0 0110 0v4" stroke="#c9a96e" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Login untuk Mengirim Pesan</h3>
+        <p>Untuk mengirim pesan ke pengurus paroki, Anda perlu<br>login terlebih dahulu menggunakan akun Gmail.</p>
+        <button class="btn-google" id="btnGoogleLogin" type="button">
+          <svg width="18" height="18" viewBox="0 0 18 18">
+            <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+            <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/>
+            <path d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.039l3.007-2.332z" fill="#FBBC05"/>
+            <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.166 6.656 3.58 9 3.58z" fill="#EA4335"/>
+          </svg>
+          Login dengan Google
+        </button>
+        <!-- Fallback render target jika One Tap diblokir browser -->
+        <div id="gSignInRender" style="display:none;margin-top:12px;"></div>
+      </div>
+
+      <!-- User info bar (tampil setelah login) -->
+      <div class="user-info-bar" id="userInfoBar">
+        <img id="userAvatar" src="" alt="Foto profil" onerror="this.style.display='none'">
+        <div class="user-info-bar-text">
+          <div class="user-info-bar-name" id="userName">—</div>
+          <div class="user-info-bar-email" id="userEmail">—</div>
+        </div>
+        <button class="btn-logout" id="btnLogout" type="button">Ganti Akun</button>
+      </div>
 
       <!-- Alert -->
       <div class="form-alert" id="formAlert" role="alert"></div>
@@ -643,15 +878,15 @@ $_contactPageSchema = json_encode([
           <circle cx="26" cy="26" r="25" stroke="#c9a96e" stroke-width="1"/>
           <path d="M15 26l8 8 14-14" stroke="#c9a96e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <h2>Aplikasi Email Terbuka</h2>
-        <p>Draft pesan sudah siap di aplikasi email Anda.<br>
-        Silakan klik <strong>Kirim</strong> untuk mengirimkan pesan.<br>
-        Tim sekretariat akan segera merespons.</p>
+        <h2>Pesan Terkirim!</h2>
+        <p>Pesan Anda telah berhasil dikirim ke pengurus paroki.<br>
+        Tim sekretariat akan segera merespons melalui email Anda.<br>
+        <em style="font-size:12px;color:#b5a990;">Cek folder Terkirim di Gmail Anda untuk konfirmasi.</em></p>
         <p style="margin-top:16px;font-style:italic;color:#b5a990;">Berkah Dalem ✝</p>
       </div>
 
       <!-- Form utama -->
-      <form id="kontakForm" novalidate>
+      <form id="kontakForm" class="form-locked" novalidate>
         <!-- Honeypot -->
         <div class="form-honey" aria-hidden="true">
           <input type="text" name="website" tabindex="-1" autocomplete="off">
@@ -664,7 +899,7 @@ $_contactPageSchema = json_encode([
           </div>
           <div class="form-group">
             <label for="email">Alamat Email <span class="req">*</span></label>
-            <input type="email" id="email" name="email" placeholder="email@anda.com" maxlength="150" required>
+            <input type="email" id="email" name="email" placeholder="email@anda.com" maxlength="150" required readonly>
           </div>
         </div>
 
@@ -719,22 +954,35 @@ $_contactPageSchema = json_encode([
 
 <script>
 (function () {
-  const ADMIN_EMAIL = 'sanmardtba@gmail.com';
+  // Client ID dari secrets.php → di-output PHP
+  const GOOGLE_CLIENT_ID = '<?= htmlspecialchars(SECRET_GOOGLE_CLIENT_ID) ?>';
 
-  const form    = document.getElementById('kontakForm');
-  const alertEl = document.getElementById('formAlert');
-  const sukses  = document.getElementById('kontakSukses');
-  const btn     = document.getElementById('btnKirim');
-  const label   = document.getElementById('btnLabel');
-  const pesan   = document.getElementById('pesan');
-  const counter = document.getElementById('charCount');
+  // ── Element refs ─────────────────────────────────────────────────
+  const form        = document.getElementById('kontakForm');
+  const alertEl     = document.getElementById('formAlert');
+  const sukses      = document.getElementById('kontakSukses');
+  const btn         = document.getElementById('btnKirim');
+  const label       = document.getElementById('btnLabel');
+  const pesan       = document.getElementById('pesan');
+  const counter     = document.getElementById('charCount');
+  const loginGate   = document.getElementById('loginGate');
+  const userInfoBar = document.getElementById('userInfoBar');
+  const btnGLogin   = document.getElementById('btnGoogleLogin');
+  const btnLogout   = document.getElementById('btnLogout');
+  const userAvatar  = document.getElementById('userAvatar');
+  const userNameEl  = document.getElementById('userName');
+  const userEmailEl = document.getElementById('userEmail');
+  const emailInput  = document.getElementById('email');
 
-  // Char counter
+  // ── State ─────────────────────────────────────────────────────────
+  let isLoggedIn = false;
+
+  // ── Char counter ──────────────────────────────────────────────────
   pesan.addEventListener('input', () => {
     counter.textContent = pesan.value.length;
   });
 
-  // Tampilkan alert
+  // ── UI helpers ────────────────────────────────────────────────────
   function showAlert(type, html) {
     alertEl.className     = 'form-alert ' + type;
     alertEl.innerHTML     = html;
@@ -742,11 +990,111 @@ $_contactPageSchema = json_encode([
     alertEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
-  // Validasi
+  function setLoggedIn(profile) {
+    isLoggedIn = true;
+    userAvatar.src          = profile.picture || '';
+    userNameEl.textContent  = profile.name    || '—';
+    userEmailEl.textContent = profile.email   || '—';
+    emailInput.value        = profile.email   || '';
+
+    loginGate.style.display = 'none';
+    userInfoBar.classList.add('visible');
+    form.classList.remove('form-locked');
+
+    // Autofill nama jika masih kosong
+    const namaInput = document.getElementById('nama');
+    if (!namaInput.value) namaInput.value = profile.name || '';
+  }
+
+  function setLoggedOut() {
+    isLoggedIn          = false;
+    emailInput.value    = '';
+    userAvatar.src      = '';
+    userNameEl.textContent  = '—';
+    userEmailEl.textContent = '—';
+
+    loginGate.style.display = '';
+    userInfoBar.classList.remove('visible');
+    form.classList.add('form-locked');
+    alertEl.style.display = 'none';
+  }
+
+  // ── Decode JWT payload (Google credential) ────────────────────────
+  function decodeJwt(token) {
+    try {
+      const payload = token.split('.')[1];
+      const json    = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+      return JSON.parse(decodeURIComponent(
+        json.split('').map(c =>
+          '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+        ).join('')
+      ));
+    } catch (e) { return null; }
+  }
+
+  // ── Google Sign-In callback (dipanggil oleh GIS) ──────────────────
+  window.handleGoogleCredential = function (response) {
+    const profile = decodeJwt(response.credential);
+    if (!profile || !profile.email) {
+      showAlert('error', 'Gagal membaca data akun Google. Coba lagi.');
+      return;
+    }
+    setLoggedIn({
+      name:    profile.name,
+      email:   profile.email,
+      picture: profile.picture,
+    });
+  };
+
+  // ── Init Google Sign-In button (fallback jika GIS sudah siap) ────
+  function initGoogleButton() {
+    if (!window.google || !google.accounts || !google.accounts.id) {
+      setTimeout(initGoogleButton, 300);
+      return;
+    }
+    google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback:  window.handleGoogleCredential,
+      ux_mode:   'popup',
+    });
+  }
+
+  window.addEventListener('load', initGoogleButton);
+  if (document.readyState === 'complete') initGoogleButton();
+
+  // ── Tombol Login manual (sebagai fallback / trigger) ─────────────
+  btnGLogin.addEventListener('click', function () {
+    if (!window.google || !google.accounts || !google.accounts.id) {
+      showAlert('error', 'Layanan Google belum siap. Coba muat ulang halaman.');
+      return;
+    }
+    google.accounts.id.prompt(function (notification) {
+      // Jika One Tap diblokir browser → pakai renderButton
+      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+        google.accounts.id.renderButton(
+          document.getElementById('gSignInRender'),
+          { theme: 'outline', size: 'large', text: 'signin_with', locale: 'id' }
+        );
+        document.getElementById('gSignInRender').style.display = 'flex';
+        document.getElementById('gSignInRender').style.justifyContent = 'center';
+        btnGLogin.style.display = 'none';
+      }
+    });
+  });
+
+  // ── Tombol Ganti Akun ─────────────────────────────────────────────
+  btnLogout.addEventListener('click', function () {
+    if (window.google && google.accounts && google.accounts.id) {
+      google.accounts.id.disableAutoSelect();
+    }
+    setLoggedOut();
+  });
+
+  // ── Validasi ──────────────────────────────────────────────────────
   function validate() {
-    const errs   = [];
-    const fields = ['nama', 'email', 'subjek', 'pesan'];
-    fields.forEach(id => document.getElementById(id).classList.remove('error'));
+    const errs = [];
+    ['nama', 'email', 'subjek', 'pesan'].forEach(id =>
+      document.getElementById(id).classList.remove('error'));
 
     const nama  = form.nama.value.trim();
     const email = form.email.value.trim();
@@ -765,10 +1113,16 @@ $_contactPageSchema = json_encode([
     return errs;
   }
 
-  // Submit → mailto:
-  form.addEventListener('submit', function (e) {
+  // ── Submit → AJAX ke PHP backend ─────────────────────────────────
+  form.addEventListener('submit', async function (e) {
     e.preventDefault();
     alertEl.style.display = 'none';
+
+    if (!isLoggedIn) {
+      showAlert('error', 'Anda harus login dengan Gmail terlebih dahulu.');
+      loginGate.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      return;
+    }
 
     const errs = validate();
     if (errs.length) {
@@ -777,47 +1131,43 @@ $_contactPageSchema = json_encode([
       return;
     }
 
-    const nama    = form.nama.value.trim();
-    const email   = form.email.value.trim();
-    const telepon = form.telepon.value.trim();
-    const subjek  = form.subjek.value;
-    const msg     = form.pesan.value.trim();
-
-    // Susun subject & body email
-    const subject = '[Kontak Website] ' + subjek;
-
-    const bodyLines = [
-      'Nama     : ' + nama,
-      'Email    : ' + email,
-      telepon ? 'Telepon  : ' + telepon : null,
-      'Keperluan: ' + subjek,
-      '',
-      '--- Pesan ---',
-      msg,
-      '',
-      '---',
-      'Pesan ini dikirim melalui formulir kontak parokitulungagung.org',
-    ];
-
-    const body = bodyLines.filter(l => l !== null).join('\n');
-
-    // Buka aplikasi email pengguna
-    const mailto = 'mailto:' + ADMIN_EMAIL
-      + '?subject=' + encodeURIComponent(subject)
-      + '&body='    + encodeURIComponent(body);
-
-    window.location.href = mailto;
-
-    // Tampilkan sukses setelah jeda singkat (beri waktu browser membuka email)
+    // Loading state
     btn.disabled      = true;
-    label.textContent = 'Membuka email\u2026';
+    label.textContent = 'Mengirim\u2026';
 
-    setTimeout(function () {
-      form.style.display   = 'none';
-      sukses.style.display = 'block';
-      sukses.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 800);
+    const data = new FormData();
+    data.append('nama',    form.nama.value.trim());
+    data.append('email',   form.email.value.trim());
+    data.append('telepon', form.telepon.value.trim());
+    data.append('subjek',  form.subjek.value);
+    data.append('pesan',   form.pesan.value.trim());
+    data.append('website', form.website.value); // honeypot
+
+    try {
+      const res  = await fetch(window.location.href, {
+        method:  'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body:    data,
+      });
+      const json = await res.json();
+
+      if (json.ok) {
+        form.style.display   = 'none';
+        userInfoBar.classList.remove('visible');
+        sukses.style.display = 'block';
+        sukses.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        btn.disabled      = false;
+        label.textContent = 'Kirim Pesan';
+        showAlert('error', json.msg || 'Gagal mengirim pesan. Silakan coba lagi.');
+      }
+    } catch (err) {
+      btn.disabled      = false;
+      label.textContent = 'Kirim Pesan';
+      showAlert('error', 'Terjadi kesalahan jaringan. Silakan coba lagi.');
+    }
   });
+
 })();
 </script>
 

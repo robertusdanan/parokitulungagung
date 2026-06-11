@@ -1,0 +1,21 @@
+{
+    "session_id": "web_mpnodugb_bbsix8",
+    "created_at": 1779862846,
+    "last_active": 1779862846,
+    "page_context": "https:\/\/www.parokitulungagung.org\/umkmumat (UMKM Umat – Pasar Umat Paroki Tulungagung)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "jadwal misa stasi dongko",
+            "timestamp": 1779862846
+        },
+        {
+            "role": "assistant",
+            "content": "📅 Jadwal Misa Paroki SMDTBA Tulungagung:\n\nMisa Harian:\n• Senin – Rabu: pukul 05.30\n• Kamis: 05.30 (di Susteran)\n• Jumat: 18.00\n• Sabtu: 18.00\n• Minggu: 07.00\n\nMisa Stasi:\n• Ngunut: Sabtu 18.00\n• Rejotangan: Sabtu 16.00\n• Trenggalek: Minggu 07.00\n• Kalangbret: Minggu I & II, 10.00\n• Dongko: Minggu I & II, 11.00\n• Sendang: Minggu II, 11.00",
+            "source": "kb",
+            "timestamp": 1779862846
+        }
+    ],
+    "meta": []
+}

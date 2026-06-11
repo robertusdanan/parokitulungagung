@@ -7,7 +7,7 @@ require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/functions.php';
 adminBoot();
 $user = requireSuperadmin();
-adminHeader('SEO Generator', 'seo-artikel', $user);
+adminHeader('SEO Generator — Artikel', 'seo', $user);
 ?>
 
 <style>
@@ -301,8 +301,16 @@ adminHeader('SEO Generator', 'seo-artikel', $user);
 <!-- ── Page Header ─────────────────────────────────────────────────────── -->
 <div class="page-header">
   <div class="page-header-left">
-    <h1>SEO Generator</h1>
-    <p>Generate alt text, caption &amp; schema gambar artikel ke Supabase secara otomatis</p>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+      <a href="/admin/pages/seo.php" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--text-secondary);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card2);transition:all .15s"
+         onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="15 18 9 12 15 6"/></svg>
+        SEO Generator
+      </a>
+      <span style="font-size:11px;color:var(--text-muted)">/ Artikel</span>
+    </div>
+    <h1>SEO Generator <span style="font-size:13px;font-weight:500;background:rgba(201,168,76,.15);color:var(--accent);border:1px solid rgba(201,168,76,.25);border-radius:20px;padding:3px 10px;vertical-align:middle;letter-spacing:.04em;">✦ AI Powered</span></h1>
+    <p>Generate alt text, caption &amp; schema gambar artikel secara otomatis menggunakan Gemini &amp; Groq AI</p>
   </div>
   <button class="btn btn-secondary btn-sm" onclick="clearFileCache()" id="btnClearCache"
           title="Hapus file cache lokal agar data Supabase terbaru dimuat ulang">
@@ -502,9 +510,11 @@ function renderTable() {
       statusHtml = `<span class="seo-status-pending" id="status-${esc(art.id)}">● Belum</span>`;
     }
 
-    const btnLabel = art.seo_done ? '↻ Re-generate' : '▶ Generate';
-    const btnHtml  = art.img_count > 0
-      ? `<button class="btn-generate-row" onclick="processOne('${esc(art.id)}','${esc(art.menu)}','${escQ(art.judul)}',false)" id="btn-${esc(art.id)}">${btnLabel}</button>`
+    const btnLabel  = art.seo_done ? '↻ Re-generate' : '▶ Generate';
+    // Re-generate = force:true (replace existing), Generate baru = force:false
+    const forceFlag = art.seo_done ? 'true' : 'false';
+    const btnHtml   = art.img_count > 0
+      ? `<button class="btn-generate-row" onclick="processOne('${esc(art.id)}','${esc(art.menu)}','${escQ(art.judul)}',false,${forceFlag})" id="btn-${esc(art.id)}">${btnLabel}</button>`
       : `<span style="font-size:11px;color:var(--text-muted)">—</span>`;
 
     html += `<tr data-id="${esc(art.id)}" data-menu="${esc(art.menu)}"
@@ -563,16 +573,31 @@ async function processOne(id, menu, judul, silent = false, force = false) {
     const row = el('seoTableBody').querySelector(`tr[data-id="${id}"]`);
     if (row && data.ok) row.dataset.done = '1';
 
-    // Update button label
+    // Update button label — setelah generate, tombol selalu jadi Re-generate (force:true)
     if (btn) {
       btn.disabled    = false;
       btn.textContent = '↻ Re-generate';
+      // Update onclick agar berikutnya selalu force:true
+      btn.setAttribute('onclick',
+        `processOne('${id}','${menu}','${judul.replace(/'/g,"\\'")}',false,true)`
+      );
     }
 
     return data;
   } catch (e) {
     if (status && !silent) { status.textContent = '✗ Error'; }
-    if (btn)   { btn.disabled = false; btn.textContent = '▶ Generate'; }
+    if (btn) {
+      btn.disabled = false;
+      // Kembalikan ke label & force sesuai kondisi sebelumnya
+      if (force) {
+        btn.textContent = '↻ Re-generate';
+        btn.setAttribute('onclick',
+          `processOne('${id}','${menu}','${judul.replace(/'/g,"\\'")}',false,true)`
+        );
+      } else {
+        btn.textContent = '▶ Generate';
+      }
+    }
     return { ok: false, msg: e.message };
   }
 }
@@ -588,6 +613,19 @@ async function startBatch(mode) {
   if (!rows.length) {
     toast('Info', 'Tidak ada artikel yang perlu di-generate.', 'info');
     return;
+  }
+
+  // Konfirmasi jika mode 'all' dan ada artikel yang sudah punya SEO (akan di-replace)
+  if (mode === 'all') {
+    const doneCount = rows.filter(r => r.dataset.done === '1').length;
+    if (doneCount > 0) {
+      const ok = confirm(
+        `"Generate Semua" akan me-replace SEO ${doneCount} artikel yang sudah ada.\n\n` +
+        `Gunakan "Hanya yang Belum" jika tidak ingin mengganti yang sudah ada.\n\n` +
+        `Lanjutkan?`
+      );
+      if (!ok) return;
+    }
   }
 
   batchRunning = true;
@@ -607,11 +645,13 @@ async function startBatch(mode) {
   const total = rows.length;
 
   for (const row of rows) {
-    const id    = row.dataset.id;
-    const menu  = row.dataset.menu;
-    const judul = row.dataset.judul;
+    const id     = row.dataset.id;
+    const menu   = row.dataset.menu;
+    const judul  = row.dataset.judul;
+    // 'all' mode: artikel yang sudah done harus di-force replace; 'pending' hanya yang belum
+    const force  = (mode === 'all' && row.dataset.done === '1');
 
-    const result = await processOne(id, menu, judul, true);
+    const result = await processOne(id, menu, judul, true, force);
     done++;
 
     const pct        = Math.round((done / total) * 100);
@@ -638,9 +678,15 @@ async function startBatch(mode) {
       }
     }
     const btnEl = el('btn-' + id);
-    if (btnEl) { btnEl.disabled = false; btnEl.textContent = '↻ Re-generate'; }
+    if (btnEl) {
+      btnEl.disabled = false;
+      btnEl.textContent = '↻ Re-generate';
+      btnEl.setAttribute('onclick',
+        `processOne('${id}','${menu}','${judul.replace(/'/g,"\\'")}',false,true)`
+      );
+    }
 
-    await sleep(250); // jeda kecil agar tidak flood Supabase
+    await sleep(500); // jeda agar tidak flood API Gemini/Groq
   }
 
   pText.textContent = `✅ Selesai! ${done} artikel diproses.`;

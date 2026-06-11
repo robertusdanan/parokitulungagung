@@ -55,6 +55,7 @@ $pages = [
     '/kategorial'        => ['weekly',  '0.7', date('c')],
     '/umkmumat'          => ['weekly',  '0.6', date('c')],
     '/e-lonceng'         => ['monthly', '0.5', date('c')],
+    '/tvdigital'         => ['monthly', '0.5', date('c')],
 
     // ── Informasi & kebijakan ─────────────────────────────────────────────
     '/kontak'            => ['monthly', '0.5', date('c')],

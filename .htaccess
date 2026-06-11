@@ -53,6 +53,11 @@ RewriteCond %{QUERY_STRING} (^|&)(i|p)=[0-9]+(&|$) [NC]
 RewriteRule ^ %{REQUEST_URI}? [R=301,L]
 
 # =========================================================
+# BYPASS error.php — jangan diproses ulang oleh rewrite
+# =========================================================
+RewriteRule ^error\.php$ - [L]
+
+# =========================================================
 # STATIC FILE BYPASS
 # =========================================================
 RewriteCond %{REQUEST_FILENAME} -f
@@ -100,6 +105,7 @@ RewriteRule ^analisis/?$ GA4/analytics.html [L]
 RewriteRule ^penulis/([a-z0-9\-]+)/?$ pages/penulis.php?slug=$1 [L,QSA]
 RewriteRule ^penulis/?$               pages/penulis.php          [L]
 
+RewriteRule ^tvdigital/?$         pages/tvdigital.php         [L]
 RewriteRule ^agenda/?$            pages/agenda.php            [L]
 RewriteRule ^galeri/?$            pages/galeri.php            [L]
 RewriteRule ^profil-ai/?$         pages/profil-ai.php         [L]
@@ -115,6 +121,13 @@ RewriteRule ^tentang/?$           components/tentang.php           [L]
 RewriteRule ^jadwal-misa/?$       components/jadwal-misa.php       [L]
 RewriteRule ^kebijakan-privasi/?$ components/kebijakan-privasi.php [L]
 RewriteRule ^kebijakan-cookie/?$  components/kebijakan-cookie.php  [L]
+
+# Halaman Baby-Keyboard
+RewriteRule ^babykeyboard/?$  pages/baby-keyboard.html  [L]
+
+# Profil
+RewriteRule ^robertusdanan/?$  pages/robertusdanan.php  [L]
+
 
 # =========================================================
 # SRM & KOMEDI
@@ -136,27 +149,27 @@ RewriteCond %{REQUEST_FILENAME}.php -f
 RewriteRule ^(.+?)/?$ $1.php [L,QSA]
 
 # =========================================================
-# FALLBACK ke index.php (HARUS PALING BAWAH)
+# FALLBACK ke index.php (Hanya untuk path "/" saja)
 # =========================================================
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ index.php [L,QSA]
+RewriteRule ^$ index.php [L,QSA]
 
 # =========================================================
 # ERROR HANDLER
 # =========================================================
-ErrorDocument 400 /error.php
-ErrorDocument 401 /error.php
-ErrorDocument 403 /error.php
-ErrorDocument 404 /error.php
-ErrorDocument 405 /error.php
-ErrorDocument 408 /error.php
-ErrorDocument 429 /error.php
-ErrorDocument 500 /error.php
-ErrorDocument 502 /error.php
-ErrorDocument 503 /error.php
-ErrorDocument 504 /error.php
-ErrorDocument 505 /error.php
+ErrorDocument 400 /error.php?code=400
+ErrorDocument 401 /error.php?code=401
+ErrorDocument 403 /error.php?code=403
+ErrorDocument 404 /error.php?code=404
+ErrorDocument 405 /error.php?code=405
+ErrorDocument 408 /error.php?code=408
+ErrorDocument 429 /error.php?code=429
+ErrorDocument 500 /error.php?code=500
+ErrorDocument 502 /error.php?code=502
+ErrorDocument 503 /error.php?code=503
+ErrorDocument 504 /error.php?code=504
+ErrorDocument 505 /error.php?code=505
 
 # =========================================================
 # GZIP
@@ -280,12 +293,14 @@ script-src 'self' 'unsafe-inline' \
   https://cdnjs.cloudflare.com \
   https://challenges.cloudflare.com \
   https://static.cloudflareinsights.com \
-  https://script.google.com;\
+  https://script.google.com \
+  https://accounts.google.com;\
 style-src 'self' 'unsafe-inline' \
   https://fonts.googleapis.com \
   https://cdn.jsdelivr.net \
   https://cdnjs.cloudflare.com \
-  https://challenges.cloudflare.com;\
+  https://challenges.cloudflare.com \
+  https://accounts.google.com;\
 font-src 'self' \
   https://fonts.gstatic.com \
   https://cdn.jsdelivr.net \
@@ -308,9 +323,19 @@ frame-src 'self' \
   https://www.google.com \
   https://maps.google.com \
   https://maps.app.goo.gl \
-  https://challenges.cloudflare.com;\
+  https://challenges.cloudflare.com \
+  https://accounts.google.com \
+  https://sindikasi.inews.id \
+  https://20.detik.com \
+  https://www.vidio.com \
+  https://www.cnnindonesia.com \
+  https://www.cnbcindonesia.com \
+  https://www.dailymotion.com \
+  https://beritasatu.tv \
+  https://klik.tvri.go.id;\
 connect-src 'self' \
   https://rkzaathgygfjovrpdlqi.supabase.co \
+  https://hscqnkxwoesxvzwwbzgh.supabase.co \
   https://www.googletagmanager.com \
   https://www.google-analytics.com \
   https://opensheet.elk.sh \
@@ -322,7 +347,11 @@ connect-src 'self' \
   https://script.google.com \
   https://sheets.googleapis.com \
   https://oauth2.googleapis.com \
-  https://www.googleapis.com;\
+  https://www.googleapis.com \
+  https://accounts.google.com \
+  https://oauth2.googleapis.com \
+  https://bzqocarlrcwvllqphpre.supabase.co;\
+  
 object-src 'none';\
 base-uri 'self';\
 form-action 'self';\
@@ -336,7 +365,7 @@ upgrade-insecure-requests;"
 </IfModule>
 
 # php -- BEGIN cPanel-generated handler, do not edit
-# Set the "ea-php82" package as the default "PHP" programming language.
+# Set the “ea-php82” package as the default “PHP” programming language.
 <IfModule mime_module>
   AddHandler application/x-httpd-ea-php82___lsphp .php .php8 .phtml
 </IfModule>

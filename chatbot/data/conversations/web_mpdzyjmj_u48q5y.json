@@ -1,0 +1,21 @@
+{
+    "session_id": "web_mpdzyjmj_u48q5y",
+    "created_at": 1780395150,
+    "last_active": 1780395152,
+    "page_context": "https:\/\/www.parokitulungagung.org\/ (Gereja Katolik Tulungagung | Paroki SMDTBA)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "testing",
+            "timestamp": 1780395152
+        },
+        {
+            "role": "assistant",
+            "content": "Halo! Saya adalah asisten virtual Paroki SMDTBA Tulungagung. Saya siap membantu Anda dengan informasi seputar kegiatan paroki, jadwal misa, maupun pertanyaan seputar iman Katolik. Ada yang bisa saya bantu hari ini?",
+            "source": "gemini",
+            "timestamp": 1780395152
+        }
+    ],
+    "meta": []
+}

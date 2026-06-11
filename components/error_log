@@ -200,3 +200,6 @@ Stack trace:
 Stack trace:
 #0 {main}
   thrown in /home/ejtkecoh/public_html/components/jadwal-misa.php on line 247
+[20-May-2026 14:24:48 UTC] PHP Parse error:  syntax error, unexpected token "use" in /home/ejtkecoh/public_html/components/kontak.php on line 19
+[20-May-2026 14:24:50 UTC] PHP Parse error:  syntax error, unexpected token "use" in /home/ejtkecoh/public_html/components/kontak.php on line 19
+[20-May-2026 14:24:50 UTC] PHP Parse error:  syntax error, unexpected token "use" in /home/ejtkecoh/public_html/components/kontak.php on line 19

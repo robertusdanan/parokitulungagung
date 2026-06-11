@@ -4,6 +4,42 @@ require_once __DIR__ . '/../includes/functions.php';
 $data      = fetchSupabaseCached('kepengurusan_dpp_bgkp', [], 'id.asc');
 $dataError = ($data === null) ? 'Gagal mengambil data dari server.' : null;
 
+// ─── Image SEO Helper ─────────────────────────────────────────────────────────
+if (!function_exists('fetchImageSeoByPrefix')) {
+    function fetchImageSeoByPrefix(string $prefix): array {
+        if (!defined('SUPABASE_URL') || !defined('SUPABASE_ANON_KEY')) return [];
+        $ck = 'img_seo_pfx_' . md5($prefix);
+        $cv = function_exists('cache_get') ? cache_get($ck) : null;
+        if ($cv !== null) return $cv;
+        $url = rtrim(SUPABASE_URL, '/') . '/rest/v1/image_seo'
+             . '?image_url=like.' . rawurlencode($prefix . '%')
+             . '&select=image_url,alt_text,caption,title_attr,schema_description,image_keywords'
+             . '&limit=500';
+        $ctx = stream_context_create([
+            'http' => ['header' => "apikey: " . SUPABASE_ANON_KEY . "\r\nAuthorization: Bearer " . SUPABASE_ANON_KEY . "\r\nAccept: application/json\r\n", 'timeout' => 5, 'ignore_errors' => true],
+            'ssl'  => ['verify_peer' => true],
+        ]);
+        $result = [];
+        $res = @file_get_contents($url, false, $ctx);
+        if ($res) {
+            $rows = json_decode($res, true);
+            if (is_array($rows)) foreach ($rows as $row) if (!empty($row['image_url'])) $result[$row['image_url']] = $row;
+        }
+        if (function_exists('cache_set')) cache_set($ck, $result, 600);
+        return $result;
+    }
+}
+if (!function_exists('getImgSeo')) {
+    function getImgSeo(string $imgUrl, array $map): array {
+        if (!$imgUrl || empty($map)) return [];
+        if (isset($map[$imgUrl])) return $map[$imgUrl];
+        $p = parse_url($imgUrl, PHP_URL_PATH) ?: $imgUrl;
+        foreach ($map as $u => $d) { if ((parse_url($u, PHP_URL_PATH) ?: $u) === $p) return $d; }
+        return [];
+    }
+}
+$dppSeoMap = fetchImageSeoByPrefix('/img/person/');
+
 function dpp_getAllPeriodes(array $data): array {
     $set = [];
     foreach ($data as $row) { $p=trim($row['Periode']??''); if(preg_match('/^\d{4}-\d{4}$/',$p)) $set[$p]=true; }
@@ -98,7 +134,7 @@ $extraCss = ['/css/content.css'];
     <div class="tabcontents" id="tabcontents-dpp" style="padding:2rem;background:var(--white);border-radius:0 12px 12px 12px;box-shadow:0 4px 16px rgba(91,44,111,0.12)">
 
       <?php
-      function renderDppTipe(array $allData, string $tipe): void {
+      function renderDppTipe(array $allData, string $tipe, array $seoMap = []): void {
           $byTipe  = array_filter($allData, fn($i) => ($i['Tipe']??'')===$tipe);
           $grouped = [];
           foreach ($byTipe as $i) $grouped[$i['Bidang']??'Lainnya'][] = $i;
@@ -108,6 +144,9 @@ $extraCss = ['/css/content.css'];
               $others = array_filter($persons, fn($p) => $p!==$ketua && $p!==$wakil);
               $imgKetua = !empty($ketua['Foto']) ? '/img/person/'.$ketua['Foto'] : '';
               $imgWakil = !empty($wakil['Foto']) ? '/img/person/'.$wakil['Foto'] : '';
+              // ── SEO data per foto ──────────────────────────────────────
+              $seoKetua = $imgKetua ? getImgSeo($imgKetua, $seoMap) : [];
+              $seoWakil = $imgWakil ? getImgSeo($imgWakil, $seoMap) : [];
       ?>
           <div class="galeri-accordion" style="margin-bottom:8px">
             <div class="galeri-accordion-header">
@@ -126,20 +165,21 @@ $extraCss = ['/css/content.css'];
                 </div>
                 <div class="profile-leader-photos">
                   <?php if(!empty($ketua['Nama'])): ?>
-                  <?php if($imgKetua): ?><img src="<?= e($imgKetua) ?>" class="profile-leader-img" onclick="ShowPhotoBox('<?= e($ketua['Nama']) ?>','<?= e($imgKetua) ?>','<?= e($bidang) ?>','Ketua')" alt="<?= e($ketua['Nama']) ?>" loading="lazy" decoding="async" width="120" height="120" onerror="this.style.opacity='0.3'">
+                  <?php if($imgKetua): ?><img src="<?= e($imgKetua) ?>" class="profile-leader-img" onclick="ShowPhotoBox('<?= e($ketua['Nama']) ?>','<?= e($imgKetua) ?>','<?= e($bidang) ?>','Ketua')" alt="<?= e($seoKetua['alt_text'] ?? $ketua['Nama']) ?>" title="<?= e($seoKetua['title_attr'] ?? ($ketua['Nama'] . ' — Paroki SMDTBA Tulungagung')) ?>" loading="lazy" decoding="async" width="120" height="120" onerror="this.style.opacity='0.3'">
                   <?php else: ?><div class="profile-leader-img" style="display:flex;align-items:center;justify-content:center;background:rgba(201,168,76,.1);color:#c9a84c;font-size:20px;font-weight:700;font-family:'Cormorant Garamond',serif"><?= strtoupper(mb_substr($ketua['Nama'],0,1)) ?></div><?php endif; ?>
                   <?php endif; ?>
                   <?php if(!empty($wakil['Nama'])): ?>
-                  <?php if($imgWakil): ?><img src="<?= e($imgWakil) ?>" class="profile-leader-img" onclick="ShowPhotoBox('<?= e($wakil['Nama']) ?>','<?= e($imgWakil) ?>','<?= e($bidang) ?>','Wakil')" alt="<?= e($wakil['Nama']) ?>" loading="lazy" decoding="async" width="120" height="120" onerror="this.style.opacity='0.3'">
+                  <?php if($imgWakil): ?><img src="<?= e($imgWakil) ?>" class="profile-leader-img" onclick="ShowPhotoBox('<?= e($wakil['Nama']) ?>','<?= e($imgWakil) ?>','<?= e($bidang) ?>','Wakil')" alt="<?= e($seoWakil['alt_text'] ?? $wakil['Nama']) ?>" title="<?= e($seoWakil['title_attr'] ?? ($wakil['Nama'] . ' — Paroki SMDTBA Tulungagung')) ?>" loading="lazy" decoding="async" width="120" height="120" onerror="this.style.opacity='0.3'">
                   <?php else: ?><div class="profile-leader-img" style="display:flex;align-items:center;justify-content:center;background:rgba(201,168,76,.1);color:#c9a84c;font-size:20px;font-weight:700;font-family:'Cormorant Garamond',serif"><?= strtoupper(mb_substr($wakil['Nama'],0,1)) ?></div><?php endif; ?>
                   <?php endif; ?>
                 </div>
               </div>
               <?php endif; ?>
               <?php foreach(array_values($others) as $idx=>$person):
-                  $nama=$person['Nama']??''; $posisi=$person['Posisi']??''; $img=!empty($person['Foto'])?'/img/person/'.$person['Foto']:''; ?>
+                  $nama=$person['Nama']??''; $posisi=$person['Posisi']??''; $img=!empty($person['Foto'])?'/img/person/'.$person['Foto']:'';
+                  $seoP = $img ? getImgSeo($img, $seoMap) : []; ?>
               <div class="profile-item" style="animation-delay:<?= $idx*35 ?>ms" onclick="<?= $img?"ShowPhotoBox('".e($nama)."','".e($img)."','".e($bidang)."','".e($posisi)."')":'' ?>">
-                <?php if($img): ?><img class="profile-item-img" src="<?= e($img) ?>" alt="<?= e($nama) ?>" loading="lazy" decoding="async" width="80" height="80" onerror="this.style.opacity='0.3'">
+                <?php if($img): ?><img class="profile-item-img" src="<?= e($img) ?>" alt="<?= e($seoP['alt_text'] ?? $nama) ?>" title="<?= e($seoP['title_attr'] ?? ($nama . ' — Paroki SMDTBA Tulungagung')) ?>" loading="lazy" decoding="async" width="80" height="80" onerror="this.style.opacity='0.3'">
                 <?php else: ?><div class="profile-item-img" style="display:flex;align-items:center;justify-content:center;background:rgba(201,168,76,.1);color:#c9a84c;font-size:18px;font-weight:700;font-family:'Cormorant Garamond',serif"><?= strtoupper(mb_substr($nama,0,1)) ?></div><?php endif; ?>
                 <div class="profile-item-info">
                   <div class="profile-item-role"><?= e($posisi) ?></div>
@@ -152,8 +192,8 @@ $extraCss = ['/css/content.css'];
       <?php endforeach; }
       ?>
 
-      <div id="tab-dpp"><?php renderDppTipe(array_values($filtered), 'DPP'); ?></div>
-      <div id="tab-bgkp"><?php renderDppTipe(array_values($filtered), 'BGKP'); ?></div>
+      <div id="tab-dpp"><?php renderDppTipe(array_values($filtered), 'DPP', $dppSeoMap); ?></div>
+      <div id="tab-bgkp"><?php renderDppTipe(array_values($filtered), 'BGKP', $dppSeoMap); ?></div>
     </div>
   </div>
   <?php endif; ?>

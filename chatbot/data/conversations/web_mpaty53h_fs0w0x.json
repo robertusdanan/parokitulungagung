@@ -1,64 +1,53 @@
 {
     "session_id": "web_mpaty53h_fs0w0x",
-    "created_at": 1779183930,
-    "last_active": 1779184050,
+    "created_at": 1780126152,
+    "last_active": 1780126238,
     "page_context": "https:\/\/www.parokitulungagung.org\/ (Gereja Katolik Tulungagung | Paroki SMDTBA)",
     "user_name": "",
     "history": [
         {
             "role": "user",
-            "content": "Agenda Paroki",
-            "timestamp": 1779184032
+            "content": "tv digital paroki",
+            "timestamp": 1780126160
         },
         {
             "role": "assistant",
-            "content": "📅 Info & Agenda Paroki SMDTBA:\n\nHalaman Agenda memuat semua informasi resmi paroki:\n• Jadwal misa khusus (hari raya, novena, dll)\n• Kegiatan kategorial & komunitas\n• Pengumuman penting paroki\n• Dokumen yang bisa diunduh\n\nSelalu cek agenda untuk info terkini!",
-            "source": "kb",
-            "timestamp": 1779184032
-        },
-        {
-            "role": "user",
-            "content": "E-Lonceng",
-            "timestamp": 1779184036
-        },
-        {
-            "role": "assistant",
-            "content": "🔔 E-Lonceng adalah fitur pengumuman digital Paroki SMDTBA. Di sini Anda bisa menemukan pengumuman terbaru dan informasi penting dari paroki.",
-            "source": "kb",
-            "timestamp": 1779184036
-        },
-        {
-            "role": "user",
-            "content": "Jadwal Misa",
-            "timestamp": 1779184037
-        },
-        {
-            "role": "assistant",
-            "content": "📅 Jadwal Misa Paroki SMDTBA Tulungagung:\n\nMisa Harian:\n• Senin – Rabu: pukul 05.30\n• Kamis: 05.30 (di Susteran)\n• Jumat: 18.00\n• Sabtu: 18.00\n• Minggu: 07.00\n\nMisa Stasi:\n• Ngunut: Sabtu 18.00\n• Rejotangan: Sabtu 16.00\n• Trenggalek: Minggu 07.00\n• Kalangbret: Minggu I & II, 10.00\n• Dongko: Minggu I & II, 11.00\n• Sendang: Minggu II, 11.00",
-            "source": "kb",
-            "timestamp": 1779184037
-        },
-        {
-            "role": "user",
-            "content": "Agenda Paroki",
-            "timestamp": 1779184042
-        },
-        {
-            "role": "assistant",
-            "content": "📅 Info & Agenda Paroki SMDTBA:\n\nHalaman Agenda memuat semua informasi resmi paroki:\n• Jadwal misa khusus (hari raya, novena, dll)\n• Kegiatan kategorial & komunitas\n• Pengumuman penting paroki\n• Dokumen yang bisa diunduh\n\nSelalu cek agenda untuk info terkini!",
-            "source": "kb",
-            "timestamp": 1779184042
-        },
-        {
-            "role": "user",
-            "content": "tiket",
-            "timestamp": 1779184050
-        },
-        {
-            "role": "assistant",
-            "content": "Halo! Jika yang Anda maksud adalah tiket untuk acara \"Malam Kasih & Ngopi Bareng Bersama Romo Eko\" untuk pembangunan Griya Pastoral, Anda dapat melihat informasi lengkapnya di Artikel Berita kami.\n\nAcara tersebut akan diselenggarakan pada:\n• Jumat, 17 Juli 2026\n• Pukul 18.00 – 21.00 WIB\n• Lokasi: Crown Victoria Hotel, Tulungagung\n\nUntuk detail pembelian tiket dan informasi lebih lanjut, silakan kunjungi halaman Kontak kami agar Pengurus Gereja dapat membantu Anda. Tuhan memberkati.",
+            "content": "Halo! Senang sekali bisa membantu Anda. Paroki SMDTBA menyediakan fasilitas untuk menonton siaran langsung TV digital Indonesia secara gratis langsung melalui website kami tanpa perlu aplikasi tambahan.\n\nSilakan kunjungi halaman TV Digital untuk mulai menonton. Semoga tayangan tersebut bermanfaat bagi Anda!",
             "source": "gemini",
-            "timestamp": 1779184050
+            "timestamp": 1780126160
+        },
+        {
+            "role": "user",
+            "content": "bisa menonton gtv?",
+            "timestamp": 1780126182
+        },
+        {
+            "role": "assistant",
+            "content": "Tentu saja, Anda bisa menonton GTV dan berbagai saluran televisi nasional lainnya melalui fitur TV digital kami. Fasilitas ini tersedia agar umat dapat menikmati siaran langsung dengan mudah dan praktis.\n\nSilakan kunjungi halaman TV Digital untuk mulai menonton. Selamat menikmati tayangannya!",
+            "source": "gemini",
+            "timestamp": 1780126182
+        },
+        {
+            "role": "user",
+            "content": "bermain dengan bayi",
+            "timestamp": 1780126201
+        },
+        {
+            "role": "assistant",
+            "content": "Tentu, kami memiliki fitur menarik untuk si kecil! Kami menyediakan halaman permainan keyboard interaktif yang dirancang khusus untuk bayi dan balita, di mana setiap tombol akan mengeluarkan suara, warna, dan animasi yang menyenangkan.\n\nSilakan kunjungi halaman Baby Keyboard untuk mengajak si kecil bermain dan belajar bersama. Selamat bersenang-senang!",
+            "source": "gemini",
+            "timestamp": 1780126201
+        },
+        {
+            "role": "user",
+            "content": "bermain bersama dengan bayi",
+            "timestamp": 1780126238
+        },
+        {
+            "role": "assistant",
+            "content": "Bermain bersama si kecil adalah momen yang sangat berharga. Untuk menambah keceriaan, kami menyediakan halaman permainan keyboard interaktif yang dirancang khusus dengan suara, warna, dan animasi yang menarik bagi bayi dan balita.\n\nSilakan kunjungi halaman Baby Keyboard untuk mencoba permainan edukatif tersebut bersama buah hati Anda. Semoga waktu bermain Anda menjadi lebih menyenangkan!",
+            "source": "gemini",
+            "timestamp": 1780126238
         }
     ],
     "meta": []

@@ -3,6 +3,41 @@ require_once __DIR__ . '/../includes/functions.php';
 
 $data      = fetchSupabaseCached('daftar_asisten_imam', [], 'Nama.asc');
 
+// ─── Image SEO Helper ─────────────────────────────────────────────────────────
+if (!function_exists('fetchImageSeoByPrefix')) {
+    function fetchImageSeoByPrefix(string $prefix): array {
+        if (!defined('SUPABASE_URL') || !defined('SUPABASE_ANON_KEY')) return [];
+        $ck = 'img_seo_pfx_' . md5($prefix);
+        $cv = function_exists('cache_get') ? cache_get($ck) : null;
+        if ($cv !== null) return $cv;
+        $url = rtrim(SUPABASE_URL, '/') . '/rest/v1/image_seo'
+             . '?image_url=like.' . rawurlencode($prefix . '%')
+             . '&select=image_url,alt_text,caption,title_attr,schema_description,image_keywords'
+             . '&limit=500';
+        $ctx = stream_context_create([
+            'http' => ['header' => "apikey: " . SUPABASE_ANON_KEY . "\r\nAuthorization: Bearer " . SUPABASE_ANON_KEY . "\r\nAccept: application/json\r\n", 'timeout' => 5, 'ignore_errors' => true],
+            'ssl'  => ['verify_peer' => true],
+        ]);
+        $result = [];
+        $res = @file_get_contents($url, false, $ctx);
+        if ($res) {
+            $rows = json_decode($res, true);
+            if (is_array($rows)) foreach ($rows as $row) if (!empty($row['image_url'])) $result[$row['image_url']] = $row;
+        }
+        if (function_exists('cache_set')) cache_set($ck, $result, 600);
+        return $result;
+    }
+}
+if (!function_exists('getImgSeo')) {
+    function getImgSeo(string $imgUrl, array $map): array {
+        if (!$imgUrl || empty($map)) return [];
+        if (isset($map[$imgUrl])) return $map[$imgUrl];
+        $p = parse_url($imgUrl, PHP_URL_PATH) ?: $imgUrl;
+        foreach ($map as $u => $d) { if ((parse_url($u, PHP_URL_PATH) ?: $u) === $p) return $d; }
+        return [];
+    }
+}
+$aiSeoMap = fetchImageSeoByPrefix('/img/person/');
 // Guard: jika Supabase mengembalikan error-object (array tapi bukan data rows)
 if (is_array($data) && isset($data['message'])) {
     $data = null;
@@ -194,6 +229,10 @@ $extraCss = ['/css/content.css'];
             $wilayah = (string)($item['Asal Lingk / Stasi'] ?? '');
             $fotoCol = trim((string)($item['Foto'] ?? ''));
             $foto    = $fotoCol ? '/img/person/' . $fotoCol : '';
+            // ── SEO ────────────────────────────────────────────────────
+            $seoAI    = $foto ? getImgSeo($foto, $aiSeoMap) : [];
+            $altAI    = $seoAI['alt_text']   ?: $nama;
+            $titleAI  = $seoAI['title_attr'] ?: ($nama . ' — Asisten Imam Paroki SMDTBA Tulungagung');
             // Gunakan single-quote JS string agar tidak bentrok dengan atribut HTML double-quote.
             // Escape backslash dan single-quote di dalam nilai, lalu bungkus dengan '...'
             $jsEsc = fn(string $s): string =>
@@ -206,7 +245,7 @@ $extraCss = ['/css/content.css'];
              data-wilayah="<?= e($wilayah) ?>"
              <?= $onclick ? 'onclick="' . $onclick . '"' : '' ?>>
           <?php if ($foto): ?>
-          <img class="profile-item-img" src="<?= e($foto) ?>" alt="<?= e($nama) ?>"
+          <img class="profile-item-img" src="<?= e($foto) ?>" alt="<?= e($altAI) ?>" title="<?= e($titleAI) ?>"
                loading="lazy" decoding="async" width="80" height="80" onerror="this.style.opacity='0.3'">
           <?php else: ?>
           <div class="profile-item-img"

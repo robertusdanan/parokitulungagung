@@ -1,9 +1,45 @@
 <?php
 require_once __DIR__ . '/../includes/functions.php';
 
+// ─── Image SEO Helper ─────────────────────────────────────────────────────────
+if (!function_exists('fetchImageSeoByPrefix')) {
+    function fetchImageSeoByPrefix(string $prefix): array {
+        if (!defined('SUPABASE_URL') || !defined('SUPABASE_ANON_KEY')) return [];
+        $ck = 'img_seo_pfx_' . md5($prefix);
+        $cv = function_exists('cache_get') ? cache_get($ck) : null;
+        if ($cv !== null) return $cv;
+        $url = rtrim(SUPABASE_URL, '/') . '/rest/v1/image_seo'
+             . '?image_url=like.' . rawurlencode($prefix . '%')
+             . '&select=image_url,alt_text,caption,title_attr,schema_description,image_keywords'
+             . '&limit=500';
+        $ctx = stream_context_create([
+            'http' => ['header' => "apikey: " . SUPABASE_ANON_KEY . "\r\nAuthorization: Bearer " . SUPABASE_ANON_KEY . "\r\nAccept: application/json\r\n", 'timeout' => 5, 'ignore_errors' => true],
+            'ssl'  => ['verify_peer' => true],
+        ]);
+        $result = [];
+        $res = @file_get_contents($url, false, $ctx);
+        if ($res) {
+            $rows = json_decode($res, true);
+            if (is_array($rows)) foreach ($rows as $row) if (!empty($row['image_url'])) $result[$row['image_url']] = $row;
+        }
+        if (function_exists('cache_set')) cache_set($ck, $result, 600);
+        return $result;
+    }
+}
+if (!function_exists('getImgSeo')) {
+    function getImgSeo(string $imgUrl, array $map): array {
+        if (!$imgUrl || empty($map)) return [];
+        if (isset($map[$imgUrl])) return $map[$imgUrl];
+        $p = parse_url($imgUrl, PHP_URL_PATH) ?: $imgUrl;
+        foreach ($map as $u => $d) { if ((parse_url($u, PHP_URL_PATH) ?: $u) === $p) return $d; }
+        return [];
+    }
+}
+
 // ── Data Wilayah dari Supabase (server-side) ──────────────────────────
-$data      = fetchSupabaseCached('daftar_wilayah', [], 'Wilayah.asc');
-$dataError = ($data === null) ? 'Gagal mengambil data dari server.' : null;
+$data         = fetchSupabaseCached('daftar_wilayah', [], 'Wilayah.asc');
+$dataError    = ($data === null) ? 'Gagal mengambil data dari server.' : null;
+$lingkSeoMap  = fetchImageSeoByPrefix('/img/person/');
 
 // ── Periode helpers ───────────────────────────────────────────────────
 function wil_getAllPeriodes(array $data, string $col = 'Periode'): array {
@@ -148,7 +184,7 @@ $extraCss = ['/css/content.css'];
     </ul>
     <div class="tabcontents" id="tabcontents-wilayah" style="padding:2rem;border-radius:0 12px 12px 12px;box-shadow:0 4px 16px rgba(91,44,111,0.12)">
       <?php
-      function renderWilayahGroup(array $items): void {
+      function renderWilayahGroup(array $items, array $seoMap = []): void {
           $items = array_values($items);
           if (!$items) { echo '<p>Tidak ada data.</p>'; return; }
           $namaWilayah = $items[0]['Wilayah'] ?? '';
@@ -156,6 +192,10 @@ $extraCss = ['/css/content.css'];
           $koorFoto    = trim($items[0]['KoordinatorFoto'] ?? '');
           $fotoKoord   = $koorFoto ? '/img/person/' . $koorFoto : '';
           $ocKoord     = $fotoKoord ? "ShowPhotoBox('".e($koorNama)."','$fotoKoord','".e($namaWilayah)."','Koordinator')" : '';
+          // ── SEO koordinator ────────────────────────────────────────────
+          $seoKoord  = $fotoKoord ? getImgSeo($fotoKoord, $seoMap) : [];
+          $altKoord  = $seoKoord['alt_text']   ?: ($koorNama ? $koorNama . ' — Koordinator ' . $namaWilayah : '');
+          $titleKoord= $seoKoord['title_attr'] ?: ($koorNama . ' — Paroki SMDTBA Tulungagung');
       ?>
       <div class="profile-leader-card" style="margin-bottom:12px;cursor:pointer;" <?= $ocKoord ? "onclick=\"$ocKoord\"" : '' ?>>
         <div class="profile-leader-info">
@@ -163,7 +203,7 @@ $extraCss = ['/css/content.css'];
           <?php if ($koorNama): ?><div style="margin-top:4px;"><span class="profile-leader-role">Koordinator</span> <span class="profile-leader-name"><?= e($koorNama) ?></span></div><?php endif; ?>
         </div>
         <?php if ($fotoKoord): ?>
-        <img src="<?= e($fotoKoord) ?>" class="profile-leader-img" alt="<?= e($koorNama) ?>" loading="lazy" decoding="async" width="120" height="120" onerror="this.style.opacity='0.3'">
+        <img src="<?= e($fotoKoord) ?>" class="profile-leader-img" alt="<?= e($altKoord) ?>" title="<?= e($titleKoord) ?>" loading="lazy" decoding="async" width="120" height="120" onerror="this.style.opacity='0.3'">
         <?php elseif ($koorNama): ?>
         <div class="profile-leader-img" style="display:flex;align-items:center;justify-content:center;background:rgba(201,168,76,.15);color:#c9a84c;font-size:20px;font-weight:700;font-family:'Cormorant Garamond',serif"><?= strtoupper(mb_substr($koorNama,0,1)) ?></div>
         <?php endif; ?>
@@ -173,10 +213,14 @@ $extraCss = ['/css/content.css'];
           $lingk   = trim($item['Lingkungan'] ?? '');
           $fotoCol = trim($item['Foto'] ?? '');
           $foto    = $fotoCol ? '/img/person/' . $fotoCol : '';
+          // ── SEO ketua lingkungan ────────────────────────────────────
+          $seoKetua  = $foto ? getImgSeo($foto, $seoMap) : [];
+          $altKetua  = $seoKetua['alt_text']   ?: ($ketua ? $ketua . ' — Ketua ' . $lingk : '');
+          $titleKetua= $seoKetua['title_attr'] ?: ($ketua . ' — Paroki SMDTBA Tulungagung');
       ?>
       <div class="profile-item" onclick="<?= $foto ? "ShowPhotoBox('".e($ketua)."','".e($foto)."','".e($lingk)."','Ketua')" : '' ?>">
         <?php if ($foto): ?>
-        <img class="profile-item-img" src="<?= e($foto) ?>" alt="<?= e($ketua) ?>" loading="lazy" decoding="async" width="80" height="80" onerror="this.style.opacity='0.3'">
+        <img class="profile-item-img" src="<?= e($foto) ?>" alt="<?= e($altKetua) ?>" title="<?= e($titleKetua) ?>" loading="lazy" decoding="async" width="80" height="80" onerror="this.style.opacity='0.3'">
         <?php else: ?>
         <div class="profile-item-img" style="display:flex;align-items:center;justify-content:center;background:rgba(201,168,76,.1);color:#c9a84c;font-size:18px;font-weight:700;font-family:'Cormorant Garamond',serif"><?= strtoupper(mb_substr($ketua,0,1)) ?></div>
         <?php endif; ?>
@@ -188,10 +232,10 @@ $extraCss = ['/css/content.css'];
       <?php endforeach; ?>
       <?php } ?>
 
-      <div id="wil1"><?php renderWilayahGroup(array_values($wil1)); ?></div>
-      <div id="wil2"><?php renderWilayahGroup(array_values($wil2)); ?></div>
-      <div id="wil3"><?php renderWilayahGroup(array_values($wil3)); ?></div>
-      <div id="stasi"><?php renderWilayahGroup(array_values($stasi)); ?></div>
+      <div id="wil1"><?php renderWilayahGroup(array_values($wil1), $lingkSeoMap); ?></div>
+      <div id="wil2"><?php renderWilayahGroup(array_values($wil2), $lingkSeoMap); ?></div>
+      <div id="wil3"><?php renderWilayahGroup(array_values($wil3), $lingkSeoMap); ?></div>
+      <div id="stasi"><?php renderWilayahGroup(array_values($stasi), $lingkSeoMap); ?></div>
     </div>
   </div>
 

@@ -1,6 +1,42 @@
 <?php
 require_once __DIR__ . '/../includes/functions.php';
 
+// ─── Image SEO Helper ─────────────────────────────────────────────────────────
+if (!function_exists('fetchImageSeoByPrefix')) {
+    function fetchImageSeoByPrefix(string $prefix): array {
+        if (!defined('SUPABASE_URL') || !defined('SUPABASE_ANON_KEY')) return [];
+        $ck = 'img_seo_pfx_' . md5($prefix);
+        $cv = function_exists('cache_get') ? cache_get($ck) : null;
+        if ($cv !== null) return $cv;
+        $url = rtrim(SUPABASE_URL, '/') . '/rest/v1/image_seo'
+             . '?image_url=like.' . rawurlencode($prefix . '%')
+             . '&select=image_url,alt_text,caption,title_attr,schema_description,image_keywords'
+             . '&limit=500';
+        $ctx = stream_context_create([
+            'http' => ['header' => "apikey: " . SUPABASE_ANON_KEY . "\r\nAuthorization: Bearer " . SUPABASE_ANON_KEY . "\r\nAccept: application/json\r\n", 'timeout' => 5, 'ignore_errors' => true],
+            'ssl'  => ['verify_peer' => true],
+        ]);
+        $result = [];
+        $res = @file_get_contents($url, false, $ctx);
+        if ($res) {
+            $rows = json_decode($res, true);
+            if (is_array($rows)) foreach ($rows as $row) if (!empty($row['image_url'])) $result[$row['image_url']] = $row;
+        }
+        if (function_exists('cache_set')) cache_set($ck, $result, 600);
+        return $result;
+    }
+}
+if (!function_exists('getImgSeo')) {
+    function getImgSeo(string $imgUrl, array $map): array {
+        if (!$imgUrl || empty($map)) return [];
+        if (isset($map[$imgUrl])) return $map[$imgUrl];
+        $p = parse_url($imgUrl, PHP_URL_PATH) ?: $imgUrl;
+        foreach ($map as $u => $d) { if ((parse_url($u, PHP_URL_PATH) ?: $u) === $p) return $d; }
+        return [];
+    }
+}
+$umkmSeoMap = fetchImageSeoByPrefix('/public/umkm/');
+
 // ── Data UMKM dari Supabase (server-side) ─────────────────────────────
 $data  = [];
 $error = '';
@@ -109,11 +145,16 @@ $extraCss = ['/css/content.css'];
         $mapsUrl   = $item['maps_url']  ?? '';
         $imgSrc    = $gambar ? '/public/umkm/' . $gambar : '';
         if (!$imgSrc) continue;
-        $modalData = htmlspecialchars(json_encode(['src'=>$imgSrc,'judul'=>$judul,'namaUsaha'=>$namaUsaha,'kontak'=>$kontak,'deskripsi'=>$deskripsi,'mapsUrl'=>$mapsUrl]), ENT_QUOTES, 'UTF-8');
+        // ── SEO data untuk gambar ini ──────────────────────────────────
+        $imgSeo   = getImgSeo($imgSrc, $umkmSeoMap);
+        $imgAlt   = $imgSeo['alt_text']   ?: $judul;
+        $imgTitle = $imgSeo['title_attr'] ?: ($judul ?: $namaUsaha);
+        $imgCap   = $imgSeo['caption']    ?? '';
+        $modalData = htmlspecialchars(json_encode(['src'=>$imgSrc,'judul'=>$judul,'namaUsaha'=>$namaUsaha,'kontak'=>$kontak,'deskripsi'=>$deskripsi,'mapsUrl'=>$mapsUrl,'seoAlt'=>$imgAlt,'seoTitle'=>$imgTitle,'seoCap'=>$imgCap]), ENT_QUOTES, 'UTF-8');
     ?>
     <div class="uk-card" style="animation-delay:<?= $idx*50 ?>ms" onclick="ukOpenModal(<?= $modalData ?>)">
       <div class="uk-card-img-wrap">
-        <img class="uk-card-img" src="<?= e($imgSrc) ?>" alt="<?= e($judul) ?>" loading="lazy"
+        <img class="uk-card-img" src="<?= e($imgSrc) ?>" alt="<?= e($imgAlt) ?>" title="<?= e($imgTitle) ?>" loading="lazy"
              onerror="this.closest('.uk-card').style.display='none'">
         <div class="uk-card-overlay">
           <?php if ($judul): ?><div class="uk-card-overlay-name"><?= e($judul) ?></div><?php endif; ?>
@@ -156,6 +197,7 @@ $extraCss = ['/css/content.css'];
     <div class="uk-modal-inner">
       <div class="uk-modal-img-col">
         <img class="uk-modal-img" id="ukModalImg" src="" alt="" onclick="ukOpenLightbox(this.src, this.alt)" title="Klik untuk perbesar">
+        <p id="ukModalCaption" style="display:none;margin:6px 0 0;font-size:12px;color:rgba(255,255,255,0.65);font-style:italic;line-height:1.5;text-align:center;"></p>
         <span class="uk-modal-badge">Pasar Umat</span>
       </div>
       <div class="uk-modal-body">
@@ -607,7 +649,7 @@ document.addEventListener("DOMContentLoaded", function () {
   window.ukOpenModal = function (data) {
     var img=document.getElementById('ukModalImg'),inner=document.querySelector('.uk-modal-inner');
     inner.classList.remove('uk-modal--landscape');
-    img.src=data.src||''; img.alt=data.judul||'';
+    img.src=data.src||''; img.alt=data.seoAlt||data.judul||''; img.title=data.seoTitle||'';
     img.onload=function(){ if(img.naturalWidth>img.naturalHeight) inner.classList.add('uk-modal--landscape'); else inner.classList.remove('uk-modal--landscape'); };
     if(img.complete&&img.naturalWidth){ if(img.naturalWidth>img.naturalHeight) inner.classList.add('uk-modal--landscape'); }
     document.getElementById('ukModalJudul').textContent=data.judul||data.namaUsaha||'';
@@ -617,6 +659,9 @@ document.addEventListener("DOMContentLoaded", function () {
     var descEl=document.getElementById('ukModalDesc');
     if(data.deskripsi&&data.deskripsi.trim()){ descEl.className='uk-modal-desc'; descEl.textContent=data.deskripsi; }
     else { descEl.className='uk-modal-desc-empty'; descEl.textContent='Belum ada deskripsi untuk usaha ini.'; }
+    // ── SEO caption (ditampilkan sebagai keterangan foto jika ada) ──────
+    var capEl=document.getElementById('ukModalCaption');
+    if(capEl){ if(data.seoCap&&data.seoCap.trim()){ capEl.textContent=data.seoCap; capEl.style.display='block'; } else { capEl.style.display='none'; } }
 
     // ── Maps ──────────────────────────────────────────────────
     _mapsWrap.innerHTML='';

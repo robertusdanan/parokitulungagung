@@ -1,8 +1,44 @@
 <?php
 require_once __DIR__ . '/../includes/functions.php';
 
+// ─── Image SEO Helper ─────────────────────────────────────────────────────────
+if (!function_exists('fetchImageSeoByPrefix')) {
+    function fetchImageSeoByPrefix(string $prefix): array {
+        if (!defined('SUPABASE_URL') || !defined('SUPABASE_ANON_KEY')) return [];
+        $ck = 'img_seo_pfx_' . md5($prefix);
+        $cv = function_exists('cache_get') ? cache_get($ck) : null;
+        if ($cv !== null) return $cv;
+        $url = rtrim(SUPABASE_URL, '/') . '/rest/v1/image_seo'
+             . '?image_url=like.' . rawurlencode($prefix . '%')
+             . '&select=image_url,alt_text,caption,title_attr,schema_description,image_keywords'
+             . '&limit=500';
+        $ctx = stream_context_create([
+            'http' => ['header' => "apikey: " . SUPABASE_ANON_KEY . "\r\nAuthorization: Bearer " . SUPABASE_ANON_KEY . "\r\nAccept: application/json\r\n", 'timeout' => 5, 'ignore_errors' => true],
+            'ssl'  => ['verify_peer' => true],
+        ]);
+        $result = [];
+        $res = @file_get_contents($url, false, $ctx);
+        if ($res) {
+            $rows = json_decode($res, true);
+            if (is_array($rows)) foreach ($rows as $row) if (!empty($row['image_url'])) $result[$row['image_url']] = $row;
+        }
+        if (function_exists('cache_set')) cache_set($ck, $result, 600);
+        return $result;
+    }
+}
+if (!function_exists('getImgSeo')) {
+    function getImgSeo(string $imgUrl, array $map): array {
+        if (!$imgUrl || empty($map)) return [];
+        if (isset($map[$imgUrl])) return $map[$imgUrl];
+        $p = parse_url($imgUrl, PHP_URL_PATH) ?: $imgUrl;
+        foreach ($map as $u => $d) { if ((parse_url($u, PHP_URL_PATH) ?: $u) === $p) return $d; }
+        return [];
+    }
+}
+
 // ── Data Galeri dari Supabase (server-side) ───────────────────────────
-$data      = fetchSupabaseCached('galeri_foto', [], 'Tanggal.desc');
+$data         = fetchSupabaseCached('galeri_foto', [], 'Tanggal.desc');
+$galeriSeoMap = fetchImageSeoByPrefix('/public/galeri/');
 $dataError = ($data === null) ? 'Gagal memuat data galeri.' : null;
 
 // ── Kelompokkan per tahun & bulan ─────────────────────────────────────
@@ -370,17 +406,29 @@ $galeriDataJS = [];
             $gambar = $item['Gambar'] ?? '';
             $imgSrc = str_starts_with($gambar, 'http') ? $gambar : '/public/galeri/' . $gambar;
 
+            // ── SEO data dari image_seo Supabase ───────────────────────────────
+            $imgSeo  = getImgSeo($imgSrc, $galeriSeoMap);
+            $imgAlt  = $imgSeo['alt_text']   ?? '';
+            $imgTitle= $imgSeo['title_attr'] ?? '';
+            $imgCap  = $imgSeo['caption']    ?? '';
+            // Fallback ke judul jika SEO belum di-generate
+            $altFinal   = $imgAlt   ?: (($item['Judul'] ?? '') . ' – Dokumentasi Paroki SMDTBA Tulungagung');
+            $titleFinal = $imgTitle ?: ($item['Judul'] ?? '');
+
             // ── Gunakan id Supabase sebagai key (unik, stabil, tidak perlu slugify) ──
             $cardId = 'g' . ($item['id'] ?? count($galeriDataJS));
             $galeriDataJS[$cardId] = [
-              'img'    => $imgSrc,
-              'judul'  => $item['Judul'] ?? '',
-              'tgl'    => formatTanggalIndo($item['Tanggal'] ?? ''),
-              'tglRaw' => $item['Tanggal'] ?? '',
-              'ket'    => $item['Keterangan'] ?? '',
-              'foto'  => $item['Foto'] ?? '',
-              'link'  => $item['Link'] ?? '#',
-              'id'    => $item['id'] ?? 0,
+              'img'     => $imgSrc,
+              'judul'   => $item['Judul'] ?? '',
+              'tgl'     => formatTanggalIndo($item['Tanggal'] ?? ''),
+              'tglRaw'  => $item['Tanggal'] ?? '',
+              'ket'     => $item['Keterangan'] ?? '',
+              'foto'    => $item['Foto'] ?? '',
+              'link'    => $item['Link'] ?? '#',
+              'id'      => $item['id'] ?? 0,
+              'seo_alt' => $altFinal,
+              'seo_cap' => $imgCap,
+              'seo_tit' => $titleFinal,
             ];
           ?>
           <div class="galeri-card"
@@ -390,8 +438,8 @@ $galeriDataJS = [];
                data-gid="<?= $cardId ?>"
                onkeydown="if(event.key==='Enter'||event.key===' ')this.click()">
             <img src="<?= e($imgSrc) ?>"
-                 alt="<?= e(($item['Judul'] ?? '') . ' – Dokumentasi Paroki SMDTBA Tulungagung') ?>"
-                 title="<?= e($item['Judul'] ?? '') ?>"
+                 alt="<?= e($altFinal) ?>"
+                 title="<?= e($titleFinal) ?>"
                  loading="<?= ($idx2 < 4 && $firstMonth) ? 'eager' : 'lazy' ?>"
                  fetchpriority="<?= ($idx2 === 0 && $firstMonth) ? 'high' : 'auto' ?>"
                  decoding="async"
@@ -787,10 +835,11 @@ window.GALERI = <?= json_encode($galeriDataJS, JSON_UNESCAPED_UNICODE | JSON_UNE
 
   window.galeriOpenModal = function(d){
     document.getElementById('galeri-modal-img').src       = d.img;
-    document.getElementById('galeri-modal-img').alt       = d.judul;
+    document.getElementById('galeri-modal-img').alt       = d.seo_alt || d.judul;
+    document.getElementById('galeri-modal-img').title     = d.seo_tit || d.judul;
     document.getElementById('galeri-modal-title').textContent     = d.judul;
     document.getElementById('galeri-modal-date').textContent      = d.tgl;
-    document.getElementById('galeri-modal-keterangan').textContent = d.ket || '—';
+    document.getElementById('galeri-modal-keterangan').textContent = d.seo_cap || d.ket || '—';
     document.getElementById('galeri-modal-foto').textContent      = 'Foto: ' + (d.foto || '—');
     document.getElementById('galeri-modal-link').href             = d.link;
     ov.classList.add('visible');

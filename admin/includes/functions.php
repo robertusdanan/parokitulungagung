@@ -205,10 +205,10 @@ function adminHeader(string $pageTitle, string $activePage, array $user): void {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
         Log Aktivitas
       </a>
-      <a href="/admin/pages/seo-artikel.php" class="nav-item <?= $activePage === 'seo-artikel' ? 'active' : '' ?>">
+      <a href="/admin/pages/seo.php" class="nav-item <?= in_array($activePage, ['seo','seo-artikel']) ? 'active' : '' ?>">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg>
         SEO Generator
-        <span class="badge badge-gold" style="font-size:9px;margin-left:auto;padding:2px 6px">AI-free</span>
+        <span class="badge badge-gold" style="font-size:9px;margin-left:auto;padding:2px 6px">✦ AI</span>
       </a>
       <?php endif; ?>
       <?php endif; ?>
