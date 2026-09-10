@@ -19,12 +19,11 @@ if (!defined('GEMINI_API_KEYS')) {
 
 define('GEMINI_MODELS', [
     'gemini-2.5-flash-lite',
-    'gemini-3.6-flash',
     'gemini-flash-latest',
-    'gemini-2.5-flash',
+    'gemini-3.6-flash',
 ]);
 
-define('GEMINI_MAX_OUTPUT_TOKENS', 700);
+define('GEMINI_MAX_OUTPUT_TOKENS', 1200);
 define('GEMINI_TEMPERATURE', 0.65);
 define('GEMINI_TIMEOUT', 15);
 

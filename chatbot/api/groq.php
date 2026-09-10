@@ -135,12 +135,25 @@ class GroqAI
 
     private static function formatToSafeHtml(string $text): string
     {
+        // Strip common prompt leak artifacts like "(HTML format):" or "```html"
+        $text = preg_replace('/^```[a-z]*\s*/i', '', $text);
+        $text = preg_replace('/\s*```$/', '', $text);
+        $text = preg_replace('/^\(HTML.*?\):?\s*/i', '', $text);
+        $text = preg_replace('/^Here is.*?:/i', '', $text);
+
+        // Ganti markdown header ### -> <b>...</b>
         $text = preg_replace('/^#{1,4}\s*(.*?)$/m', '<b>$1</b>', $text);
+        // Ganti **bold** -> <b>bold</b>
         $text = preg_replace('/\*\*(.*?)\*\*/s', '<b>$1</b>', $text);
+        // Ganti * bullet point di awal baris menjadi •
+        $text = preg_replace('/^\s*[\*\-]\s+/m', '• ', $text);
+        // Ganti *italic* -> <i>italic</i>
         $text = preg_replace('/(?<!\*)\*(?!\*)(.*?)(?<!\*)\*(?!\*)/s', '<i>$1</i>', $text);
+        // Normalisasi link markdown [title](url) -> <a href="url">title</a> jika ada
         $text = preg_replace('/\[(.*?)\]\((.*?)\)/', '<a href="$2">$1</a>', $text);
+        // Ubah newline jadi <br>
         $text = nl2br($text);
-        return $text;
+        return trim($text);
     }
 
     private static function buildPayload(string $systemPrompt, array $history, string $userMessage): array
