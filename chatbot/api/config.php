@@ -4,11 +4,18 @@ date_default_timezone_set('Asia/Jakarta');
  * chatbot/api/config.php — Konfigurasi Chatbot Hybrid Paroki SMDTBA
  */
 
-// ── Load secrets dari luar public_html ──────────────────────
-require_once dirname(__DIR__, 3) . '/private/secrets.php';
+// ── Load functions & secrets ───────────────────────────────
+require_once dirname(__DIR__, 2) . '/includes/functions.php';
+$secretsFile = privatePath('secrets.php');
+if (file_exists($secretsFile)) {
+    require_once $secretsFile;
+}
+require_once dirname(__DIR__, 2) . '/includes/config.php';
 
 // ─── GEMINI API KEYS & MODELS ─────────────────────────────
-define('GEMINI_API_KEYS', SECRET_GEMINI_API_KEYS);
+if (!defined('GEMINI_API_KEYS')) {
+    define('GEMINI_API_KEYS', defined('SECRET_GEMINI_API_KEYS') ? SECRET_GEMINI_API_KEYS : []);
+}
 
 define('GEMINI_MODELS', [
     'gemini-2.5-flash-lite',
@@ -30,7 +37,9 @@ function gemini_endpoint(string $model, string $key): string
 }
 
 // ─── GROQ API KEYS & MODELS ───────────────────────────────
-define('GROQ_API_KEYS', SECRET_GROQ_API_KEYS);
+if (!defined('GROQ_API_KEYS')) {
+    define('GROQ_API_KEYS', defined('SECRET_GROQ_API_KEYS') ? SECRET_GROQ_API_KEYS : []);
+}
 define('GROQ_ENDPOINT', 'https://api.groq.com/openai/v1/chat/completions');
 
 define('GROQ_MODELS', [
@@ -56,7 +65,7 @@ define('CACHE_DIR', DATA_DIR . 'cache/');
 // ──────────────────────────────────────────────────────────
 // ANTI-SPAM & LIMITS
 // ──────────────────────────────────────────────────────────
-define('RATE_LIMIT_MAX',    25);
+define('RATE_LIMIT_MAX',    30);
 define('RATE_LIMIT_WINDOW', 60);
 define('MAX_MSG_LENGTH',    1000);
 
@@ -78,9 +87,15 @@ if (!defined('SITE_BASE')) {
     define('SITE_BASE', $scheme . '://' . $host);
 }
 
-define('SITE_NAME', 'Paroki Santa Maria Dengan Tidak Bernoda Asal (SMDTBA) Tulungagung');
-define('SITE_URL',  'https://www.parokitulungagung.org');
-define('SITE_LANG', 'id');
+if (!defined('SITE_NAME')) {
+    define('SITE_NAME', 'Paroki Santa Maria Dengan Tidak Bernoda Asal (SMDTBA) Tulungagung');
+}
+if (!defined('SITE_URL')) {
+    define('SITE_URL',  'https://www.parokitulungagung.org');
+}
+if (!defined('SITE_LANG')) {
+    define('SITE_LANG', 'id');
+}
 
 // ──────────────────────────────────────────────────────────
 // CACHE & DEBUG
