@@ -211,12 +211,91 @@ adminHeader('Pengaturan Profil', 'profil', $user);
   .profil-layout { grid-template-columns: 1fr; }
   .avatar-card { position: static; }
 }
+
+/* ── Universal Sticky Save Bar ────────────────────────────────────────── */
+.universal-save-bar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(22, 22, 24, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--accent);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.55);
+  border-radius: 50px;
+  padding: 10px 22px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: all .3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: slideUpSave 0.35s ease-out;
+}
+@keyframes slideUpSave {
+  from { transform: translate(-50%, 40px); opacity: 0; }
+  to   { transform: translate(-50%, 0); opacity: 1; }
+}
+.save-bar-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  color: #fff;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.save-bar-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--warning);
+  display: inline-block;
+  box-shadow: 0 0 10px var(--warning);
+  animation: pulseDot 1.4s infinite;
+}
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.4; transform: scale(0.8); }
+}
+.save-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pulse-save-btn {
+  box-shadow: 0 0 14px rgba(201, 160, 80, 0.45);
+  border-color: var(--accent) !important;
+}
 </style>
 
-<div class="page-header">
+<div class="page-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
   <div class="page-header-left">
     <h1>Pengaturan Profil</h1>
     <p>Kelola informasi akun dan foto profil Anda</p>
+  </div>
+  <div class="page-header-actions">
+    <button type="button" class="btn btn-primary" id="btnUniversalSaveTop" onclick="saveUniversalProfile()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="vertical-align:middle;margin-right:6px">
+        <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+        <polyline points="17 21 17 13 7 13 7 21"/>
+        <polyline points="7 3 7 8 15 8"/>
+      </svg>
+      Simpan Semua Perubahan
+    </button>
+  </div>
+</div>
+
+<!-- ── Floating Universal Save Bar ──────────────────────────────────────── -->
+<div id="universalSaveBar" class="universal-save-bar" style="display:none;">
+  <div class="save-bar-info">
+    <span class="save-bar-dot"></span>
+    <span id="saveBarText">Ada perubahan data yang belum disimpan!</span>
+  </div>
+  <div class="save-bar-actions">
+    <button type="button" class="btn btn-secondary btn-sm" onclick="discardChanges()">Batal</button>
+    <button type="button" class="btn btn-primary btn-sm pulse-save-btn" id="btnUniversalSaveBottom" onclick="saveUniversalProfile()">
+      Simpan Perubahan
+    </button>
   </div>
 </div>
 
@@ -510,6 +589,84 @@ adminHeader('Pengaturan Profil', 'profil', $user);
 </div>
 
 <script>
+// ── Universal Dirty State & Navigation Guard ────────────────────────────
+let isDirty = false;
+let initialFormData = {};
+
+function markDirty(reason = 'Ada perubahan data yang belum disimpan!') {
+  isDirty = true;
+  const bar  = document.getElementById('universalSaveBar');
+  const text = document.getElementById('saveBarText');
+  const topBtn = document.getElementById('btnUniversalSaveTop');
+  if (bar)  bar.style.display = 'flex';
+  if (text) text.textContent = reason;
+  if (topBtn) topBtn.classList.add('pulse-save-btn');
+}
+
+function clearDirty() {
+  isDirty = false;
+  const bar  = document.getElementById('universalSaveBar');
+  const topBtn = document.getElementById('btnUniversalSaveTop');
+  if (bar)  bar.style.display = 'none';
+  if (topBtn) topBtn.classList.remove('pulse-save-btn');
+  captureInitialFormData();
+}
+
+function captureInitialFormData() {
+  const fields = ['fieldUsername','fieldNama','fieldEmail','fieldBio','fieldJabatan','fieldInstagram','fieldFacebook','fieldTwitter','fieldWebsite'];
+  initialFormData = {};
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) initialFormData[id] = el.value;
+  });
+}
+
+function discardChanges() {
+  if (!confirm('Batalkan semua perubahan data profil dan kembalikan ke awal?')) return;
+  Object.keys(initialFormData).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = initialFormData[id];
+  });
+  const pwFields = ['fieldOldPw', 'fieldNewPw', 'fieldNewPw2'];
+  pwFields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  const bar = document.getElementById('pwStrengthBar');
+  if (bar) bar.style.width = '0%';
+  const t1 = document.getElementById('pwStrengthText');
+  if (t1) t1.textContent = '';
+  const t2 = document.getElementById('pwMatchText');
+  if (t2) t2.textContent = '';
+  clearDirty();
+  toast('Dibatalkan', 'Perubahan formulir dibatalkan', 'info');
+}
+
+// Intersep navigasi saat dirty
+window.addEventListener('beforeunload', function (e) {
+  if (isDirty) {
+    e.preventDefault();
+    e.returnValue = 'Perubahan belum disimpan!';
+    return e.returnValue;
+  }
+});
+
+document.addEventListener('click', function (e) {
+  if (!isDirty) return;
+  const a = e.target.closest('a');
+  if (!a) return;
+  const href = a.getAttribute('href');
+  if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  if (confirm('PERHATIAN: Ada perubahan profil yang belum disimpan!\n\nKlik "Cancel" untuk tetap di sini & Simpan Perubahan.\nKlik "OK" untuk keluar dan membuang perubahan.')) {
+    isDirty = false;
+    window.location.href = href;
+  }
+}, true);
+
 // ── Upload Foto ────────────────────────────────────────────────────────
 async function uploadFoto(input) {
   const file = input.files[0]; if (!file) return;
@@ -547,6 +704,9 @@ async function uploadFoto(input) {
 
       // Update avatar di sidebar juga (ganti dengan foto)
       updateSidebarAvatar(data.path);
+
+      // Trigger dirty state: foto baru terupload
+      markDirty('Foto profil baru diupload! Klik simpan semua perubahan.');
     } else {
       stat.textContent = '✗ ' + data.error;
       toast('Gagal', data.error, 'error');
@@ -614,13 +774,16 @@ async function saveInfo() {
     if (sidebarName) sidebarName.textContent = displayName;
 
     toast('Berhasil', 'Semua informasi profil berhasil disimpan', 'success');
+    clearDirty();
 
     // Tampilkan warning jika username diganti
     if (res.warnings && res.warnings.length) {
       res.warnings.forEach(w => toast('Perhatian', w, 'warning', 6000));
     }
+    return true;
   } else {
     toast('Error', res.error, 'error');
+    return false;
   }
 }
 
@@ -631,12 +794,12 @@ async function savePassword() {
   const newPw  = document.getElementById('fieldNewPw').value;
   const newPw2 = document.getElementById('fieldNewPw2').value;
 
-  if (!oldPw)  { toast('Error', 'Masukkan password lama terlebih dahulu', 'error'); return; }
-  if (!newPw)  { toast('Error', 'Masukkan password baru', 'error'); return; }
-  if (newPw.length < 8) { toast('Error', 'Password baru minimal 8 karakter', 'error'); return; }
-  if (newPw !== newPw2) { toast('Error', 'Konfirmasi password tidak cocok', 'error'); return; }
+  if (!oldPw)  { toast('Error', 'Masukkan password lama terlebih dahulu', 'error'); return false; }
+  if (!newPw)  { toast('Error', 'Masukkan password baru', 'error'); return false; }
+  if (newPw.length < 8) { toast('Error', 'Password baru minimal 8 karakter', 'error'); return false; }
+  if (newPw !== newPw2) { toast('Error', 'Konfirmasi password tidak cocok', 'error'); return false; }
 
-  btnLoading(btn, true);
+  if (btn) btnLoading(btn, true);
   const res = await apiPost('/admin/api/profil.php', {
     action:       'update',
     username:     document.getElementById('fieldUsername').value.trim(),
@@ -645,7 +808,7 @@ async function savePassword() {
     old_password: oldPw,
     new_password: newPw,
   });
-  btnLoading(btn, false);
+  if (btn) btnLoading(btn, false);
 
   if (res.success) {
     document.getElementById('fieldOldPw').value  = '';
@@ -655,8 +818,30 @@ async function savePassword() {
     document.getElementById('pwStrengthText').textContent     = '';
     document.getElementById('pwMatchText').textContent        = '';
     toast('Berhasil', 'Password berhasil diganti', 'success');
+    clearDirty();
+    return true;
   } else {
     toast('Error', res.error, 'error');
+    return false;
+  }
+}
+
+// ── Universal Save: Simpan Semua Sekaligus ─────────────────────────────
+async function saveUniversalProfile() {
+  const btnTop    = document.getElementById('btnUniversalSaveTop');
+  const btnBottom = document.getElementById('btnUniversalSaveBottom');
+  if (btnTop)    btnLoading(btnTop, true);
+  if (btnBottom) btnLoading(btnBottom, true);
+
+  try {
+    const infoOk = await saveInfo();
+    const newPw = document.getElementById('fieldNewPw') ? document.getElementById('fieldNewPw').value : '';
+    if (infoOk && newPw) {
+      await savePassword();
+    }
+  } finally {
+    if (btnTop)    btnLoading(btnTop, false);
+    if (btnBottom) btnLoading(btnBottom, false);
   }
 }
 
@@ -708,13 +893,28 @@ function togglePw(inputId, btn) {
   btn.style.color = isHidden ? 'var(--accent)' : 'var(--text-muted)';
 }
 
-// ── Init: set foto profil di sidebar jika ada ──────────────────────────
+// ── Init: setup listener & set foto profil di sidebar jika ada ─────────
 document.addEventListener('DOMContentLoaded', function () {
   <?php if ($fotoPath): ?>
   // Set foto di sidebar langsung
   const p = "<?= e(strtok($fotoPath, '?')) ?>";
   updateSidebarAvatar(p);
   <?php endif; ?>
+
+  captureInitialFormData();
+
+  // Daftarkan listener input untuk dirty detection
+  const watchIds = [
+    'fieldUsername','fieldNama','fieldEmail','fieldBio','fieldJabatan',
+    'fieldInstagram','fieldFacebook','fieldTwitter','fieldWebsite',
+    'fieldOldPw','fieldNewPw','fieldNewPw2'
+  ];
+  watchIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('input', () => markDirty('Ada data profil yang diubah. Simpan perubahan sebelum beralih!'));
+    el.addEventListener('change', () => markDirty('Ada data profil yang diubah. Simpan perubahan sebelum beralih!'));
+  });
 });
 </script>
 

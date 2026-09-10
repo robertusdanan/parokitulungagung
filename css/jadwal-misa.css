@@ -8,7 +8,7 @@
   position: relative;
   background:
     linear-gradient(180deg, rgba(26,18,8,0.55) 0%, rgba(26,18,8,0.85) 60%, #1a1208 100%),
-    url('https://img.parokitulungagung.org/gereja/exterior-blank.webp') center/cover no-repeat;
+    url('https://img.parokitulungagung.org/assets/gereja/exterior-blank.webp') center/cover no-repeat;
   text-align: center;
   padding: 64px 24px 48px;
   overflow: hidden;

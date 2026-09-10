@@ -361,7 +361,7 @@ button.btn-login-portal .login-dot { width: 5px; height: 5px; border-radius: 50%
   width: 100%;
   height: calc(100vh - var(--navbar-h));
   height: calc(100dvh - var(--navbar-h));
-  background-image: url('https://img.parokitulungagung.org/gereja/interiorwide.webp');
+  background-image: url('https://img.parokitulungagung.org/assets/gereja/interiorwide.webp');
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;

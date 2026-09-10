@@ -78,13 +78,30 @@ if ($action === 'upload_foto') {
     elseif ($mimeType === 'image/webp' && function_exists('imagecreatefromwebp'))
         $src = @imagecreatefromwebp($file['tmp_name']);
 
+    $r2CdnBase = defined('R2_CDN_URL') ? rtrim(R2_CDN_URL, '/') : 'https://img.parokitulungagung.org';
+
     if (!$src) {
         $ext      = $mimeType === 'image/png' ? 'png' : 'jpg';
         $filename = 'profil-' . $currentUser['id'] . '.' . $ext;
-        if (!move_uploaded_file($file['tmp_name'], $uploadDir . $filename)) {
+        $savePath = $uploadDir . $filename;
+        if (!move_uploaded_file($file['tmp_name'], $savePath)) {
             apiJson(['error' => 'Gagal menyimpan foto.'], 500);
         }
-        apiJson(['success' => true, 'path' => '/img/admin/profil/' . $filename]);
+        $r2Key  = 'assets/admin/' . $filename;
+        $cdnUrl = $r2CdnBase . '/' . $r2Key;
+        try {
+            $r2 = getR2WriteClient();
+            $r2->putObjectFromFile($r2Key, $savePath, $mimeType);
+        } catch (Exception $e) {
+            error_log('[PROFIL UPLOAD R2 ERROR] ' . $e->getMessage());
+        }
+        apiJson([
+            'success' => true,
+            'path'    => $cdnUrl,
+            'size_kb' => round(filesize($savePath) / 1024, 1),
+            'orig_kb' => round($file['size'] / 1024, 1),
+            'format'  => strtoupper($ext),
+        ]);
     }
 
     $origW = imagesx($src); $origH = imagesy($src);
@@ -107,14 +124,14 @@ if ($action === 'upload_foto') {
     else         imagejpeg($dst, $savePath, 82);
     imagedestroy($dst);
 
-    $r2Key  = 'assets/admin/profil/' . $filename;
-    $cdnUrl = (defined('R2_CDN_URL') ? rtrim(R2_CDN_URL, '/') : 'https://img.parokitulungagung.org') . '/' . $r2Key;
+    $r2Key  = 'assets/admin/' . $filename;
+    $cdnUrl = $r2CdnBase . '/' . $r2Key;
 
-    if (class_exists('R2WriteClient') && defined('R2_ACCOUNT_ID') && R2_ACCOUNT_ID !== '') {
-        $r2 = new R2WriteClient(R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET_NAME);
-        $r2->upload($savePath, $r2Key, $webpOk ? 'image/webp' : 'image/jpeg', [
-            'Cache-Control' => 'public, max-age=31536000, immutable',
-        ]);
+    try {
+        $r2 = getR2WriteClient();
+        $r2->putObjectFromFile($r2Key, $savePath, $webpOk ? 'image/webp' : 'image/jpeg');
+    } catch (Exception $e) {
+        error_log('[PROFIL UPLOAD R2 ERROR] ' . $e->getMessage());
     }
 
     if (!file_exists($savePath)) {
@@ -267,6 +284,12 @@ if ($action === 'hapus_foto') {
     foreach (['webp', 'jpg', 'png'] as $ext) {
         $f = $dir . 'profil-' . $currentUser['id'] . '.' . $ext;
         if (file_exists($f)) @unlink($f);
+        try {
+            $r2 = getR2WriteClient();
+            $r2->deleteObject('assets/admin/profil-' . $currentUser['id'] . '.' . $ext);
+        } catch (Exception $e) {
+            // Abaikan jika tidak ada di R2
+        }
     }
     getLogger()->log($currentUser, 'DELETE', 'profil', 'Hapus foto profil');
     apiJson(['success' => true]);

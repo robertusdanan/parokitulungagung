@@ -429,8 +429,8 @@ document.addEventListener("DOMContentLoaded", function () {
   if (window.innerWidth <= 600) return; // mobile: skip
 
   var images = [
-    'https://img.parokitulungagung.org/gereja/exterior-blank.webp',
-    'https://img.parokitulungagung.org/gereja/interiorwide.webp',
+    'https://img.parokitulungagung.org/assets/gereja/exterior-blank.webp',
+    'https://img.parokitulungagung.org/assets/gereja/interiorwide.webp',
   ];
   var idx = 0, cachedImg = null, heroTimer = null, heroVisible = true;
 

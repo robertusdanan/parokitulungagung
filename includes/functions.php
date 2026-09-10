@@ -860,14 +860,14 @@ function iconKategorialUrl(string $namaFile): string
 /**
  * URL publik foto profil admin / penulis dari Cloudflare R2 bucket.
  * SEBELUMNYA: "/img/admin/profil/profil-<uid>.webp" (lokal)
- * SEKARANG  : "https://img.parokitulungagung.org/admin/profil/profil-<uid>.webp"
+ * SEKARANG  : "https://img.parokitulungagung.org/assets/admin/profil-<uid>.webp"
  */
 function adminFotoUrl(string $uid): string
 {
     $uid = trim($uid);
     if ($uid === '') return '';
     $base = defined('R2_CDN_URL') ? rtrim(R2_CDN_URL, '/') : 'https://img.parokitulungagung.org';
-    return $base . '/admin/profil/profil-' . rawurlencode($uid) . '.webp';
+    return $base . '/assets/admin/profil-' . rawurlencode($uid) . '.webp';
 }
 
 /**
