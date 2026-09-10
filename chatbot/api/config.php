@@ -70,10 +70,12 @@ define('RATE_LIMIT_WINDOW', 60);
 define('MAX_MSG_LENGTH',    1000);
 
 // ──────────────────────────────────────────────────────────
-// MEMORY
+// MEMORY & LEARNING
 // ──────────────────────────────────────────────────────────
-define('MAX_HISTORY',     6);
-define('SESSION_TIMEOUT', 1800);
+define('MAX_HISTORY',          6);
+define('SESSION_TIMEOUT',      1800);
+define('AUTO_LEARN_ENABLED',   false);
+define('AUTO_LEARN_THRESHOLD', 3);
 
 // ──────────────────────────────────────────────────────────
 // WEBSITE INFO
