@@ -276,6 +276,82 @@ function agendaDlFileType(string $ext): array
     .petugas-lightbox-next { right: 8px; }
     .petugas-lightbox-close { top: -12px; right: -4px; }
   }
+
+  /* ── OVERRIDE: Bright Modern Theme for Agenda Items ────────────────── */
+  .agenda-modern {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 8px 0;
+  }
+  .agenda-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    margin-bottom: 0 !important; /* Diatur oleh flex-gap */
+    background: #fffdf7 !important; /* Bright warm cream */
+    border-radius: 12px !important;
+    border: 1px solid rgba(184,134,11,0.18) !important;
+    border-left: 4px solid #b8860b !important; /* Elegant gold accent border */
+    box-shadow: 0 2px 8px rgba(184,134,11,0.03) !important;
+    transition: all .2s cubic-bezier(.4,0,.2,1) !important;
+  }
+  .agenda-item:hover {
+    background: #fff9ec !important; /* Creamy gold glow */
+    border-color: rgba(184,134,11,0.4) !important;
+    box-shadow: 0 4px 16px rgba(184,134,11,0.12) !important;
+    transform: translateY(-2px) !important;
+  }
+  .agenda-item--holiday {
+    border-left-color: #c0392b !important; /* Red for holidays */
+  }
+  .agenda-month {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #8b6508 !important; /* Dark warm gold */
+    letter-spacing: .1em;
+    margin-bottom: 3px;
+  }
+  .agenda-item--holiday .agenda-month {
+    color: #c0392b !important;
+  }
+  .agenda-day {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #3a2a0a !important; /* Highly readable charcoal */
+    line-height: 1;
+  }
+  .agenda-day--holiday {
+    color: #c0392b !important;
+  }
+  .agenda-body {
+    flex: 1;
+    min-width: 0;
+  }
+  .agenda-title {
+    font-family: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #2c1e05 !important; /* Deep warm brown */
+    line-height: 1.4;
+    margin-bottom: 3px;
+  }
+  .agenda-desc {
+    font-size: 12.5px;
+    color: #665c49 !important; /* Highly readable dark grayish-brown */
+    line-height: 1.45;
+  }
+  .agenda-icon {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    flex-shrink: 0;
+    opacity: .95;
+    filter: drop-shadow(0 1px 3px rgba(184,134,11,0.15));
+  }
   </style>
 </head>
 <body>
@@ -310,7 +386,7 @@ function agendaDlFileType(string $ext): array
   </div>
 
   <div style="padding:8px;">
-    <div class="w3-container w3-card" style="background-color:#dfe0e0">
+    <div class="w3-container w3-card" style="background-color:#ffffff; border-radius:12px; border:1px solid rgba(184,134,11,0.12); box-shadow:0 4px 24px rgba(0,0,0,0.02); padding: 12px 18px 24px;">
 
       <div class="w3-bar tab-header" style="margin-top:10px;">
         <button class="w3-bar-item w3-button tablink active-tab"
