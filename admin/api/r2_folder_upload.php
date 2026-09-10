@@ -35,6 +35,9 @@ header('Content-Type: application/json; charset=utf-8');
 
 $user = apiRequirePageAccess('media', 'create');
 
+// Lepaskan lock session SEGERA agar request upload paralel tidak saling memblokir (session lock bottleneck)
+session_write_close();
+
 require_once __DIR__ . '/../../includes/R2WriteClient.php';
 require_once __DIR__ . '/../../includes/R2FolderCompressor.php';
 require_once __DIR__ . '/../../includes/GitHubDispatcher.php';
@@ -51,7 +54,8 @@ if (!defined('SECRET_R2_ACCESS_KEY_WRITE') || !defined('SECRET_R2_SECRET_KEY_WRI
     apiJson(['error' => 'Kredensial R2 (write) belum diatur di private/secrets.php. Tambahkan SECRET_R2_ACCESS_KEY_WRITE & SECRET_R2_SECRET_KEY_WRITE.'], 500);
 }
 
-set_time_limit(120);
+@ini_set('memory_limit', '512M');
+set_time_limit(600);
 ignore_user_abort(false);
 
 // ── Validasi input ───────────────────────────────────────────────────────
@@ -187,14 +191,14 @@ if ($isVideoFile && !R2FolderCompressor::isFfmpegAvailable()
         // 2) JANGAN dispatch sekarang. Cukup tandai album ini "punya video
         //    pending" di session admin (flag ringan, BUKAN daftar job) —
         //    GitHub Actions nanti scan sendiri isi _pending_video/{album}/.
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            @session_start();
+        }
         if (!isset($_SESSION['albums_with_pending_video']) || !is_array($_SESSION['albums_with_pending_video'])) {
             $_SESSION['albums_with_pending_video'] = [];
         }
         $_SESSION['albums_with_pending_video'][$folderClean] = true;
-        // Tutup session SEGERA — request upload lain (foto/video lain dalam
-        // folder yang sama, JS jalan concurrency=3) tidak boleh ikut
-        // ter-blokir menunggu lock session ini selama proses upload network.
-        session_write_close();
+        @session_write_close();
 
         r2AlbumCacheInvalidateStats($folderClean);
         r2AlbumCacheAddNameIfMissing($folderClean);

@@ -1515,6 +1515,69 @@ function readDirRecursive(dirEntry, basePath) {
   });
 }
 
+function uploadOneAlbumFile(fileEntry, folderName, onProgress) {
+  return new Promise(function (resolve) {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/admin/api/r2_folder_upload.php', true);
+
+    let lastLoaded = 0;
+    let lastTime = Date.now();
+    let speedStr = '';
+
+    if (xhr.upload && onProgress) {
+      xhr.upload.onprogress = function (e) {
+        if (e.lengthComputable && e.total > 0) {
+          const now = Date.now();
+          const dt = (now - lastTime) / 1000;
+          if (dt >= 0.4) {
+            const bytesPerSec = (e.loaded - lastLoaded) / dt;
+            speedStr = (bytesPerSec / (1024 * 1024)).toFixed(1) + ' MB/s';
+            lastLoaded = e.loaded;
+            lastTime = now;
+          }
+          onProgress(e.loaded, e.total, speedStr);
+        }
+      };
+    }
+
+    xhr.onload = function () {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          const data = JSON.parse(xhr.responseText);
+          resolve(data);
+        } catch (err) {
+          resolve({ success: false, error: 'Format respons server tidak valid' });
+        }
+      } else {
+        let errMsg = 'HTTP Error ' + xhr.status;
+        try {
+          const errData = JSON.parse(xhr.responseText);
+          if (errData && errData.error) errMsg = errData.error;
+        } catch (_) {}
+        resolve({ success: false, error: errMsg });
+      }
+    };
+
+    xhr.onerror = function () {
+      resolve({ success: false, error: 'Koneksi jaringan terputus' });
+    };
+
+    xhr.ontimeout = function () {
+      resolve({ success: false, error: 'Upload timeout (melebihi batas)' });
+    };
+
+    xhr.timeout = 600000; // 10 menit
+
+    const fd = new FormData();
+    fd.append('file', fileEntry.file);
+    fd.append('folder', folderName);
+    fd.append('relpath', fileEntry.relpath);
+    fd.append('skip_existing', '0');
+
+    xhr.send(fd);
+  });
+}
+
 async function runAlbumUpload(folderName, fileEntries) {
   albumUploadRunning = true;
   const dz  = document.getElementById('albumDropzone');
@@ -1550,52 +1613,86 @@ async function runAlbumUpload(folderName, fileEntries) {
     log.scrollTop = log.scrollHeight;
   }
 
-  const concurrency = 3;
-  let idx = 0;
-  let queuedVideos = 0; // jumlah video yang diantre server (belum dikirim ke GitHub Actions)
-  async function worker() {
-    while (idx < filtered.length) {
-      const fe = filtered[idx++];
-      try {
-        const fd = new FormData();
-        fd.append('file', fe.file);
-        fd.append('folder', folderName);
-        fd.append('relpath', fe.relpath);
-        fd.append('skip_existing', '0');
-        const r = await fetch('/admin/api/r2_folder_upload.php', { method: 'POST', body: fd });
-        const d = await r.json();
-        if (d.success) {
-          if (d.skipped) {
-            skipped++;
-            addLog(`⊘ Dilewati: ${fe.relpath}`, 'skip');
-          } else if (d.queued) {
-            // Video ini SUDAH di-staging ke R2 tapi SENGAJA belum dikirim ke
-            // GitHub Actions — semua video folder ini akan digabung jadi 1
-            // batch dispatch setelah loop upload selesai (lihat di bawah).
-            queuedVideos++;
-            addLog(`⏳ ${fe.relpath}: diantre untuk batch kompresi`, 'ok');
-          } else {
-            ok++;
-            savedKb += Math.max(0, (d.orig_kb || 0) - (d.new_kb || 0));
-            const note   = d.saved_pct > 0 ? ` (hemat ${d.saved_pct}%)` : '';
-            const poster = d.is_video ? (d.poster ? ' · thumbnail ✓' : ' · thumbnail gagal dibuat') : '';
-            const warn   = (!d.compressed && d.note) ? ` — ${d.note}` : '';
-            addLog(`✓ ${fe.relpath} · ${d.new_kb}KB${note}${poster}${warn}`, 'ok');
-          }
-        } else {
-          fail++;
-          addLog(`✗ ${fe.relpath}: ${d.error}`, 'err');
-        }
-      } catch(err) {
-        fail++;
-        addLog(`✗ ${fe.relpath}: koneksi gagal`, 'err');
+  let queuedVideos = 0;
+
+  const isVideoOrLarge = function (fe) {
+    const isVid = /\.(mp4|mov|avi|mkv|wmv|3gp|m4v)$/i.test(fe.relpath);
+    return isVid || (fe.file && fe.file.size > 6 * 1024 * 1024);
+  };
+
+  const largeQueue = filtered.filter(isVideoOrLarge);
+  const smallQueue = filtered.filter(fe => !isVideoOrLarge(fe));
+
+  async function processEntry(fe) {
+    const fName = fe.relpath;
+    const fSize = fe.file ? fe.file.size : 0;
+    const fSizeMb = (fSize / (1024 * 1024)).toFixed(1);
+
+    const logLine = document.createElement('div');
+    logLine.className = 'album-upload-log-line';
+    logLine.textContent = `⏳ Uploading: ${fName} (0 / ${fSizeMb} MB)...`;
+    log.appendChild(logLine);
+    log.scrollTop = log.scrollHeight;
+
+    const onProgress = function (loaded, fTotal, speed) {
+      const lMb = (loaded / (1024 * 1024)).toFixed(1);
+      const tMb = (fTotal / (1024 * 1024)).toFixed(1);
+      const pct = fTotal > 0 ? Math.round((loaded / fTotal) * 100) : 0;
+      const spd = speed ? ` • ${speed}` : '';
+      logLine.textContent = `⏳ Uploading: ${fName} (${lMb}/${tMb} MB · ${pct}%${spd})`;
+    };
+
+    let d = await uploadOneAlbumFile(fe, folderName, onProgress);
+    if (!d.success && d.error && (d.error.includes('jaringan') || d.error.includes('timeout'))) {
+      logLine.textContent = `↻ Retry: ${fName}...`;
+      d = await uploadOneAlbumFile(fe, folderName, onProgress);
+    }
+
+    if (d.success) {
+      if (d.skipped) {
+        skipped++;
+        logLine.className = 'album-upload-log-line skip';
+        logLine.textContent = `⊘ Dilewati: ${fName}`;
+      } else if (d.queued) {
+        queuedVideos++;
+        logLine.className = 'album-upload-log-line ok';
+        logLine.textContent = `⏳ ${fName}: diantre untuk batch kompresi GitHub`;
+      } else {
+        ok++;
+        savedKb += Math.max(0, (d.orig_kb || 0) - (d.new_kb || 0));
+        const note   = d.saved_pct > 0 ? ` (hemat ${d.saved_pct}%)` : '';
+        const poster = d.is_video ? (d.poster ? ' · thumbnail ✓' : ' · thumbnail gagal dibuat') : '';
+        const warn   = (!d.compressed && d.note) ? ` — ${d.note}` : '';
+        logLine.className = 'album-upload-log-line ok';
+        logLine.textContent = `✓ ${fName} · ${d.new_kb}KB${note}${poster}${warn}`;
       }
-      done++;
-      document.getElementById('albumProgressCount').textContent = `${done} / ${total}`;
-      document.getElementById('albumProgressBar').style.width = Math.round((done / total) * 100) + '%';
+    } else {
+      fail++;
+      logLine.className = 'album-upload-log-line err';
+      logLine.textContent = `✗ ${fName}: ${d.error || 'gagal'}`;
+    }
+    done++;
+    document.getElementById('albumProgressCount').textContent = `${done} / ${total}`;
+    document.getElementById('albumProgressBar').style.width = Math.round((done / total) * 100) + '%';
+  }
+
+  // 1) Video & file besar satu per satu
+  for (const fe of largeQueue) {
+    await processEntry(fe);
+  }
+
+  // 2) Foto kecil concurrency 2
+  let sIdx = 0;
+  async function smallWorker() {
+    while (sIdx < smallQueue.length) {
+      const fe = smallQueue[sIdx++];
+      await processEntry(fe);
     }
   }
-  await Promise.all(Array.from({ length: Math.min(concurrency, filtered.length) }, worker));
+  if (smallQueue.length > 0) {
+    const concurrency = 2;
+    await Promise.all(Array.from({ length: Math.min(concurrency, smallQueue.length) }, smallWorker));
+  }
 
   // Semua file (foto + video) sudah selesai diupload/diantre. Kalau ada
   // video yang diantre, kirim SATU batch dispatch ke GitHub Actions supaya

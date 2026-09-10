@@ -666,11 +666,15 @@ $canDelete = userCan($user, 'delete');
       <?php if ($canCreate): ?>
       <div style="padding:0 16px">
         <div class="r2-progress-box" id="r2ProgressBox" style="display:none">
-          <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px">
-            <span id="r2ProgressLabel">Mengupload...</span>
-            <span id="r2ProgressCount">0 / 0</span>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:12.5px;margin-bottom:6px">
+            <span id="r2ProgressLabel" style="font-weight:600;color:var(--text-primary)">Mengupload...</span>
+            <span id="r2ProgressCount" style="font-weight:600;color:var(--accent)">0 / 0</span>
           </div>
           <div class="r2-progress-track"><div class="r2-progress-bar" id="r2ProgressBar" style="width:0%"></div></div>
+          <div id="r2ProgressDetail" style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-muted);margin-top:6px;gap:8px">
+            <span id="r2ProgressFileName" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:65%"></span>
+            <span id="r2ProgressStats" style="white-space:nowrap"></span>
+          </div>
         </div>
         <div class="compress-result" id="r2Result"></div>
       </div>
@@ -1568,7 +1572,71 @@ async function handleR2AlbumAddInputChange(e) {
   await openR2Album(r2CurrentAlbum); // refresh grid file di album ini
 }
 
-// ── Upload 1 album (folder) ke R2, dengan concurrency terbatas ─────────────
+// ── Helper upload 1 file dengan XHR + progress event live ───────────────────
+function uploadOneR2File(fileEntry, folderName, skipExisting, onProgress) {
+  return new Promise(function (resolve) {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/admin/api/r2_folder_upload.php', true);
+
+    let lastLoaded = 0;
+    let lastTime = Date.now();
+    let speedStr = '';
+
+    if (xhr.upload && onProgress) {
+      xhr.upload.onprogress = function (e) {
+        if (e.lengthComputable && e.total > 0) {
+          const now = Date.now();
+          const dt = (now - lastTime) / 1000;
+          if (dt >= 0.4) {
+            const bytesPerSec = (e.loaded - lastLoaded) / dt;
+            speedStr = (bytesPerSec / (1024 * 1024)).toFixed(1) + ' MB/s';
+            lastLoaded = e.loaded;
+            lastTime = now;
+          }
+          onProgress(e.loaded, e.total, speedStr);
+        }
+      };
+    }
+
+    xhr.onload = function () {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          const data = JSON.parse(xhr.responseText);
+          resolve(data);
+        } catch (err) {
+          resolve({ success: false, error: 'Format respons server tidak valid' });
+        }
+      } else {
+        let errMsg = 'HTTP Error ' + xhr.status;
+        try {
+          const errData = JSON.parse(xhr.responseText);
+          if (errData && errData.error) errMsg = errData.error;
+        } catch (_) {}
+        resolve({ success: false, error: errMsg });
+      }
+    };
+
+    xhr.onerror = function () {
+      resolve({ success: false, error: 'Koneksi jaringan terputus' });
+    };
+
+    xhr.ontimeout = function () {
+      resolve({ success: false, error: 'Upload timeout (melebihi batas)' });
+    };
+
+    xhr.timeout = 600000; // 10 menit
+
+    const fd = new FormData();
+    fd.append('file', fileEntry.file);
+    fd.append('folder', folderName);
+    fd.append('relpath', fileEntry.relpath);
+    fd.append('skip_existing', skipExisting ? '1' : '0');
+
+    xhr.send(fd);
+  });
+}
+
+// ── Upload 1 album (folder) ke R2, dengan XHR progress & antrean cerdas ────
 async function runR2Upload(folderName, fileEntries) {
   const filtered = fileEntries.filter(function (fe) { return R2_MEDIA_EXT_RE.test(fe.relpath); });
   if (!filtered.length) {
@@ -1579,47 +1647,81 @@ async function runR2Upload(folderName, fileEntries) {
   const skipExisting = document.getElementById('r2SkipExisting')?.checked ?? true;
   const total = filtered.length;
   let done = 0, ok = 0, fail = 0, skipped = 0, savedKb = 0;
-  let dispatchedVideos = 0, githubUrl = null; // video yang berhasil dikirim ke GitHub Actions sebagai 1 batch job
-  let queuedVideos = 0; // video yang sudah di-staging ke R2 & diantre, menunggu 1x batch dispatch di akhir
+  let dispatchedVideos = 0, githubUrl = null;
+  let queuedVideos = 0;
   showR2Progress(`Mengupload album "${folderName}"...`, 0, total);
 
-  const concurrency = 3;
-  let idx = 0;
-  async function worker() {
-    while (idx < filtered.length) {
-      const fe = filtered[idx++];
-      try {
-        const fd = new FormData();
-        fd.append('file', fe.file);
-        fd.append('folder', folderName);
-        fd.append('relpath', fe.relpath);
-        fd.append('skip_existing', skipExisting ? '1' : '0');
-        const res = await fetch('/admin/api/r2_folder_upload.php', { method: 'POST', body: fd });
-        const d = await res.json();
-        if (d.success) {
-          if (d.skipped) skipped++;
-          else if (d.queued) {
-            // Video sudah di-staging ke R2, tapi SENGAJA belum dikirim ke
-            // GitHub Actions — semua video album ini digabung jadi 1 batch
-            // dispatch setelah loop upload ini selesai (lihat di bawah),
-            // supaya 1 folder berisi banyak video = 1 run GitHub Actions
-            // (bukan 1 run terpisah per video).
-            queuedVideos++;
-          } else {
-            ok++;
-            savedKb += Math.max(0, (d.orig_kb || 0) - (d.new_kb || 0));
-          }
-        } else fail++;
-      } catch (err) { fail++; }
-      done++;
-      updateR2Progress(done, total);
+  // Pisahkan file video / file besar (>6MB) untuk diupload sekuensial (1 per 1)
+  // agar bandwidth penuh dan tidak memicu timeout upload paralel
+  const isVideoOrLarge = function (fe) {
+    const isVid = /\.(mp4|mov|avi|mkv|wmv|3gp|m4v)$/i.test(fe.relpath);
+    return isVid || (fe.file && fe.file.size > 6 * 1024 * 1024);
+  };
+
+  const largeQueue = filtered.filter(isVideoOrLarge);
+  const smallQueue = filtered.filter(function (fe) { return !isVideoOrLarge(fe); });
+
+  async function processEntry(fe) {
+    const fName = fe.relpath;
+    const fSize = fe.file ? fe.file.size : 0;
+    const fSizeMb = (fSize / (1024 * 1024)).toFixed(1);
+
+    updateR2FileStatus(fName, `0 MB / ${fSizeMb} MB (0%)`);
+
+    const onProgress = function (loaded, fTotal, speed) {
+      const lMb = (loaded / (1024 * 1024)).toFixed(1);
+      const tMb = (fTotal / (1024 * 1024)).toFixed(1);
+      const pct = fTotal > 0 ? Math.round((loaded / fTotal) * 100) : 0;
+      const spd = speed ? ` • ${speed}` : '';
+      updateR2FileStatus(fName, `${lMb} MB / ${tMb} MB (${pct}%)${spd}`);
+    };
+
+    let d = await uploadOneR2File(fe, folderName, skipExisting, onProgress);
+    if (!d.success && d.error && (d.error.includes('jaringan') || d.error.includes('timeout'))) {
+      // 1x retry otomatis jika ada gangguan jaringan sesaat
+      updateR2FileStatus(fName, 'Mencoba ulang upload...');
+      d = await uploadOneR2File(fe, folderName, skipExisting, onProgress);
+    }
+
+    if (d.success) {
+      if (d.skipped) skipped++;
+      else if (d.queued) {
+        queuedVideos++;
+      } else {
+        ok++;
+        savedKb += Math.max(0, (d.orig_kb || 0) - (d.new_kb || 0));
+      }
+    } else {
+      fail++;
+      console.warn('Upload error:', fName, d.error);
+    }
+    done++;
+    updateR2Progress(done, total);
+  }
+
+  // 1) Proses video / file besar satu per satu
+  for (const fe of largeQueue) {
+    await processEntry(fe);
+  }
+
+  // 2) Proses foto kecil dengan concurrency 2
+  let sIdx = 0;
+  async function smallWorker() {
+    while (sIdx < smallQueue.length) {
+      const fe = smallQueue[sIdx++];
+      await processEntry(fe);
     }
   }
-  await Promise.all(Array.from({ length: Math.min(concurrency, filtered.length) }, worker));
+  if (smallQueue.length > 0) {
+    const concurrency = 2;
+    await Promise.all(Array.from({ length: Math.min(concurrency, smallQueue.length) }, smallWorker));
+  }
 
-  // Semua file (foto + video) selesai diupload/diantre. Kalau ada video yang
-  // diantre, kirim SATU batch dispatch ke GitHub Actions untuk semuanya sekaligus.
+  updateR2FileStatus('', '');
+
+  // Semua file selesai diupload. Jika ada video, dispatch 1 batch job ke GitHub Actions
   if (queuedVideos > 0) {
+    showR2Progress(`Memicu kompresi GitHub Actions untuk ${queuedVideos} video...`, total, total);
     try {
       const rb = await fetch('/admin/api/r2_video_batch_dispatch.php', {
         method: 'POST',
@@ -1631,14 +1733,9 @@ async function runR2Upload(folderName, fileEntries) {
         dispatchedVideos = db.count || queuedVideos;
         githubUrl = db.github_url || null;
       } else {
-        // Dispatch batch gagal → server sudah fallback (salin video mentah
-        // tanpa kompresi ke key final), jadi tetap dihitung sebagai "berhasil".
         ok += queuedVideos;
       }
     } catch (err) {
-      // Tidak bisa menghubungi server sama sekali untuk batch dispatch —
-      // video tetap ada di staging R2 (belum final), tandai sebagai gagal
-      // supaya admin tahu perlu upload ulang / retry.
       fail += queuedVideos;
     }
   }
@@ -1646,12 +1743,9 @@ async function runR2Upload(folderName, fileEntries) {
   const box = document.getElementById('r2Result');
   if (box) {
     box.style.display = 'block';
-    // Foto sudah 100% final di R2. Video yang dilempar ke GitHub Actions dianggap
-    // "selesai dikirim" (bukan menunggu ffmpeg selesai) — cukup kasih link untuk
-    // memantau progres kompresinya langsung di GitHub, tanpa polling dari sini.
     const githubBadge = dispatchedVideos > 0 ? `
       <div style="margin-top:10px;padding:10px 12px;border-radius:8px;background:var(--bg-accent);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
-        <span style="font-size:13px;color:var(--text-accent)">🐙 ${dispatchedVideos} video dikirim ke GitHub Actions untuk dikompresi (ffmpeg tidak tersedia di server ini)</span>
+        <span style="font-size:13px;color:var(--text-accent)">🐙 ${dispatchedVideos} video dikirim ke GitHub Actions untuk dikompresi</span>
         ${githubUrl ? `<a href="${githubUrl}" target="_blank" rel="noopener" style="font-size:12.5px;font-weight:600;color:var(--text-accent);white-space:nowrap">Lihat progres di GitHub →</a>` : ''}
       </div>` : '';
     box.innerHTML = `
@@ -1667,7 +1761,7 @@ async function runR2Upload(folderName, fileEntries) {
 }
 
 function showR2Progress(label, done, total) {
-  if (r2HideTimer) { clearTimeout(r2HideTimer); r2HideTimer = null; } // batalkan hide yang mungkin masih terjadwal
+  if (r2HideTimer) { clearTimeout(r2HideTimer); r2HideTimer = null; }
   const box = document.getElementById('r2ProgressBox');
   if (!box) return;
   box.style.display = 'block';
@@ -1680,13 +1774,19 @@ function updateR2Progress(done, total) {
   if (countEl) countEl.textContent = `${done} / ${total}`;
   if (barEl)   barEl.style.width = (total > 0 ? Math.round((done / total) * 100) : 0) + '%';
 }
+function updateR2FileStatus(fileName, stats) {
+  const nameEl  = document.getElementById('r2ProgressFileName');
+  const statsEl = document.getElementById('r2ProgressStats');
+  if (nameEl)  nameEl.textContent = fileName ? `File: ${fileName}` : '';
+  if (statsEl) statsEl.textContent = stats || '';
+}
 function hideR2Progress() {
   if (r2HideTimer) clearTimeout(r2HideTimer);
   r2HideTimer = setTimeout(function () {
     const box = document.getElementById('r2ProgressBox');
     if (box) box.style.display = 'none';
     r2HideTimer = null;
-  }, 800);
+  }, 1200);
 }
 
 // ── Panel switch & daftar album ─────────────────────────────────────────────
