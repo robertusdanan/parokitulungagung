@@ -43,8 +43,8 @@ $output['time'] = date('Y-m-d H:i:s');
 
 // Opsi 1: Coba jalankan Git Pull secara langsung (Synchronous & Instan)
 if (is_dir($repoDir)) {
-    // Jalankan git pull di folder repository
-    $cmdPull = "cd " . escapeshellarg($repoDir) . " && git pull origin main 2>&1";
+    // Jalankan git pull di folder repository dengan reset bersih
+    $cmdPull = "cd " . escapeshellarg($repoDir) . " && git reset --hard && git pull origin main 2>&1";
     $resPull = shell_exec($cmdPull);
     $output['git_pull'] = trim((string)$resPull);
 
