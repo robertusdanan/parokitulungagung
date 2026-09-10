@@ -1,0 +1,21 @@
+{
+    "session_id": "web_mqafjm18_30l2h1",
+    "created_at": 1781238722,
+    "last_active": 1781238722,
+    "page_context": "https:\/\/www.parokitulungagung.org\/?utm_source=pwa (Gereja Katolik Tulungagung | Paroki SMDTBA)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "Jadwal Misa",
+            "timestamp": 1781238722
+        },
+        {
+            "role": "assistant",
+            "content": "📅 Jadwal Misa Paroki SMDTBA Tulungagung:\n\nMisa Harian:\n• Senin – Rabu: pukul 05.30\n• Kamis: 05.30 (di Susteran)\n• Jumat: 18.00\n• Sabtu: 18.00\n• Minggu: 07.00\n\nMisa Stasi:\n• Ngunut: Sabtu 18.00\n• Rejotangan: Sabtu 16.00\n• Trenggalek: Minggu 07.00\n• Kalangbret: Minggu I & II, 10.00\n• Dongko: Minggu I & II, 11.00\n• Sendang: Minggu II, 11.00",
+            "source": "kb",
+            "timestamp": 1781238722
+        }
+    ],
+    "meta": []
+}

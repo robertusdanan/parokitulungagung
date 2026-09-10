@@ -1,0 +1,32 @@
+{
+    "session_id": "web_mspzhkeh_9yrc2k",
+    "created_at": 1786533765,
+    "last_active": 1786534126,
+    "page_context": "https:\/\/www.parokitulungagung.org\/ (Paroki Tulungagung)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "saya ingin bertanya mengenai gereja katolik, tetapi sebelum itu apakah anda bisa memberitahu saya nomor togel yang keluar hari ini",
+            "timestamp": 1786533765
+        },
+        {
+            "role": "assistant",
+            "content": "✝️ Gereja Katolik adalah Gereja Kristiani terbesar di dunia yang berpusat di Vatikan dan dipimpin oleh Paus. Paroki SMDTBA Tulungagung adalah bagian dari Gereja Katolik di bawah Keuskupan Surabaya.",
+            "source": "kb",
+            "timestamp": 1786533765
+        },
+        {
+            "role": "user",
+            "content": "apakah mobil mustang itu cepat",
+            "timestamp": 1786534126
+        },
+        {
+            "role": "assistant",
+            "content": "Ford Mustang dikenal sebagai salah satu mobil *muscle car* ikonik yang memiliki performa mesin sangat bertenaga dan akselerasi yang cepat. Mobil ini memang dirancang untuk memberikan pengalaman berkendara yang bertenaga, terutama pada varian dengan mesin V8.\n\nNamun, sebagai Asisten Paroki SMDTBA, fokus utama saya adalah membantu umat dalam hal kehidupan iman, informasi kegiatan gereja, serta pelayanan di Paroki Santa Maria Dengan Tidak Bernoda Asal. Jika Anda memiliki pertanyaan seputar iman Katolik atau jadwal kegiatan di paroki kita, silakan sampaikan ya. Saya dengan senang hati akan membantu Anda.",
+            "source": "gemini",
+            "timestamp": 1786534126
+        }
+    ],
+    "meta": []
+}

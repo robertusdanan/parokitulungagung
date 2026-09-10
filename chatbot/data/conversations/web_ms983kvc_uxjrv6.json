@@ -1,0 +1,32 @@
+{
+    "session_id": "web_ms983kvc_uxjrv6",
+    "created_at": 1785519409,
+    "last_active": 1785519429,
+    "page_context": "https:\/\/www.parokitulungagung.org\/ (Paroki Tulungagung)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "apakah anda ai?",
+            "timestamp": 1785519411
+        },
+        {
+            "role": "assistant",
+            "content": "Halo! Ya, saya adalah asisten virtual Paroki SMDTBA. Saya hadir untuk membantu Anda mendapatkan informasi seputar kegiatan gereja, jadwal misa, serta menjawab pertanyaan seputar iman Katolik dengan cara yang ramah dan informatif. Ada yang bisa saya bantu hari ini?",
+            "source": "gemini",
+            "timestamp": 1785519411
+        },
+        {
+            "role": "user",
+            "content": "jelaskan tentang sejarah paroki ini",
+            "timestamp": 1785519429
+        },
+        {
+            "role": "assistant",
+            "content": "📜 Historia — Sejarah Paroki SMDTBA:\n\nHalaman Historia memuat tulisan-tulisan tentang sejarah panjang Gereja Katolik Tulungagung, dari awal berdirinya hingga perkembangan saat ini. Paroki ini telah melayani lebih dari 100 tahun.",
+            "source": "kb",
+            "timestamp": 1785519429
+        }
+    ],
+    "meta": []
+}

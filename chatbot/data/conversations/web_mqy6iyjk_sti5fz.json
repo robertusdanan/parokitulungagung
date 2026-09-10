@@ -1,0 +1,43 @@
+{
+    "session_id": "web_mqy6iyjk_sti5fz",
+    "created_at": 1782674763,
+    "last_active": 1782674791,
+    "page_context": "https:\/\/www.parokitulungagung.org\/ (Gereja Katolik Tulungagung | Paroki SMDTBA)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "Salam selamat malam pak\/bu.  perkenalkan nama saya Aulia Febri Rahmasari. maaf mengganggu waktunya di malam hari ini. Saya berencana untuk mendaftar katekumen. kira2 syarat2 yang harus dipenuhi bagaimana ya pak\/bu? terima kasih atas jawabannya",
+            "timestamp": 1782674763
+        },
+        {
+            "role": "assistant",
+            "content": "Sama-sama! Semoga informasinya bermanfaat. 🙏 Jangan ragu untuk bertanya lagi ya. Tuhan memberkati!",
+            "source": "kb",
+            "timestamp": 1782674763
+        },
+        {
+            "role": "user",
+            "content": "Pertanyaan lain",
+            "timestamp": 1782674784
+        },
+        {
+            "role": "assistant",
+            "content": "Tentu, silakan sampaikan pertanyaan Anda. Saya siap membantu menjawab seputar kegiatan di Paroki SMDTBA, jadwal misa, atau pertanyaan lainnya terkait iman Katolik. Apa yang ingin Anda ketahui?",
+            "source": "gemini",
+            "timestamp": 1782674784
+        },
+        {
+            "role": "user",
+            "content": "Kontak Paroki",
+            "timestamp": 1782674791
+        },
+        {
+            "role": "assistant",
+            "content": "Kontak Paroki SMDTBA Tulungagung:\n\nSilakan hubungi pada jam kerja untuk informasi lebih lanjut.",
+            "source": "kb",
+            "timestamp": 1782674791
+        }
+    ],
+    "meta": []
+}

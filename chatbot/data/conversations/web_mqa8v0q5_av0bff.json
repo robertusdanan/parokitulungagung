@@ -1,0 +1,21 @@
+{
+    "session_id": "web_mqa8v0q5_av0bff",
+    "created_at": 1781227496,
+    "last_active": 1781227499,
+    "page_context": "https:\/\/www.parokitulungagung.org\/agenda (Info & Agenda Paroki – Gereja Katolik Tulungagung)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "Ada misa hari raya hati yesus yang mahakudus tidak?",
+            "timestamp": 1781227499
+        },
+        {
+            "role": "assistant",
+            "content": "Salam damai! Terkait perayaan Hari Raya Hati Yesus Yang Mahakudus, biasanya dirayakan 19 hari setelah Pentakosta. Untuk jadwal pastinya di Paroki SMDTBA Tulungagung, mohon maaf saya belum memiliki data spesifiknya dalam agenda saat ini.\n\nAgar Bapak\/Ibu mendapatkan informasi yang akurat, silakan cek secara berkala di halaman Agenda kami atau menghubungi sekretariat paroki melalui halaman Kontak. Semoga membantu!",
+            "source": "gemini",
+            "timestamp": 1781227499
+        }
+    ],
+    "meta": []
+}

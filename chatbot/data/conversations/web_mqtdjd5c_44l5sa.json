@@ -1,0 +1,21 @@
+{
+    "session_id": "web_mqtdjd5c_44l5sa",
+    "created_at": 1782384208,
+    "last_active": 1782384215,
+    "page_context": "https:\/\/www.parokitulungagung.org\/penulis\/komsos-paroki-tulungagung (Komsos Paroki Tulungagung – Penulis Artikel Paroki Tulungagung)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "Katekument komsos paroki tulungagung apakah masih buka?",
+            "timestamp": 1782384215
+        },
+        {
+            "role": "assistant",
+            "content": "Halo! Senang sekali Anda bertanya mengenai kegiatan Komsos di Paroki kita.\n\nUntuk informasi terkini mengenai pendaftaran katekumen atau kegiatan yang dikelola oleh Komsos Paroki Tulungagung, saya sarankan Anda untuk melihat agenda kegiatan terbaru atau menghubungi sekretariat kami secara langsung agar mendapatkan jawaban yang paling akurat.\n\nSilakan kunjungi halaman Agenda untuk melihat jadwal kegiatan yang sedang berlangsung, atau kunjungi halaman Kontak kami untuk berkoordinasi lebih lanjut dengan pengurus paroki. Semoga informasi ini membantu!",
+            "source": "gemini",
+            "timestamp": 1782384215
+        }
+    ],
+    "meta": []
+}

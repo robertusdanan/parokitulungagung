@@ -1,0 +1,32 @@
+{
+    "session_id": "web_mpeq06dt_3p6tfv",
+    "created_at": 1780101508,
+    "last_active": 1780101556,
+    "page_context": "https:\/\/www.parokitulungagung.org\/ (Gereja Katolik Tulungagung | Paroki SMDTBA)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "tv digital",
+            "timestamp": 1780101525
+        },
+        {
+            "role": "assistant",
+            "content": "Mohon maaf, saya kurang memahami pertanyaan Anda mengenai \"tv digital\". Apakah ada hal lain yang bisa saya bantu terkait dengan Paroki SMDTBA Tulungagung, iman Katolik, atau kegiatan gereja?",
+            "source": "gemini",
+            "timestamp": 1780101525
+        },
+        {
+            "role": "user",
+            "content": "di website ini katanya ada tv digital, tunjukkan",
+            "timestamp": 1780101556
+        },
+        {
+            "role": "assistant",
+            "content": "Mohon maaf atas ketidaknyamanannya. Sepertinya terjadi kesalahpahaman, saat ini di website resmi Paroki SMDTBA Tulungagung tidak tersedia fitur siaran TV digital. \n\nMungkin yang Anda maksud adalah siaran langsung misa atau konten video kegiatan paroki? Jika demikian, kami biasanya menyiarkan kegiatan tersebut melalui kanal YouTube resmi paroki. \n\nUntuk informasi lebih lanjut mengenai tautan resmi atau jadwal siaran kegiatan gereja, silakan kunjungi halaman Kontak kami agar tim sekretariat dapat membantu Anda lebih detail. Apakah ada hal lain yang bisa saya bantu?",
+            "source": "gemini",
+            "timestamp": 1780101556
+        }
+    ],
+    "meta": []
+}

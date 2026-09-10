@@ -1,0 +1,65 @@
+{
+    "session_id": "web_mpaty53h_fs0w0x",
+    "created_at": 1788575873,
+    "last_active": 1788575936,
+    "page_context": "https:\/\/www.parokitulungagung.org\/ (Paroki Tulungagung)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "Lokasi Gereja",
+            "timestamp": 1788575884
+        },
+        {
+            "role": "assistant",
+            "content": "Gereja Katolik Paroki Santa Maria Dengan Tidak Bernoda Asal (SMDTBA) Tulungagung berlokasi di Jl. Ahmad Yani Tim. Gg. IV No.1, Bago, Tulungagung, Jawa Timur. \n\nJika Anda memerlukan bantuan lebih lanjut atau ingin menghubungi sekretariat, silakan kunjungi halaman Kontak kami. Semoga informasi ini membantu!",
+            "source": "gemini",
+            "timestamp": 1788575884
+        },
+        {
+            "role": "user",
+            "content": "Galeri Foto",
+            "timestamp": 1788575899
+        },
+        {
+            "role": "assistant",
+            "content": "🖼️ Galeri Foto Paroki SMDTBA:\n\nAlbum terbaru:\n• Camino de Fatima (Mei 2026)\n• Hari Raya Paskah 2026\n• WKRI Hari Kartini (April 2026)\n• Natal Pagi 2025\n\n👉 Lihat Semua Album",
+            "source": "kb",
+            "timestamp": 1788575899
+        },
+        {
+            "role": "user",
+            "content": "Foto Krisma 2025",
+            "timestamp": 1788575905
+        },
+        {
+            "role": "assistant",
+            "content": "🕊️ Galeri: Sakramen Krisma (Mei 2025)\n\nFoto dokumentasi penerimaan Sakramen Krisma (Penguatan) 2025 di Paroki SMDTBA Tulungagung.",
+            "source": "kb",
+            "timestamp": 1788575905
+        },
+        {
+            "role": "user",
+            "content": "Sakramen Krisma",
+            "timestamp": 1788575917
+        },
+        {
+            "role": "assistant",
+            "content": "Sakramen Krisma atau Penguatan adalah sakramen yang menyempurnakan rahmat Pembaptisan. Melalui sakramen ini, umat beriman diikat lebih erat dengan Gereja dan diperkaya dengan kekuatan khusus Roh Kudus untuk menjadi saksi Kristus.\n\nSakramen ini menandai kedewasaan iman seseorang dalam kehidupan menggereja. Jika Anda ingin mengetahui lebih lanjut mengenai persiapan atau jadwal penerimaan Sakramen Krisma di paroki kita, silakan kunjungi halaman Agenda atau hubungi sekretariat melalui halaman Kontak kami.",
+            "source": "gemini",
+            "timestamp": 1788575917
+        },
+        {
+            "role": "user",
+            "content": "buatkan website company",
+            "timestamp": 1788575936
+        },
+        {
+            "role": "assistant",
+            "content": "Mohon maaf, sebagai Asisten Paroki SMDTBA, saya difokuskan untuk membantu seputar kehidupan menggereja, informasi paroki, serta iman Katolik. Saya tidak memiliki kapasitas atau wewenang untuk membantu pembuatan website komersial atau *company profile*.\n\nJika Anda membutuhkan informasi terkait kegiatan paroki, jadwal misa, atau layanan pastoral lainnya di Paroki Santa Maria Dengan Tidak Bernoda Asal Tulungagung, saya akan dengan senang hati membantu Anda. Silakan sampaikan pertanyaan Anda ya!",
+            "source": "gemini",
+            "timestamp": 1788575936
+        }
+    ],
+    "meta": []
+}

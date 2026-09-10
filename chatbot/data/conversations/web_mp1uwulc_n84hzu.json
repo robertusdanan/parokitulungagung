@@ -1,0 +1,43 @@
+{
+    "session_id": "web_mp1uwulc_n84hzu",
+    "created_at": 1778543556,
+    "last_active": 1778543747,
+    "page_context": "https:\/\/www.parokitulungagung.org\/ (Gereja Katolik Tulungagung | Paroki SMDTBA)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "E-Ticket",
+            "timestamp": 1778543556
+        },
+        {
+            "role": "assistant",
+            "content": "🎟️ E-Ticket tersedia!\n\nEvent: Malam Kasih & Ngopi Bareng Romo Eko\n📅 Jumat, 17 Juli 2026 | 18.00 – 21.00 WIB\n📍 Crown Victoria Hotel, Tulungagung\n\nHarga tiket mulai Rp 150.000. Untuk pembangunan Griya Pastoral Umat.",
+            "source": "kb",
+            "timestamp": 1778543556
+        },
+        {
+            "role": "user",
+            "content": "Kak barcodenya blm masuk wa",
+            "timestamp": 1778543596
+        },
+        {
+            "role": "assistant",
+            "content": "Mohon maaf atas ketidaknyamanannya. 😔\n\nMohon bersabar sebentar ya, Kak. Tim kami sedang memproses pengiriman barcode ke WhatsApp. Jika dalam waktu dekat belum juga masuk, silakan hubungi WhatsApp Komsos di +62 851-8306-8895 agar dibantu langsung. Terima kasih atas pengertiannya! 🙏",
+            "source": "gemini",
+            "timestamp": 1778543596
+        },
+        {
+            "role": "user",
+            "content": "Ok",
+            "timestamp": 1778543747
+        },
+        {
+            "role": "assistant",
+            "content": "Baik, terima kasih kembali atas pengertiannya! 😊",
+            "source": "gemini",
+            "timestamp": 1778543747
+        }
+    ],
+    "meta": []
+}

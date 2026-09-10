@@ -1,0 +1,716 @@
+/* ========================================
+   FULL ZONE SELECTION - IMPROVED STYLING
+   Hover dan selection untuk SELURUH KELAS
+   ======================================== */
+
+/* ========================================
+   LOADING ANIMATIONS
+   ======================================== */
+
+.page-loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #8B2635 0%, #6B1D28 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    opacity: 1;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.page-loading-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loading-spinner-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+}
+
+.loading-spinner {
+    width: 100%;
+    height: 100%;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-top: 4px solid #D4AF37;
+    border-right: 4px solid #D4AF37;
+    border-radius: 50%;
+    animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+}
+
+.loading-spinner-inner {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 3px solid rgba(212, 175, 55, 0.6);
+    border-radius: 50%;
+    animation: spin 1.8s cubic-bezier(0.5, 0, 0.5, 1) infinite reverse;
+}
+
+.loading-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #8B2635;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.loading-text {
+    margin-top: 2rem;
+    color: white;
+    font-size: 1.125rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    animation: fadeInOut 2s ease-in-out infinite;
+}
+
+.loading-subtext {
+    margin-top: 0.5rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.1); }
+}
+
+@keyframes fadeInOut {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+.seat-layout-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(10px);
+}
+
+.seat-loading-spinner {
+    width: 80px;
+    height: 80px;
+    border: 3px solid rgba(139, 38, 53, 0.1);
+    border-top: 3px solid #8B2635;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.seat-loading-text {
+    margin-top: 1.5rem;
+    color: var(--gray-700);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.seat-loading-dots {
+    display: inline-flex;
+    gap: 0.25rem;
+    margin-left: 0.25rem;
+}
+
+.seat-loading-dots span {
+    width: 6px;
+    height: 6px;
+    background: #8B2635;
+    border-radius: 50%;
+    animation: bounce 1.4s ease-in-out infinite;
+}
+
+.seat-loading-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.seat-loading-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+    0%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+}
+
+/* ========================================
+   FULL ZONE HOVER EFFECT
+   Hover di SELURUH baris kelas yang sama
+   ======================================== */
+
+/* Hover effect untuk seluruh zona kelas */
+.seat-block.zone-kelas1.zone-hover::before,
+.seat-block.zone-kelas2.zone-hover::before,
+.seat-block.zone-kelas3.zone-hover::before {
+    opacity: 0.9 !important;
+    box-shadow: 
+        0 0 40px rgba(255, 255, 255, 0.5) inset,
+        0 0 25px rgba(0, 0, 0, 0.2),
+        0 4px 20px rgba(0, 0, 0, 0.15) !important;
+    transform: scale(1.02) translateY(-2px);
+}
+
+/* Pulse animation untuk hover */
+@keyframes zoneHoverPulse {
+    0%, 100% {
+        box-shadow: 
+            0 0 40px rgba(255, 255, 255, 0.5) inset,
+            0 0 25px rgba(0, 0, 0, 0.2);
+    }
+    50% {
+        box-shadow: 
+            0 0 50px rgba(255, 255, 255, 0.6) inset,
+            0 0 35px rgba(0, 0, 0, 0.25);
+    }
+}
+
+.seat-block.zone-kelas1.zone-hover::before {
+    animation: zoneHoverPulse 2s ease-in-out infinite;
+}
+
+.seat-block.zone-kelas2.zone-hover::before {
+    animation: zoneHoverPulse 2s ease-in-out infinite;
+    animation-delay: 0.3s;
+}
+
+.seat-block.zone-kelas3.zone-hover::before {
+    animation: zoneHoverPulse 2s ease-in-out infinite;
+    animation-delay: 0.6s;
+}
+
+/* ========================================
+   ZONE SELECTION STYLING
+   Visual feedback saat zona dipilih
+   ======================================== */
+
+/* Remove individual block checkmarks */
+.seat-block.zone-selected::after {
+    display: none !important;
+}
+
+/* Selected state untuk seluruh zona */
+.seat-block.zone-selected::before {
+    opacity: 0.95 !important;
+    box-shadow: 
+        0 0 0 3px rgba(16, 185, 129, 0.6),
+        0 0 50px rgba(255, 255, 255, 0.6) inset,
+        0 0 30px rgba(16, 185, 129, 0.4),
+        0 6px 25px rgba(0, 0, 0, 0.2) !important;
+    animation: selectedGlow 2s ease-in-out infinite;
+}
+
+@keyframes selectedGlow {
+    0%, 100% {
+        box-shadow: 
+            0 0 0 3px rgba(16, 185, 129, 0.6),
+            0 0 50px rgba(255, 255, 255, 0.6) inset,
+            0 0 30px rgba(16, 185, 129, 0.4),
+            0 6px 25px rgba(0, 0, 0, 0.2);
+    }
+    50% {
+        box-shadow: 
+            0 0 0 3px rgba(16, 185, 129, 0.9),
+            0 0 60px rgba(255, 255, 255, 0.7) inset,
+            0 0 40px rgba(16, 185, 129, 0.5),
+            0 6px 30px rgba(0, 0, 0, 0.25);
+    }
+}
+
+/* Overlay indikator untuk zona yang dipilih */
+.zone-selected-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 8rem;
+    color: rgba(16, 185, 129, 0.25);
+    font-weight: 900;
+    z-index: 10;
+    pointer-events: none;
+    text-shadow: 0 4px 30px rgba(16, 185, 129, 0.5);
+    animation: checkFadeIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes checkFadeIn {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0) rotate(-180deg);
+    }
+    60% {
+        transform: translate(-50%, -50%) scale(1.2) rotate(20deg);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    }
+}
+
+/* ========================================
+   ZONE OVERLAY (for full-class interaction)
+   ======================================== */
+
+.zone-overlay {
+    background: transparent;
+    border: 3px dashed transparent;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.zone-overlay:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Tooltip saat hover zona - Modern & Elegant */
+.zone-overlay::after {
+    content: attr(data-zone-label);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: linear-gradient(135deg, rgba(139, 38, 53, 0.98) 0%, rgba(107, 29, 40, 0.98) 100%);
+    color: white;
+    padding: 1.5rem 3rem;
+    border-radius: 20px;
+    font-size: 2rem;
+    font-weight: 700;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+        0 0 40px rgba(139, 38, 53, 0.4);
+    backdrop-filter: blur(20px);
+    z-index: 1000;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Tambahan decorative element */
+.zone-overlay::before {
+    content: '✦';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    font-size: 4rem;
+    color: rgba(212, 175, 55, 0.2);
+    pointer-events: none;
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 999;
+}
+
+.zone-overlay:hover::before {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(180deg);
+}
+
+.zone-overlay:hover::after {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* Warna khusus untuk setiap kelas */
+.zone-overlay-kelas1:hover::after {
+    background: linear-gradient(135deg, rgba(101, 148, 8, 0.98) 0%, rgba(81, 118, 6, 0.98) 100%);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+        0 0 40px rgba(101, 148, 8, 0.4);
+}
+
+.zone-overlay-kelas2:hover::after {
+    background: linear-gradient(135deg, rgba(6, 105, 185, 0.98) 0%, rgba(5, 84, 148, 0.98) 100%);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+        0 0 40px rgba(6, 105, 185, 0.4);
+}
+
+.zone-overlay-kelas3:hover::after {
+    background: linear-gradient(135deg, rgba(137, 7, 189, 0.98) 0%, rgba(110, 6, 151, 0.98) 100%);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+        0 0 40px rgba(137, 7, 189, 0.4);
+}
+
+/* ========================================
+   MODAL STYLING (Zone Ticket Count)
+   ======================================== */
+
+.zone-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    padding: 1rem;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.zone-modal {
+    background: white;
+    border-radius: 20px;
+    max-width: 450px;
+    width: 100%;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+    animation: modalSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.zone-modal-header {
+    padding: 1.75rem;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #8B2635 0%, #6B1D28 100%);
+    color: white;
+    border-radius: 20px 20px 0 0;
+}
+
+.zone-modal-header h3 {
+    font-size: 1.375rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.zone-modal-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    font-size: 2rem;
+    color: white;
+    cursor: pointer;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s;
+    line-height: 1;
+}
+
+.zone-modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+.zone-modal-body {
+    padding: 2rem;
+}
+
+.zone-modal-body p {
+    margin-bottom: 1rem;
+    color: #374151;
+}
+
+.zone-modal-body p:last-of-type {
+    margin-bottom: 0;
+}
+
+.zone-modal-note {
+    font-size: 0.875rem;
+    color: #92400e;
+    padding: 1rem;
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-radius: 10px;
+    border-left: 4px solid #f59e0b;
+    margin: 1.25rem 0;
+    line-height: 1.6;
+}
+
+.ticket-quantity-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    margin: 2rem 0;
+}
+
+.ticket-quantity-selector button {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 2px solid #8b2635;
+    background: white;
+    color: #8b2635;
+    font-size: 1.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.ticket-quantity-selector button:hover {
+    background: #8b2635;
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(139, 38, 53, 0.3);
+}
+
+.ticket-quantity-selector button:active {
+    transform: scale(0.95);
+}
+
+.ticket-quantity-selector input {
+    width: 90px;
+    height: 56px;
+    text-align: center;
+    font-size: 1.75rem;
+    font-weight: 700;
+    border: 3px solid #d1d5db;
+    border-radius: 12px;
+    color: #1f2937;
+    background: #f9fafb;
+}
+
+.zone-modal-available {
+    text-align: center;
+    font-size: 0.9375rem;
+    color: #6b7280;
+    padding: 1rem;
+    background: #f3f4f6;
+    border-radius: 10px;
+}
+
+.zone-modal-available strong {
+    color: #059669;
+    font-size: 1.125rem;
+}
+
+.zone-modal-footer {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    gap: 1rem;
+    background: #f9fafb;
+    border-radius: 0 0 20px 20px;
+}
+
+.zone-modal-footer button {
+    flex: 1;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+    .zone-selected-indicator {
+        font-size: 5rem;
+    }
+    
+    .loading-spinner-container {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .loading-logo {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+    
+    .loading-text {
+        font-size: 1rem;
+    }
+    
+    .zone-modal {
+        max-width: 95%;
+    }
+    
+    .zone-modal-header h3 {
+        font-size: 1.125rem;
+    }
+    
+    .zone-modal-body {
+        padding: 1.5rem;
+    }
+    
+    .zone-overlay::after {
+        font-size: 1.5rem;
+        padding: 1rem 2rem;
+    }
+    
+    .zone-overlay::before {
+        font-size: 3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .zone-selected-indicator {
+        font-size: 4rem;
+    }
+    
+    .ticket-quantity-selector button {
+        width: 44px;
+        height: 44px;
+        font-size: 1.5rem;
+    }
+    
+    .ticket-quantity-selector input {
+        width: 70px;
+        height: 48px;
+        font-size: 1.5rem;
+    }
+    
+    .zone-overlay::after {
+        font-size: 1.25rem;
+        padding: 0.875rem 1.5rem;
+    }
+    
+    .zone-overlay::before {
+        font-size: 2rem;
+    }
+}
+
+/* ========================================
+   PRINT FRIENDLY
+   ======================================== */
+
+@media print {
+    .zone-overlay,
+    .zone-modal-overlay,
+    .loading-overlay {
+        display: none !important;
+    }
+}
+/* ========================================
+   VVIP TRAPESIUM LAYOUT ENHANCEMENTS
+   ======================================== */
+
+/* Kontainer VVIP angled — tambahkan padding bawah agar tidak terpotong saat dirotasi */
+.angled-row {
+    padding-bottom: 12px;
+    overflow: visible !important;
+}
+
+/* Pastikan section tidak clip transform */
+#leftSection,
+#rightSection {
+    overflow: visible !important;
+}
+
+/* Zona VVIP mendapat highlight subtle */
+.row-container.angled-row .seat-block.zone-vvip::before {
+    opacity: 0.55;
+    box-shadow: 0 2px 8px rgba(255, 207, 50, 0.35);
+}
+
+/* Kursi VVIP dalam angled row sedikit lebih besar */
+.angled-row .seat {
+    width: 26px;
+    height: 26px;
+}
+
+/* Label zona VVIP */
+.vvip-zone-label {
+    text-align: center;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #b8860b;
+    margin: 4px 0 6px;
+    text-transform: uppercase;
+    opacity: 0.75;
+}
+
+/* Garis emas pemisah VVIP dan kursi normal */
+.vvip-divider {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #ffcf32 25%, #ffcf32 75%, transparent);
+    margin: 8px 0 12px;
+    border-radius: 2px;
+    opacity: 0.8;
+}
+
+/* Panah stage */
+.stage-arrows {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 60px;
+    margin-top: 6px;
+    margin-bottom: -2px;
+}
+
+.stage-arrow-left,
+.stage-arrow-right {
+    font-size: 0.9rem;
+    color: #b8860b;
+    opacity: 0.55;
+    line-height: 1;
+}
+
+.stage-arrow-left  { transform: rotate(-30deg); }
+.stage-arrow-right { transform: rotate(30deg); }
+
+/* Responsive: kursi VVIP kembali ke ukuran normal di mobile */
+@media (max-width: 768px) {
+    .angled-row .seat {
+        width: 20px;
+        height: 20px;
+    }
+    .stage-arrows {
+        padding: 0 30px;
+    }
+}

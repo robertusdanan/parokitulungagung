@@ -1,0 +1,349 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="canonical" href="https://www.parokitulungagung.org/komedi" />
+  
+  <title>KoMedi</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome 5 -->
+  <link 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" 
+    rel="stylesheet"
+  />
+
+  <!-- Google Fonts: Roboto -->
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" 
+    rel="stylesheet"
+  />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/pages/komedi/style.css" />
+  <style>
+  .spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 36px;
+    height: 36px;
+    margin: -18px 0 0 -18px;
+    border: 4px solid rgba(0, 0, 0, 0.2);
+    border-top: 4px solid #4f46e5; /* indigo-600 */
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    z-index: 10;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .canvas-wrapper {
+    position: relative;
+    width: 100%;
+    height: 16rem; /* h-64 */
+    background-color: #f3f4f6; /* gray-100 */
+  }
+
+  .canvas-wrapper canvas {
+    width: 100%;
+    height: 100%;
+  }
+</style>
+</head>
+
+ <body class="bg-gray-50 min-h-screen flex flex-col">
+
+<div id="header-katalog"></div>
+<div class="bg-gradient-to-r from-indigo-50 via-white to-indigo-50 border-y border-indigo-200 py-6 px-6 text-center shadow-sm">
+  <p class="text-lg sm:text-xl font-semibold text-gray-800">
+    Menerima pesanan <span class="text-indigo-600">Desain Kaos Custom</span> untuk 
+    <span class="italic">event, komunitas, maupun seragam</span>. </br>
+    Tersedia juga <span class="text-indigo-600">Totebag & Tas Serut</span> dengan 
+    <span class="italic">desain eksklusif sesuai keinginan Anda!</span>
+  </p>
+</div>
+
+<div id="katalog-list"></div>
+
+ 
+<main class="container mx-auto px-4 py-10 flex-grow">
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-8">
+    <input type="text" id="searchInput" placeholder="Cari produk..." class="p-2 rounded border">
+    <input type="number" id="minPrice" placeholder="Harga Min" class="p-2 rounded border">
+    <input type="number" id="maxPrice" placeholder="Harga Maks" class="p-2 rounded border">
+    <select id="categorySelect" class="p-2 rounded border">
+      <option value="">Semua Kategori</option>
+    </select>
+  </div>
+
+  <div id="katalog-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4"></div>
+  <div id="pagination" class="flex justify-center items-center gap-4 mt-6"></div>
+
+</main>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+  let katalogData = [];
+  let filteredData = [];
+  let currentPage = 1;
+  const itemsPerPage = 6;
+
+  async function loadKatalog() {
+    try {
+      const res = await axios.get("https://opensheet.elk.sh/17wqbq_SCdfePCk_3firXNuKt_4r_kzMDmOJbGdN6Bbk/katalog");
+      katalogData = shuffleArray(res.data);
+
+      if (!Array.isArray(katalogData) || katalogData.length === 0) {
+        console.warn("Data katalog kosong atau tidak sesuai format.");
+        return;
+      }
+
+      const kategoriSet = new Set(katalogData.map(item => item.Category));
+      const categorySelect = document.getElementById("categorySelect");
+      kategoriSet.forEach(cat => {
+        if (cat) {
+          const option = document.createElement("option");
+          option.value = cat;
+          option.textContent = cat;
+          categorySelect.appendChild(option);
+        }
+      });
+
+      filteredData = katalogData;
+      renderKatalog(filteredData);
+    } catch (error) {
+      console.error("Gagal memuat data katalog:", error);
+    }
+  }
+
+function renderKatalog(data) {
+  const container = document.getElementById("katalog-container");
+  container.innerHTML = '';
+
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+  if (currentPage > totalPages) currentPage = totalPages;
+  if (currentPage < 1) currentPage = 1;
+
+  const start = (currentPage - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  const pageItems = data.slice(start, end);
+
+  pageItems.forEach(item => {
+    const basePrice = parseInt(item.Price);
+    const discount = parseFloat(item.Discount) || 0;
+    const discountNote = item.DiscountNote || '';
+    const discountEnd = item.DiscountEndDate ? new Date(item.DiscountEndDate) : null;
+    const now = new Date();
+
+    const hasDiscount = discount > 0 && !isNaN(basePrice) && (!discountEnd || discountEnd > now);
+    const discountedPrice = hasDiscount
+      ? Math.round(basePrice - (basePrice * discount / 100))
+      : basePrice;
+
+    const priceFormatted = isNaN(discountedPrice) ? 'Rp -' : `Rp ${discountedPrice.toLocaleString('id-ID')}`;
+    const originalPriceFormatted = `Rp ${basePrice.toLocaleString('id-ID')}`;
+    const imageSrc = item.Image 
+  ? `https://www.parokitulungagung.org/komedi/katalog/show.php?file=${item.Image}`
+  : 'https://via.placeholder.com/400x300?text=No+Image';
+
+    const countdownHTML = hasDiscount && discountEnd
+      ? `<p class="text-sm text-red-700 mt-1" data-countdown="${item.DiscountEndDate}"></p>`
+      : '';
+
+    const card = document.createElement('div');
+    card.className = `relative bg-white rounded-lg shadow-md overflow-hidden flex flex-col transition-all duration-300 ${
+      hasDiscount ? 'border-2' : ''
+    }`;
+
+    card.innerHTML = `
+      <div class="relative">
+        <div class="canvas-wrapper">
+  <div class="spinner"></div>
+  <canvas data-imgsrc="${imageSrc}" data-title="${item.Title || 'Produk'}" class="watermarked-canvas w-full h-64 object-cover"></canvas>
+</div>
+
+        ${hasDiscount ? `<div class="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded shadow">Diskon</div>` : ''}
+      </div>
+      <div class="p-4 flex flex-col flex-grow">
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">${item.Title || '-'}</h3>
+        <p class="text-gray-700 flex-grow mb-4">
+          Code: ${item.Code || '-'} <br> ${item.Description || '-'}
+        </p>
+        <a onclick="saveStateAndGoToDetail('${item.Link || '#'}')" class="hover:text-lg font-bold text-gray-600 cursor-pointer mb-2">
+          Detail (klik disini)
+        </a>
+
+        ${
+          hasDiscount
+            ? `
+              <p class="text-sm text-red-600 font-medium mb-1">${discountNote}</p>
+              <p class="text-gray-500 line-through text-sm">${originalPriceFormatted}</p>
+              <p class="text-lg font-bold text-indigo-600">${priceFormatted}</p>
+              ${countdownHTML}
+            `
+            : `<p class="text-lg font-bold text-indigo-600">${priceFormatted}</p>`
+        }
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+
+  renderPagination(totalPages);
+  initializeCountdowns();
+  applyWatermarks();
+}
+
+
+
+  function renderPagination(totalPages) {
+    const pagination = document.getElementById("pagination");
+    pagination.innerHTML = `
+      <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Prev</button>
+      <span>Halaman ${currentPage} dari ${totalPages}</span>
+      <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Next</button>
+    `;
+  }
+
+  function changePage(page) {
+    currentPage = page;
+    renderKatalog(filteredData);
+  }
+
+  function filterKatalog() {
+    const keyword = document.getElementById("searchInput").value.toLowerCase();
+    const min = parseInt(document.getElementById("minPrice").value) || 0;
+    const max = parseInt(document.getElementById("maxPrice").value) || Infinity;
+    const category = document.getElementById("categorySelect").value;
+
+    filteredData = katalogData.filter(item => {
+      const price = parseInt(item.Price);
+      const matchKeyword =
+        (item.Title && item.Title.toLowerCase().includes(keyword)) ||
+        (item.Description && item.Description.toLowerCase().includes(keyword));
+      const matchPrice = !isNaN(price) && price >= min && price <= max;
+      const matchCategory = category === '' || item.Category === category;
+
+      return matchKeyword && matchPrice && matchCategory;
+    });
+
+    currentPage = 1; // Reset ke halaman pertama saat filter diubah
+    renderKatalog(filteredData);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+  const savedState = JSON.parse(localStorage.getItem("katalogState"));
+  if (savedState) {
+    document.getElementById("searchInput").value = savedState.search;
+    document.getElementById("minPrice").value = savedState.minPrice;
+    document.getElementById("maxPrice").value = savedState.maxPrice;
+    document.getElementById("categorySelect").value = savedState.category;
+    currentPage = savedState.currentPage || 1;
+    localStorage.removeItem("katalogState");
+  }
+
+  loadKatalog();
+    document.getElementById("searchInput").addEventListener("input", filterKatalog);
+    document.getElementById("minPrice").addEventListener("input", filterKatalog);
+    document.getElementById("maxPrice").addEventListener("input", filterKatalog);
+    document.getElementById("categorySelect").addEventListener("change", filterKatalog);
+  });
+  function shuffleArray(array) {
+  const shuffled = [...array]; // Buat salinan array agar data asli tidak berubah
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+function saveStateAndGoToDetail(link) {
+  const state = {
+    currentPage,
+    search: document.getElementById("searchInput").value,
+    minPrice: document.getElementById("minPrice").value,
+    maxPrice: document.getElementById("maxPrice").value,
+    category: document.getElementById("categorySelect").value,
+  };
+  localStorage.setItem("katalogState", JSON.stringify(state));
+  window.location.href = `/pages/komedi/detailproduk.php?kode=${link}`;
+}
+
+  function initializeCountdowns() {
+  const countdownEls = document.querySelectorAll('[data-countdown]');
+  countdownEls.forEach(el => {
+    const endDate = new Date(el.getAttribute('data-countdown'));
+    function updateCountdown() {
+      const now = new Date();
+      const diff = endDate - now;
+      if (diff <= 0) {
+        el.textContent = "Promo berakhir";
+        return;
+      }
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      el.textContent = `Berakhir dalam ${days}h ${hours}j ${minutes}m`;
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 60000); // update tiap menit
+  });
+}
+function applyWatermarks() {
+  const canvases = document.querySelectorAll('.watermarked-canvas');
+  canvases.forEach(canvas => {
+    const src = canvas.getAttribute('data-imgsrc');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0, img.width, img.height);
+
+      // Tambahkan watermark
+      ctx.font = `${img.width / 20}px Roboto`;
+      ctx.fillStyle = 'rgba(128, 128, 128, 0.3)';
+      ctx.textAlign = 'center';
+      ctx.translate(img.width / 2, img.height / 2);
+      ctx.rotate(-Math.PI / 4);
+      ctx.fillText('parokitulungagung.org', 0, 0);
+      ctx.rotate(Math.PI / 4);
+      ctx.translate(-img.width / 2, -img.height / 2);
+
+      // Hapus spinner
+      const spinner = canvas.parentElement.querySelector('.spinner');
+      if (spinner) spinner.remove();
+    };
+    img.src = src;
+  });
+}
+
+
+</script>
+
+  <script>
+    fetch('/komedi/headerkatalog.php')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('header-katalog').innerHTML = html;
+      })
+      .catch(err => {
+        console.error('Gagal memuat list katalog:', err);
+      });
+  </script>
+   <footer class="bg-white border-t mt-12">
+   <div class="container mx-auto px-4 py-6 text-center text-gray-600 text-sm">
+   Copyright © KoMeDi (Komsos Merchandise Division)
+   </div>
+  </footer>
+ </body>
+</html>

@@ -1,0 +1,43 @@
+{
+    "session_id": "web_ms2yntna_f72ijw",
+    "created_at": 1785140665,
+    "last_active": 1785140741,
+    "page_context": "https:\/\/www.parokitulungagung.org\/jadwal-misa (Jadwal Misa Tulungagung – Gereja Katolik Paroki Tulungagung)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "Jadwal Misa",
+            "timestamp": 1785140665
+        },
+        {
+            "role": "assistant",
+            "content": "📅 Jadwal Misa Paroki SMDTBA Tulungagung:\n\nMisa Harian:\n• Senin – Rabu: pukul 05.30\n• Kamis: 05.30 (di Susteran)\n• Jumat: 18.00\n• Sabtu: 18.00\n• Minggu: 07.00\n\nMisa Stasi:\n• Ngunut: Sabtu 18.00\n• Rejotangan: Sabtu 16.00\n• Trenggalek: Minggu 07.00\n• Kalangbret: Minggu I & II, 10.00\n• Dongko: Minggu I & II, 11.00\n• Sendang: Minggu II, 11.00",
+            "source": "kb",
+            "timestamp": 1785140665
+        },
+        {
+            "role": "user",
+            "content": "info katekumem",
+            "timestamp": 1785140718
+        },
+        {
+            "role": "assistant",
+            "content": "Untuk informasi mengenai pendaftaran atau jadwal kelas katekumen (persiapan baptis dewasa), kami menyarankan Anda untuk menghubungi sekretariat paroki secara langsung agar mendapatkan penjelasan yang lebih detail dan akurat sesuai dengan periode pembukaan kelas yang sedang berjalan.\n\nSilakan kunjungi halaman Kontak kami untuk melihat nomor WhatsApp sekretariat atau alamat kantor paroki. Anda juga dapat memantau pengumuman terbaru melalui halaman Agenda kami. Semoga proses persiapan iman Anda berjalan dengan lancar. Tuhan memberkati!",
+            "source": "gemini",
+            "timestamp": 1785140718
+        },
+        {
+            "role": "user",
+            "content": "wa sekretariat",
+            "timestamp": 1785140741
+        },
+        {
+            "role": "assistant",
+            "content": "Untuk informasi jam buka sekretariat paroki, silakan hubungi langsung melalui WhatsApp atau kunjungi halaman kontak kami.",
+            "source": "kb",
+            "timestamp": 1785140741
+        }
+    ],
+    "meta": []
+}

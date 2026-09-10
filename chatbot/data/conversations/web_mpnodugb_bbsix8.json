@@ -1,0 +1,21 @@
+{
+    "session_id": "web_mpnodugb_bbsix8",
+    "created_at": 1788360219,
+    "last_active": 1788360219,
+    "page_context": "https:\/\/www.parokitulungagung.org\/ (Paroki Tulungagung)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "siapa romo paroki",
+            "timestamp": 1788360219
+        },
+        {
+            "role": "assistant",
+            "content": "🙏 Romo Paroki SMDTBA saat ini:\n\n• Romo Paroki: RD Thomas Aquino Djoko Noegroho\n• Romo Rekan: RD Yohanes Setiawan\n\nUntuk informasi jadwal dan kontak romo, silakan hubungi sekretariat.",
+            "source": "kb",
+            "timestamp": 1788360219
+        }
+    ],
+    "meta": []
+}

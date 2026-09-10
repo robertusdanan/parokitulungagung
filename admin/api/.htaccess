@@ -1,0 +1,38 @@
+# admin/api/.htaccess
+# Pastikan file PHP di folder ini selalu dieksekusi langsung,
+# tidak kena redirect dari .htaccess root, dan tidak di-cache service worker.
+
+# Izinkan semua file PHP diakses langsung
+Options -Indexes
+DirectoryIndex index.php
+
+# ── Cegah redirect dari root .htaccess ─────────────────────────────
+# Kalau root punya RewriteRule yang redirect 404 → error.php,
+# rule di sini memastikan file yang ADA tidak diredirect.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Jika file PHP ada → eksekusi langsung, stop semua rewrite
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule \.php$ - [L]
+</IfModule>
+
+# ── Header untuk semua response dari folder ini ─────────────────────
+<IfModule mod_headers.c>
+  # Jangan cache response API
+  Header always set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+  Header always set Pragma "no-cache"
+
+  # Beritahu service worker: folder ini tidak boleh di-intercept
+  # (Service worker hanya berlaku di scope yang didaftarkan)
+  Header always set Service-Worker-Allowed "/admin/"
+
+  # Izinkan request AJAX dari origin yang sama
+  Header always set Vary "X-Requested-With"
+</IfModule>
+
+# ── Blokir akses ke file non-PHP ────────────────────────────────────
+<FilesMatch "\.(json|sh|env|log|bak|sql|txt)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>

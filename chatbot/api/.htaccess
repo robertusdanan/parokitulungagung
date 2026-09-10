@@ -1,0 +1,18 @@
+# chatbot/api/.htaccess
+# Hanya chatbot.php yang boleh diakses langsung dari luar (dipanggil oleh
+# chatbot/assets/chatbot.js). File lain di folder ini (gemini.php, groq.php,
+# config.php, memory.php, logger.php, articles.php) hanya berisi class/fungsi
+# yang di-require oleh chatbot.php, dan TIDAK PERLU bisa diakses via URL.
+Options -Indexes
+
+<IfModule mod_authz_core.c>
+  <FilesMatch "^(?!chatbot\.php$).*$">
+    Require all denied
+  </FilesMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+  <FilesMatch "^(?!chatbot\.php$).*$">
+    Order allow,deny
+    Deny from all
+  </FilesMatch>
+</IfModule>

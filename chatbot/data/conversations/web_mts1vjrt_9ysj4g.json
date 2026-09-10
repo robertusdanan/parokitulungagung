@@ -1,0 +1,32 @@
+{
+    "session_id": "web_mts1vjrt_9ysj4g",
+    "created_at": 1788834511,
+    "last_active": 1788834600,
+    "page_context": "https:\/\/www.parokitulungagung.org\/?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAcGRvZgJmZGlkFlDgKszW9LHdnnEOj7i3QTHUUxVmOTlleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA8xMjQwMjQ1NzQyODc0MTQAAaebdiR_Q-0_X952xm6IPi5oupY5kLLRLsHWUU_4iKyQKRmZRvkQgP-jyODrsQ_aem_BDyrPV8sT-zjlT5gYy9BkQ (Paroki Tulungagung)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "Kontak Paroki",
+            "timestamp": 1788834511
+        },
+        {
+            "role": "assistant",
+            "content": "Kontak Paroki SMDTBA Tulungagung:\n\nSilakan hubungi pada jam kerja untuk informasi lebih lanjut.",
+            "source": "kb",
+            "timestamp": 1788834511
+        },
+        {
+            "role": "user",
+            "content": "Jadwal krisma",
+            "timestamp": 1788834600
+        },
+        {
+            "role": "assistant",
+            "content": "Mohon maaf, saat ini saya tidak memiliki informasi spesifik mengenai jadwal penerimaan Sakramen Krisma di Paroki SMDTBA.\n\nUntuk informasi yang lebih akurat dan terkini, silakan cek Agenda kegiatan paroki kami atau kunjungi halaman Kontak untuk bertanya langsung kepada sekretariat paroki. Terima kasih.",
+            "source": "gemini",
+            "timestamp": 1788834600
+        }
+    ],
+    "meta": []
+}

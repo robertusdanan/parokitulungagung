@@ -1,0 +1,4267 @@
+[
+  {
+    "patterns": [
+      "halo",
+      "hai",
+      "hello",
+      "hi",
+      "selamat",
+      "hei",
+      "hy",
+      "helo",
+      "permisi",
+      "siang"
+    ],
+    "answer": "Halo! Selamat datang di website Paroki Santa Maria Dengan Tidak Bernoda Asal (SMDTBA) Tulungagung. 🙏\n\nSaya siap membantu Anda menemukan informasi seputar paroki. Apa yang ingin Anda tanyakan?",
+    "quickReplies": [
+      "Jadwal Misa",
+      "Lokasi Gereja",
+      "Agenda Paroki",
+      "Galeri Foto"
+    ]
+  },
+  {
+    "patterns": [
+      "kamu siapa",
+      "kamu ini siapa",
+      "siapa kamu",
+      "siapa itu kamu",
+      "anda siapa",
+      "anda ini siapa",
+      "siapa anda",
+      "siapa itu anda",
+      "kamu apa",
+      "kamu ini apa",
+      "anda apa",
+      "anda ini apa",
+      "kamu siapa sih",
+      "anda siapa sih",
+      "lo siapa",
+      "lu siapa",
+      "siapa lo",
+      "siapa lu",
+      "ini bot siapa",
+      "ini bot apa",
+      "ini chatbot siapa",
+      "ini chatbot apa",
+      "bot ini siapa",
+      "bot ini apa",
+      "chatbot ini siapa",
+      "chatbot ini apa",
+      "siapa yang menjawab",
+      "siapa yang balas",
+      "siapa yang chat",
+      "siapa yang bicara",
+      "siapa yang ngomong",
+      "siapa asisten paroki",
+      "asisten paroki itu siapa",
+      "asisten paroki itu apa",
+      "asisten paroki siapa",
+      "asisten paroki apa",
+      "apa itu asisten paroki",
+      "asisten ini siapa",
+      "asisten ini apa",
+      "perkenalkan diri",
+      "perkenalkan kamu",
+      "perkenalkan anda",
+      "perkenalan kamu",
+      "perkenalan anda",
+      "perkenalan bot",
+      "perkenalan chatbot",
+      "who are you",
+      "who is this",
+      "who r u",
+      "chatbot",
+      "robot"
+    ],
+    "answer": "Saya adalah <b>Asisten Paroki SMDTBA Tulungagung</b> — chatbot yang siap membantu Anda menemukan informasi seputar:\n• Jadwal misa & stasi\n• Agenda & kegiatan paroki\n• Galeri & foto kegiatan\n• Artikel berita & kronik\n• Profil romo & pengurus\n• Dan banyak lagi!\n\nAda yang bisa saya bantu?",
+    "quickReplies": [
+      "Jadwal Misa",
+      "Galeri Foto",
+      "Artikel Paroki",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "terima kasih",
+      "makasih",
+      "thx",
+      "thanks",
+      "terimakasih",
+      "tengkyu",
+      "tq"
+    ],
+    "answer": "Sama-sama! Semoga informasinya bermanfaat. 🙏 Jangan ragu untuk bertanya lagi ya. Tuhan memberkati!",
+    "quickReplies": [
+      "Pertanyaan lain",
+      "Jadwal Misa",
+      "Galeri Foto"
+    ]
+  },
+  {
+    "patterns": [
+      "tuhan memberkati",
+      "berkah dalem",
+      "dalem"
+    ],
+    "answer": "Amin! 🙏 Tuhan memberkati Anda dan keluarga. Ada hal lain yang bisa saya bantu?",
+    "quickReplies": [
+      "Jadwal Misa",
+      "Agenda Paroki",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "jadwal misa",
+      "jam misa",
+      "misa jam",
+      "waktu misa",
+      "misa pukul",
+      "misa harian",
+      "misa pagi",
+      "misa sore",
+      "kapan misa",
+      "misa sabtu",
+      "misa jumat",
+      "misa senin",
+      "misa selasa"
+    ],
+    "answer": "📅 <b>Jadwal Misa Paroki SMDTBA Tulungagung:</b>\n\n<b>Misa Harian:</b>\n• Senin – Rabu: pukul 05.30\n• Kamis: 05.30 (di Susteran)\n• Jumat: 18.00\n• Sabtu: 18.00\n• Minggu: 07.00\n\n<b>Misa Stasi:</b>\n• Ngunut: Sabtu 18.00\n• Rejotangan: Sabtu 16.00\n• Trenggalek: Minggu 07.00\n• Kalangbret: Minggu I & II, 10.00\n• Dongko: Minggu I & II, 11.00\n• Sendang: Minggu II, 11.00",
+    "links": [
+      {
+        "text": "Lihat halaman Jadwal Misa",
+        "url": "/jadwal-misa"
+      }
+    ],
+    "quickReplies": [
+      "Misa Stasi",
+      "Lokasi Gereja",
+      "Jadwal Petugas",
+      "Agenda Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "stasi ngunut",
+      "misa ngunut",
+      "ngunut"
+    ],
+    "answer": "📍 <b>Stasi Gembala yang Baik — Ngunut</b>\nJadwal misa: <b>Sabtu, pukul 18.00</b>\n\nUntuk info lebih lanjut silakan hubungi sekretariat paroki.",
+    "links": [
+      {
+        "text": "Jadwal Misa Lengkap",
+        "url": "/jadwal-misa"
+      }
+    ],
+    "quickReplies": [
+      "Stasi lainnya",
+      "Jadwal Misa",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "stasi rejotangan",
+      "misa rejotangan",
+      "rejotangan"
+    ],
+    "answer": "📍 <b>Stasi St. Maria — Rejotangan</b>\nJadwal misa: <b>Sabtu, pukul 16.00</b>\n\nUntuk info lebih lanjut silakan hubungi sekretariat paroki.",
+    "links": [
+      {
+        "text": "Jadwal Misa Lengkap",
+        "url": "/jadwal-misa"
+      }
+    ],
+    "quickReplies": [
+      "Stasi lainnya",
+      "Jadwal Misa",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "stasi trenggalek",
+      "misa trenggalek",
+      "trenggalek"
+    ],
+    "answer": "📍 <b>Stasi St. Maria — Trenggalek</b>\nJadwal misa: <b>Minggu, pukul 07.00</b>\n\nUntuk info lebih lanjut silakan hubungi sekretariat paroki.",
+    "links": [
+      {
+        "text": "Jadwal Misa Lengkap",
+        "url": "/jadwal-misa"
+      }
+    ],
+    "quickReplies": [
+      "Stasi lainnya",
+      "Jadwal Misa",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "stasi kalangbret",
+      "misa kalangbret",
+      "kalangbret"
+    ],
+    "answer": "📍 <b>Stasi Kalangbret</b>\nJadwal misa: <b>Minggu I & II, pukul 10.00</b>\n\nUntuk info lebih lanjut silakan hubungi sekretariat paroki.",
+    "links": [
+      {
+        "text": "Jadwal Misa Lengkap",
+        "url": "/jadwal-misa"
+      }
+    ],
+    "quickReplies": [
+      "Stasi lainnya",
+      "Jadwal Misa",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "stasi dongko",
+      "misa dongko",
+      "dongko"
+    ],
+    "answer": "📍 <b>Stasi St. Maria — Dongko</b>\nJadwal misa: <b>Minggu I & II, pukul 11.00</b>\n\nUntuk info lebih lanjut silakan hubungi sekretariat paroki.",
+    "links": [
+      {
+        "text": "Jadwal Misa Lengkap",
+        "url": "/jadwal-misa"
+      }
+    ],
+    "quickReplies": [
+      "Stasi lainnya",
+      "Jadwal Misa",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "stasi sendang",
+      "misa sendang",
+      "sendang"
+    ],
+    "answer": "📍 <b>Stasi Sendang</b>\nJadwal misa: <b>Minggu II, pukul 11.00</b>\n\nUntuk info lebih lanjut silakan hubungi sekretariat paroki.",
+    "links": [
+      {
+        "text": "Jadwal Misa Lengkap",
+        "url": "/jadwal-misa"
+      }
+    ],
+    "quickReplies": [
+      "Stasi lainnya",
+      "Jadwal Misa",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "semua stasi",
+      "daftar stasi",
+      "misa di stasi",
+      "stasi paroki"
+    ],
+    "answer": "⛪ <b>Stasi-stasi Paroki SMDTBA:</b>\n\n• Ngunut: Sabtu 18.00\n• Rejotangan: Sabtu 16.00\n• Trenggalek: Minggu 07.00\n• Kalangbret: Minggu I & II, 10.00\n• Dongko: Minggu I & II, 11.00\n• Sendang: Minggu II, 11.00",
+    "links": [
+      {
+        "text": "Jadwal Misa Lengkap",
+        "url": "/jadwal-misa"
+      }
+    ],
+    "quickReplies": [
+      "Jadwal Misa",
+      "Lokasi Gereja",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "alamat",
+      "di mana",
+      "dimana",
+      "maps",
+      "google maps",
+      "peta",
+      "letak"
+    ],
+    "answer": "📍 <b>Gereja Katolik Paroki SMDTBA Tulungagung</b>\n\nJl. Ahmad Yani Tim. Gg. IV No.1, Bago, Tulungagung, Jawa Timur 66218\n\nBuka setiap hari untuk kegiatan misa & pastoral.",
+    "links": [
+      {
+        "text": "Halaman Kontak & Peta",
+        "url": "/kontak"
+      },
+      {
+        "text": "Buka di Google Maps",
+        "url": "https://maps.google.com/?q=Gereja+Katolik+SMDTBA+Tulungagung"
+      }
+    ],
+    "quickReplies": [
+      "Jadwal Misa",
+      "Nomor Telepon",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "telepon",
+      "telpon",
+      "no hp",
+      "no wa",
+      "kontak",
+      "hubungi",
+      "phone",
+      "call"
+    ],
+    "answer": "<b>Kontak Paroki SMDTBA Tulungagung:</b>\n\nSilakan hubungi pada jam kerja untuk informasi lebih lanjut.",
+    "links": [
+      {
+        "text": "Halaman Kontak",
+        "url": "/kontak"
+      },
+      {
+        "text": "📞 Sekretariat (Mas Edy)",
+        "url": "https://wa.me/6285636788440"
+      },
+            {
+        "text": "📞 Komsos Paroki",
+        "url": "https://wa.me/6285183068895"
+      }
+    ],
+    "quickReplies": [
+      "Lokasi Gereja",
+      "Jadwal Misa",
+      "Agenda Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "email",
+      "surat elektronik",
+      "e-mail"
+    ],
+    "answer": "Untuk kontak melalui email atau informasi lengkap sekretariat, silakan kunjungi halaman kontak paroki kami.",
+    "links": [
+      {
+        "text": "Halaman Kontak",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "Nomor Telepon",
+      "Lokasi Gereja",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "jam kerja",
+      "sekretariat",
+      "kantor paroki"
+    ],
+    "answer": "Untuk informasi jam buka sekretariat paroki, silakan hubungi langsung melalui WhatsApp atau kunjungi halaman kontak kami.",
+    "links": [
+      {
+        "text": "Kontak Paroki",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "Nomor Telepon",
+      "Lokasi Gereja",
+      "Jadwal Misa"
+    ]
+  },
+  {
+    "patterns": [
+      "galeri foto",
+      "lihat galeri",
+      "buka galeri",
+      "halaman galeri",
+      "semua foto",
+      "semua album"
+    ],
+    "answer": "🖼️ <b>Galeri Foto Paroki SMDTBA:</b>\n\nAlbum terbaru:\n• <a href=\"/galeri?album=157\">Camino de Fatima (Mei 2026)</a>\n• <a href=\"/galeri?album=153\">Hari Raya Paskah 2026</a>\n• <a href=\"/galeri?album=156\">WKRI Hari Kartini (April 2026)</a>\n• <a href=\"/galeri?album=126\">Natal Pagi 2025</a>\n\n👉 <a href=\"/galeri\">Lihat Semua Album</a>",
+    "links": [
+      {
+        "text": "📸 Semua Album",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Foto Paskah 2026",
+      "Foto Natal 2025",
+      "Foto Krisma 2025",
+      "Semua Galeri"
+    ]
+  },
+  {
+    "patterns": [
+      "foto sakramen",
+      "galeri sakramen",
+      "foto penerimaan sakramen",
+      "dokumentasi sakramen",
+      "gambar sakramen gereja"
+    ],
+    "answer": "⛪ <b>Album Foto Sakramen — Paroki SMDTBA:</b>\n\n• <a href=\"/galeri?album=102\">Sakramen Krisma 2025</a>\n• <a href=\"/galeri?album=127\">Baptis Anak Desember 2025</a>\n• <a href=\"/galeri?album=107\">Rekoleksi Komuni Pertama 2025</a>\n\n👉 <a href=\"/galeri\">Semua Album Galeri</a>",
+    "links": [
+      {
+        "text": "📸 Semua Galeri",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Foto Krisma 2025",
+      "Foto Baptis 2025",
+      "Foto Komuni Pertama 2025"
+    ]
+  },
+  {
+    "patterns": [
+      "foto kategorial",
+      "galeri kategorial",
+      "foto komunitas paroki",
+      "dokumentasi kategorial",
+      "gambar komunitas gereja",
+      "foto kelompok paroki"
+    ],
+    "answer": "🤝 <b>Album Foto Kegiatan Kategorial:</b>\n\n• <a href=\"/galeri?album=156\">WKRI Hari Kartini 2026</a>\n• <a href=\"/galeri?album=124\">Musker DPP/BGKP 2025</a>\n• <a href=\"/galeri?album=72\">Legio Maria</a>\n\n👉 <a href=\"/galeri\">Semua Album Galeri</a>",
+    "links": [
+      {
+        "text": "📸 Semua Galeri",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Foto WKRI 2026",
+      "Foto Legio Maria",
+      "Semua Galeri"
+    ]
+  },
+  {
+    "patterns": [
+      "berita terbaru",
+      "berita terkini",
+      "kabar terbaru",
+      "update paroki",
+      "info terbaru",
+      "berita paroki",
+      "artikel paroki"
+    ],
+    "answer": "📰 Untuk artikel, berita dan informasi terbaru seputar Paroki SMDTBA, kunjungi halaman Artikel Berita kami.",
+    "links": [
+      {
+        "text": "Baca Berita Terbaru",
+        "url": "/artikel/berita"
+      }
+    ],
+    "quickReplies": [
+      "Kronik Paroki",
+      "Historia Gereja",
+      "Agenda Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "catatan kegiatan",
+      "laporan kegiatan"
+    ],
+    "answer": "📖 Kronik Paroki berisi catatan perjalanan dan kegiatan Paroki SMDTBA dari waktu ke waktu.",
+    "links": [
+      {
+        "text": "Baca Kronik",
+        "url": "/artikel/kronik"
+      }
+    ],
+    "quickReplies": [
+      "Berita Paroki",
+      "Historia Gereja",
+      "Galeri Foto"
+    ]
+  },
+  {
+    "patterns": [
+      "sejarah artikel",
+      "kisah paroki",
+      "histori"
+    ],
+    "answer": "📜 Historia berisi tulisan-tulisan tentang sejarah dan kisah menarik Paroki SMDTBA Tulungagung.",
+    "links": [
+      {
+        "text": "Baca Historia",
+        "url": "/artikel/historia"
+      }
+    ],
+    "quickReplies": [
+      "Tentang Paroki",
+      "Kronik Paroki",
+      "Berita Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "tentang",
+      "profil paroki",
+      "sejarah",
+      "berdiri",
+      "didirikan",
+      "asal usul",
+      "paroki smdtba",
+      "santa maria",
+      "tidak bernoda asal",
+      "smdtba"
+    ],
+    "answer": "⛪ <b>Paroki Santa Maria Dengan Tidak Bernoda Asal (SMDTBA)</b> adalah paroki Gereja Katolik yang berdiri sejak <b>1950-an</b> di Tulungagung, Jawa Timur, di bawah Keuskupan Surabaya.\n\nParoki ini telah melayani umat Katolik Tulungagung selama lebih dari satu abad.",
+    "links": [
+      {
+        "text": "Selengkapnya tentang Paroki",
+        "url": "/tentang"
+      }
+    ],
+    "quickReplies": [
+      "Romo Paroki",
+      "Jadwal Misa",
+      "DPP & BGKP",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "keuskupan",
+      "diosis"
+    ],
+    "answer": "Paroki SMDTBA Tulungagung berada di bawah <b>Keuskupan Surabaya</b>.",
+    "links": [
+      {
+        "text": "Tentang Paroki",
+        "url": "/tentang"
+      }
+    ],
+    "quickReplies": [
+      "Tentang Paroki",
+      "Romo Paroki",
+      "Jadwal Misa"
+    ]
+  },
+  {
+    "patterns": [
+      "visi",
+      "misi",
+      "motto",
+      "semboyan"
+    ],
+    "answer": "Untuk mengetahui visi, misi, dan nilai-nilai Paroki SMDTBA Tulungagung, silakan kunjungi halaman Tentang Paroki.",
+    "links": [
+      {
+        "text": "Tentang Paroki",
+        "url": "/tentang"
+      }
+    ],
+    "quickReplies": [
+      "Sejarah Paroki",
+      "Romo Paroki",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "romo",
+      "pastor",
+      "frater",
+      "siapa romo",
+      "pastor paroki",
+      "daftar romo"
+    ],
+    "answer": "🙏 <b>Romo Paroki SMDTBA saat ini:</b>\n\n• <b>Romo Paroki:</b> RD Thomas Aquino Djoko Noegroho\n• <b>Romo Rekan:</b> RD Yohanes Setiawan\n\nUntuk informasi jadwal dan kontak romo, silakan hubungi sekretariat.",
+    "links": [
+      {
+        "text": "Profil Asisten Imam",
+        "url": "/profil-ai"
+      },
+      {
+        "text": "Kontak Paroki",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "Asisten Imam",
+      "Jadwal Misa",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "romo thomas djoko",
+      "romo djoko noegroho",
+      "romo thomas aquino djoko",
+      "pastor djoko tulungagung"
+    ],
+    "answer": "🙏 <b>RD Thomas Aquino Djoko Noegroho</b> adalah Romo Paroki Paroki SMDTBA Tulungagung.\n\nUntuk keperluan pastoral atau konsultasi, silakan hubungi sekretariat paroki.",
+    "links": [
+      {
+        "text": "Kontak Paroki",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "Romo Rekan",
+      "Jadwal Misa",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "romo yohanes",
+      "romo setiawan",
+      "yohanes setiawan"
+    ],
+    "answer": "🙏 <b>RD Yohanes Setiawan</b> adalah Romo Rekan Paroki SMDTBA Tulungagung.\n\nUntuk keperluan pastoral atau konsultasi, silakan hubungi sekretariat paroki.",
+    "links": [
+      {
+        "text": "Kontak Paroki",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "Romo Paroki",
+      "Jadwal Misa",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "asisten imam",
+      "profil ai",
+      "profil-ai",
+      "profilai",
+      "daftar imam",
+      "daftar asisten imam",
+      "tugas imam",
+      "tim imam",
+      "pelayan pastoral",
+      "petugas pastoral",
+      "imam paroki",
+      "imam smdtba",
+      "imam tulungagung",
+      "imam gereja",
+      "periode asisten",
+      "periode imam",
+      "asisten imam 2024",
+      "asisten imam 2025",
+      "asisten imam 2026",
+      "asisten imam 2027",
+      "daftar pelayan",
+      "pelayan gereja",
+      "pelayan umat",
+      "nama asisten",
+      "foto asisten",
+      "profil imam",
+      "profil pelayan",
+      "lihat asisten",
+      "cari asisten",
+      "info asisten",
+      "data asisten imam"
+    ],
+    "answer": "🙏 <b>Asisten Imam Paroki SMDTBA Tulungagung</b>\n\nHalaman <b>Profil Asisten Imam</b> memuat daftar lengkap asisten imam paroki berdasarkan periode pelayanan, beserta asal lingkungan/stasi, foto, dan informasi kontak.",
+    "links": [
+      {
+        "text": "👤 Lihat Profil Asisten Imam",
+        "url": "/profil-ai"
+      }
+    ],
+    "quickReplies": [
+      "Romo Paroki",
+      "DPP & BGKP",
+      "Jadwal Misa",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "jadwal acara",
+      "daftar acara paroki",
+      "agenda kegiatan",
+      "kalender"
+    ],
+    "answer": "📅 Halaman Agenda Paroki berisi:\n• Jadwal misa harian & mingguan\n• Kegiatan & event paroki\n• Jadwal petugas liturgi\n• Dokumen resmi paroki\n\nUpdate dilakukan secara berkala.",
+    "links": [
+      {
+        "text": "Buka Agenda Paroki",
+        "url": "/agenda"
+      }
+    ],
+    "quickReplies": [
+      "Jadwal Misa",
+      "Jadwal Petugas",
+      "Dokumen Paroki",
+      "E-Lonceng"
+    ]
+  },
+  {
+    "patterns": [
+      "jadwal petugas"
+    ],
+    "answer": "📋 Jadwal petugas liturgi (lektor, pemazmur, prodiakon, putra altar, organis) tersedia di halaman Agenda Paroki.",
+    "links": [
+      {
+        "text": "Agenda & Jadwal Petugas",
+        "url": "/agenda"
+      }
+    ],
+    "quickReplies": [
+      "Jadwal Misa",
+      "Agenda Paroki",
+      "Daftar Petugas"
+    ]
+  },
+  {
+    "patterns": [
+      "edaran"
+    ],
+    "answer": "📄 Dokumen, pengumuman, dan buletin paroki dapat diakses di halaman Agenda Paroki.",
+    "links": [
+      {
+        "text": "Agenda & Dokumen",
+        "url": "/agenda"
+      }
+    ],
+    "quickReplies": [
+      "Agenda Paroki",
+      "E-Lonceng",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "e-lonceng",
+      "lonceng",
+      "pengumuman digital",
+      "notifikasi paroki"
+    ],
+    "answer": "🔔 <b>E-Lonceng</b> adalah fitur pengumuman digital Paroki SMDTBA. Di sini Anda bisa menemukan pengumuman terbaru dan informasi penting dari paroki.",
+    "links": [
+      {
+        "text": "Buka E-Lonceng",
+        "url": "/e-lonceng"
+      }
+    ],
+    "quickReplies": [
+      "Agenda Paroki",
+      "Jadwal Misa",
+      "Berita Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "dewan pastoral paroki",
+      "badan",
+      "badan gereja dan kemasyarakatan"
+    ],
+    "answer": "🏛️ Informasi tentang Dewan Pastoral Paroki (DPP) dan Badan Gereja Katolik Paroki (BGKP) tersedia di halaman profil kami.",
+    "links": [
+      {
+        "text": "Profil DPP & BGKP",
+        "url": "/profil-dpp"
+      }
+    ],
+    "quickReplies": [
+      "Asisten Imam",
+      "Wilayah & Lingkungan",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "rukun",
+      "rt",
+      "rw",
+      "komunitas basis",
+      "kbg"
+    ],
+    "answer": "🗺️ Paroki SMDTBA terbagi dalam beberapa wilayah dan lingkungan. Informasi lengkapnya ada di halaman Profil Lingkungan.",
+    "links": [
+      {
+        "text": "Profil Wilayah & Lingkungan",
+        "url": "/profil-lingkungan"
+      }
+    ],
+    "quickReplies": [
+      "DPP & BGKP",
+      "Kategorial",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "kategorial",
+      "kelompok",
+      "organisasi",
+      "paguyuban",
+      "remaja",
+      "lansia",
+      "wanita",
+      "pria",
+      "vincent",
+      "svp",
+      "santo vincent",
+      "cor jesu",
+      "cmi"
+    ],
+    "answer": "🤝 Paroki SMDTBA memiliki berbagai kelompok kategorial:\n• Mudika (Muda-mudi Katolik)\n• Legio Maria\n• Wanita Katolik Republik Indonesia (WKRI)\n• Dan banyak kelompok lainnya!\n\nKunjungi halaman Kategorial untuk info lengkap.",
+    "links": [
+      {
+        "text": "Kelompok Kategorial",
+        "url": "/kategorial"
+      }
+    ],
+    "quickReplies": [
+      "Mudika",
+      "Legio Maria",
+      "Wilayah & Lingkungan",
+      "Agenda Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "mudika paroki",
+      "omk tulungagung",
+      "mudika",
+      "orang muda katolik paroki"
+    ],
+    "answer": "✨ <b>Mudika</b> (Muda-mudi Katolik) adalah kelompok orang muda Paroki SMDTBA. Info kegiatan dan kontak pengurus tersedia di halaman Kategorial.",
+    "links": [
+      {
+        "text": "Kelompok Kategorial",
+        "url": "/kategorial"
+      }
+    ],
+    "quickReplies": [
+      "Legio Maria",
+      "WKRI",
+      "Agenda Paroki",
+      "Galeri Foto"
+    ]
+  },
+  {
+    "patterns": [
+      "anggota legio",
+      "praesidium legio",
+      "legio maria paroki"
+    ],
+    "answer": "✝️ <b>Legio Maria</b> adalah salah satu kelompok kategorial aktif di Paroki SMDTBA Tulungagung. Info lengkap di halaman Kategorial.",
+    "links": [
+      {
+        "text": "Kelompok Kategorial",
+        "url": "/kategorial"
+      }
+    ],
+    "quickReplies": [
+      "Mudika",
+      "WKRI",
+      "Agenda Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "komunitas wanita katolik",
+      "ibu katolik",
+      "ibu-ibu",
+      "kelompok ibu gereja",
+      "organisasi wanita paroki"
+    ],
+    "answer": "👩 <b>WKRI</b> (Wanita Katolik Republik Indonesia) adalah kelompok wanita Katolik di Paroki SMDTBA. Info kegiatan di halaman Kategorial.",
+    "links": [
+      {
+        "text": "Kelompok Kategorial",
+        "url": "/kategorial"
+      }
+    ],
+    "quickReplies": [
+      "Legio Maria",
+      "Mudika",
+      "Agenda Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "chrismation",
+      "sakramen penguatan",
+      "konfirmasi",
+      "info krisma"
+    ],
+    "answer": "🕊️ <b>Sakramen Krisma (Penguatan)</b>\n\nUntuk informasi jadwal dan pendaftaran sakramen krisma, silakan menghubungi sekretariat paroki.",
+    "links": [
+      {
+        "text": "Kontak Sekretariat",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "Baptis",
+      "Pernikahan",
+      "Jadwal Misa",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "perkawinan",
+      "pemberkatan",
+      "menikah di gereja",
+      "sakramen perkawinan",
+      "sakramen pernikahan",
+      "kawin"
+    ],
+    "answer": "💍 <b>Sakramen Pernikahan</b>\n\nUntuk informasi persyaratan dan pendaftaran pemberkatan pernikahan, silakan menghubungi sekretariat paroki jauh-jauh hari sebelum tanggal yang diinginkan.",
+    "links": [
+      {
+        "text": "Kontak Sekretariat",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "Baptis",
+      "Krisma",
+      "Jadwal Misa",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "penerimaan ekaristi",
+      "sakramen ekaristi",
+      "misa pertama",
+      "info ekaristi sakramen"
+    ],
+    "answer": "🍞 <b>Komuni Pertama</b>\n\nUntuk informasi jadwal persiapan dan penerimaan Komuni Pertama, silakan menghubungi sekretariat paroki.",
+    "links": [
+      {
+        "text": "Kontak Sekretariat",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "Baptis",
+      "Krisma",
+      "Jadwal Misa",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "pengampunan dosa",
+      "penitensi",
+      "konfesi",
+      "info sakramen tobat"
+    ],
+    "answer": "🙏 <b>Sakramen Pengakuan Dosa</b>\n\nUntuk informasi jadwal pengakuan dosa, silakan bertanya langsung kepada romo atau menghubungi sekretariat paroki.",
+    "links": [
+      {
+        "text": "Kontak Paroki",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "Jadwal Misa",
+      "Romo Paroki",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "sakramen minyak suci",
+      "sakramen pengurapan"
+    ],
+    "answer": "🙏 <b>Sakramen Pengurapan Orang Sakit</b>\n\nBila ada keluarga atau umat yang membutuhkan sakramen pengurapan orang sakit, silakan segera menghubungi sekretariat atau romo paroki.",
+    "links": [
+      {
+        "text": "Kontak Paroki",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "Romo Paroki",
+      "Jadwal Misa",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "umkm",
+      "pasar umat",
+      "produk umat"
+    ],
+    "answer": "🛒 <b>Pasar Umat</b> adalah marketplace produk usaha umat Paroki SMDTBA Tulungagung. Dukung sesama umat dengan membeli produk-produk mereka!",
+    "links": [
+      {
+        "text": "Pasar Umat / UMKM",
+        "url": "/umkmumat"
+      }
+    ],
+    "quickReplies": [
+      "Daftar UMKM",
+      "Kategorial",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "e-ticket",
+      "eticket",
+      "ticket",
+      "ngopi bareng"
+    ],
+    "answer": "🎟️ <b>E-Ticket tersedia!</b>\n\nEvent: <b>Malam Kasih & Ngopi Bareng Romo Eko</b>\n📅 Jumat, 17 Juli 2026 | 18.00 – 21.00 WIB\n📍 Crown Victoria Hotel, Tulungagung\n\nHarga tiket mulai Rp 150.000. Untuk pembangunan Griya Pastoral Umat.",
+    "links": [
+      {
+        "text": "Beli Tiket Sekarang",
+        "url": "/e-ticket/"
+      }
+    ],
+    "quickReplies": [
+      "Info Event",
+      "Agenda Paroki",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "kontributor",
+      "penulis artikel",
+      "author",
+      "redaksi",
+      "tim paroki"
+    ],
+    "answer": "✍️ Anda bisa melihat daftar penulis dan kontributor artikel Paroki SMDTBA di halaman Penulis.",
+    "links": [
+      {
+        "text": "Halaman Penulis",
+        "url": "/penulis"
+      }
+    ],
+    "quickReplies": [
+      "Artikel Paroki",
+      "Berita Terbaru",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "donasi",
+      "sumbangan",
+      "persembahan",
+      "derma",
+      "infak",
+      "sodality"
+    ],
+    "answer": "💛 Untuk informasi donasi, persembahan, atau kolekte, silakan menghubungi sekretariat paroki secara langsung.",
+    "links": [
+      {
+        "text": "Kontak Paroki",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "Griya Pastoral",
+      "E-Ticket",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "pdf",
+      "dokumen download",
+      "buka pdf",
+      "lihat dokumen"
+    ],
+    "answer": "📄 Beberapa dokumen paroki tersedia untuk diunduh melalui halaman Agenda Paroki.",
+    "links": [
+      {
+        "text": "Dokumen di Agenda",
+        "url": "/agenda"
+      }
+    ],
+    "quickReplies": [
+      "Agenda Paroki",
+      "E-Lonceng",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "gereja katolik",
+      "catholic",
+      "roma katolik"
+    ],
+    "answer": "✝️ Gereja Katolik adalah Gereja Kristiani terbesar di dunia yang berpusat di Vatikan dan dipimpin oleh Paus. Paroki SMDTBA Tulungagung adalah bagian dari Gereja Katolik di bawah Keuskupan Surabaya.",
+    "links": [
+      {
+        "text": "Tentang Paroki",
+        "url": "/tentang"
+      }
+    ],
+    "quickReplies": [
+      "Jadwal Misa",
+      "Sakramen",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "masalah website",
+      "web error",
+      "halaman error",
+      "situs tidak bisa dibuka"
+    ],
+    "answer": "💻 Website resmi Paroki SMDTBA Tulungagung ini adalah sumber informasi lengkap seputar kegiatan, jadwal, dan kehidupan paroki. Tersedia pula dalam tampilan mobile yang responsif.",
+    "quickReplies": [
+      "Jadwal Misa",
+      "Galeri Foto",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "error",
+      "tidak bisa",
+      "tidak berfungsi",
+      "broken",
+      "rusak",
+      "loading",
+      "lambat"
+    ],
+    "answer": "⚙️ Jika ada masalah teknis pada website, silakan hubungi sekretariat paroki atau refresh halaman Anda.",
+    "links": [
+      {
+        "text": "Kontak Paroki",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "Kontak Paroki",
+      "Jadwal Misa"
+    ]
+  },
+  {
+    "patterns": [
+      "jam sekretariat",
+      "jam buka",
+      "jam kantor",
+      "jam operasional",
+      "buka jam",
+      "tutup jam",
+      "kapan buka",
+      "kapan tutup",
+      "sekretariat buka",
+      "hari buka",
+      "hari kerja sekretariat",
+      "edy wandowo",
+      "sekretaris paroki"
+    ],
+    "answer": "🕐 <b>Jam Sekretariat Paroki SMDTBA:</b>\n\n📌 Petugas: <b>Edy Wandowo</b>\n• Buka: Senin, Selasa, Kamis, Jumat\n• Jam: <b>08.00 – 14.00 WIB</b>\n• <b>Rabu: LIBUR</b>\n\nUntuk keperluan mendadak di luar jam kantor, silakan hubungi via WhatsApp.",
+    "links": [
+      {
+        "text": "Kontak Paroki",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "WhatsApp Sekretariat",
+      "Nomor Telepon",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "email paroki",
+      "email gereja",
+      "email sekretariat",
+      "surel",
+      "sanmardtba",
+      "parokitulungagung.org",
+      "support@"
+    ],
+    "answer": "📧 <b>Email Paroki SMDTBA Tulungagung:</b>\n\n• Sekretariat: <b>sanmardtba@gmail.com</b>\n• Web/Komsos: <b>support@parokitulungagung.org</b>\n\nSilakan mengirim email untuk pertanyaan yang tidak memerlukan respons cepat.",
+    "links": [
+      {
+        "text": "Halaman Kontak",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "WhatsApp Sekretariat",
+      "Kontak Paroki",
+      "Jadwal Misa"
+    ]
+  },
+  {
+    "patterns": [
+      "telepon kantor",
+      "no telpon",
+      "nomor kantor",
+      "0355",
+      "321727",
+      "telp paroki"
+    ],
+    "answer": "📞 <b>Telepon Kantor Paroki SMDTBA:</b>\n\n<b>(0355) 321727</b>\n\nAktif pada jam kerja sekretariat: Senin-Jumat (kecuali Rabu) pukul 08.00 – 14.00 WIB.",
+    "links": [
+      {
+        "text": "Halaman Kontak",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "WhatsApp Sekretariat",
+      "Jam Sekretariat",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "romo kepala paroki",
+      "pastor kepala",
+      "kepala paroki siapa",
+      "siapa pastor kepala"
+    ],
+    "answer": "⛪ <b>Pastor Paroki SMDTBA Tulungagung:</b>\n\n<b>RD Thomas Aquino Djoko Noegroho</b>\n(Pastor Kepala)\n\n<b>RD Yohanes Setiawan</b>\n(Pastor Rekan)\n\nBeliau memimpin pelayanan misa dan pastoral di Paroki Tulungagung.",
+    "links": [
+      {
+        "text": "Profil DPP & Pastor",
+        "url": "/profil-dpp"
+      }
+    ],
+    "quickReplies": [
+      "Jadwal Misa",
+      "Asisten Imam",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "romo eko",
+      "ngopi bareng romo",
+      "malam kasih",
+      "bersama romo eko"
+    ],
+    "answer": "🎤 <b>Event: Malam Kasih & Ngopi Bareng Romo Eko</b>\n\n📅 Jumat, 17 Juli 2026\n🕕 Pukul 18.00 – 21.00 WIB\n📍 Crown Victoria Hotel, Tulungagung\n\nEvent ini diadakan untuk mendukung pembangunan <b>Griya Pastoral Umat</b> Paroki SMDTBA. Tiket tersedia dengan berbagai kategori.",
+    "links": [
+      {
+        "text": "Beli Tiket Sekarang",
+        "url": "/e-ticket/"
+      }
+    ],
+    "quickReplies": [
+      "Harga Tiket",
+      "Griya Pastoral",
+      "Cara Beli Tiket"
+    ]
+  },
+  {
+    "patterns": [
+      "prodiakon",
+      "lektor",
+      "pemazmur liturgi",
+      "pelayan altar",
+      "misdinar",
+      "koor paroki",
+      "organis paroki",
+      "jadwal petugas misa",
+      "petugas liturgi",
+      "putra altar"
+    ],
+    "answer": "📋 <b>Petugas Liturgi Paroki SMDTBA:</b>\n\nJadwal petugas liturgi (lektor, pemazmur, prodiakon, putra altar, organis, koor) tersedia di halaman Jadwal Misa.\n\nUntuk daftar Asisten Imam (pelayan pastoral per wilayah), kunjungi halaman Profil AI.",
+    "links": [
+      {
+        "text": "Jadwal Misa & Petugas",
+        "url": "/jadwal-misa"
+      },
+      {
+        "text": "Profil Asisten Imam",
+        "url": "/profil-ai"
+      }
+    ],
+    "quickReplies": [
+      "Jadwal Misa",
+      "Asisten Imam",
+      "DPP & BGKP"
+    ]
+  },
+  {
+    "patterns": [
+      "dpp",
+      "bgkp",
+      "dewan paroki",
+      "pengurus paroki",
+      "kepengurusan",
+      "struktur paroki",
+      "bidang paroki",
+      "dewan pastoral",
+      "panitia paroki",
+      "ketua dpp"
+    ],
+    "answer": "🏛️ <b>DPP & BGKP Paroki SMDTBA Tulungagung</b>\n(Periode 2024-2027)\n\n<b>DPP Harian:</b>\n• RD Thomas Aquino Djoko Noegroho\n• RD Yohanes Setiawan\n• Yustinus Edi Wandowo\n• Bernardus Didik Sumarsono\n• dan anggota lainnya\n\n<b>Bidang-bidang:</b> Sumber, Formatio, Kerasulan Umum, Kerasulan Khusus\n\n<b>BGKP:</b> Aset/Fisik, Pengembangan SDM, Ketenagaan, Rumah Tangga, Hukum",
+    "links": [
+      {
+        "text": "Profil DPP & BGKP",
+        "url": "/profil-dpp"
+      }
+    ],
+    "quickReplies": [
+      "Profil Romo",
+      "Asisten Imam",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "bidang formatio",
+      "bidang sumber",
+      "bidang kerasulan",
+      "kerasulan umum",
+      "kerasulan khusus",
+      "katekese",
+      "pembinaan iman"
+    ],
+    "answer": "📚 <b>Bidang-bidang Pelayanan DPP Paroki SMDTBA:</b>\n\n• <b>Bidang Sumber</b> – Pengelolaan sumber daya\n• <b>Bidang Formatio</b> – Pembinaan & pendidikan iman umat\n• <b>Bidang Kerasulan Umum</b> – Pelayanan kepada masyarakat\n• <b>Bidang Kerasulan Khusus</b> – Pelayanan khusus (difabel, lansia, dsb)\n\nInfo lengkap ada di halaman Profil DPP.",
+    "links": [
+      {
+        "text": "Profil DPP & BGKP",
+        "url": "/profil-dpp"
+      }
+    ],
+    "quickReplies": [
+      "DPP & BGKP",
+      "Kategorial",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "wilayah",
+      "lingkungan",
+      "wilayah 1",
+      "wilayah 2",
+      "wilayah 3",
+      "ketua lingkungan",
+      "koordinator wilayah",
+      "profil lingkungan"
+    ],
+    "answer": "🗺️ <b>Wilayah & Lingkungan Paroki SMDTBA:</b>\n\n<b>Wilayah 1</b> (Kord: Yohanes Rasul Hariyadi):\nSt. Agnes, St. Benediktus, St. Ignatius, St. Antonius\n\n<b>Wilayah 2</b> (Kord: Herman Yoseph Agung Effrianto):\nSt. Dominikus, St. Elisabeth, St. Christophorus, St. Clara\n\n<b>Wilayah 3</b> (Kord: Amadeus Egar):\nSt. Hieronimus, St. Gregorius, St. Johanes, St. Gabriel, St. Fransiskus",
+    "links": [
+      {
+        "text": "Profil Wilayah & Lingkungan",
+        "url": "/profil-lingkungan"
+      }
+    ],
+    "quickReplies": [
+      "Stasi",
+      "DPP & BGKP",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "st agnes",
+      "lingkungan agnes",
+      "st benediktus",
+      "lingkungan benediktus",
+      "st ignatius",
+      "lingkungan ignatius",
+      "st antonius",
+      "lingkungan antonius"
+    ],
+    "answer": "🏘️ <b>Lingkungan Wilayah 1:</b>\n• <b>St. Agnes</b> — Ketua: Albertus Sujiwa\n• <b>St. Benediktus</b> — Ketua: Fransiska Sri Maryanti\n• <b>St. Ignatius</b> — Ketua: Katarina Diyah Prastiwi\n• <b>St. Antonius</b> — Ketua: Yosef Tas Au\n\nKoordinator Wilayah 1: Yohanes Rasul Hariyadi",
+    "links": [
+      {
+        "text": "Profil Lingkungan Lengkap",
+        "url": "/profil-lingkungan"
+      }
+    ],
+    "quickReplies": [
+      "Wilayah 2",
+      "Wilayah 3",
+      "Stasi"
+    ]
+  },
+  {
+    "patterns": [
+      "st dominikus",
+      "lingkungan dominikus",
+      "st elisabeth",
+      "lingkungan elisabeth",
+      "st christophorus",
+      "lingkungan christophorus",
+      "st clara",
+      "lingkungan clara"
+    ],
+    "answer": "🏘️ <b>Lingkungan Wilayah 2:</b>\n• <b>St. Dominikus</b> — Ketua: Vincentia Sunarlin\n• <b>St. Elisabeth</b> — Ketua: Margaretha Dewi Sari Mulia\n• <b>St. Christophorus</b> — Ketua: Vincentius Pairin\n• <b>St. Clara</b> — Ketua: Marianus Ari Wijaya\n\nKoordinator Wilayah 2: Herman Yoseph Agung Effrianto",
+    "links": [
+      {
+        "text": "Profil Lingkungan Lengkap",
+        "url": "/profil-lingkungan"
+      }
+    ],
+    "quickReplies": [
+      "Wilayah 1",
+      "Wilayah 3",
+      "Stasi"
+    ]
+  },
+  {
+    "patterns": [
+      "st hieronimus",
+      "lingkungan hieronimus",
+      "st gregorius",
+      "lingkungan gregorius",
+      "st johanes",
+      "lingkungan johanes",
+      "st gabriel",
+      "lingkungan gabriel",
+      "st fransiskus",
+      "lingkungan fransiskus"
+    ],
+    "answer": "🏘️ <b>Lingkungan Wilayah 3:</b>\n• <b>St. Hieronimus</b> — Ketua: Marc Danu Saksono\n• <b>St. Gregorius</b> — Ketua: Yuliana Endyah Retnowati\n• <b>St. Johanes</b> — Ketua: Agustinus Ambrosius Gatot Muryoto\n• <b>St. Gabriel</b> — Ketua: Theresia Marlina Wijayanti\n• <b>St. Fransiskus</b> — Ketua: Basilius Yustianus Bedi\n\nKoordinator Wilayah 3: Amadeus Egar",
+    "links": [
+      {
+        "text": "Profil Lingkungan Lengkap",
+        "url": "/profil-lingkungan"
+      }
+    ],
+    "quickReplies": [
+      "Wilayah 1",
+      "Wilayah 2",
+      "Stasi"
+    ]
+  },
+  {
+    "patterns": [
+      "ketua stasi ngunut",
+      "pengurus ngunut",
+      "adrianus",
+      "adrianus tri hardianto"
+    ],
+    "answer": "📍 <b>Stasi Gembala yang Baik — Ngunut</b>\nKetua: <b>Adrianus Tri Hardianto</b>\nJadwal Misa: Sabtu, pukul 18.00 WIB",
+    "links": [
+      {
+        "text": "Profil Lingkungan",
+        "url": "/profil-lingkungan"
+      }
+    ],
+    "quickReplies": [
+      "Stasi lainnya",
+      "Jadwal Misa",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "ketua stasi rejotangan",
+      "pengurus rejotangan",
+      "jovita sudarti"
+    ],
+    "answer": "📍 <b>Stasi St. Maria — Rejotangan</b>\nKetua: <b>Jovita Sudarti</b>\nJadwal Misa: Sabtu, pukul 16.00 WIB",
+    "links": [
+      {
+        "text": "Profil Lingkungan",
+        "url": "/profil-lingkungan"
+      }
+    ],
+    "quickReplies": [
+      "Stasi lainnya",
+      "Jadwal Misa",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "pdkk",
+      "karismatik",
+      "persekutuan doa",
+      "karismatik katolik",
+      "st christophorus pdkk"
+    ],
+    "answer": "🕊️ <b>PDKK — Persekutuan Doa Karismatik Katolik</b>\nSt. Christophorus SMDTBA\n\nKelompok doa karismatik Paroki Tulungagung. Info jadwal dan kegiatan tersedia di halaman Kategorial.",
+    "links": [
+      {
+        "text": "Profil Kategorial",
+        "url": "/kategorial"
+      }
+    ],
+    "quickReplies": [
+      "Adorasi",
+      "Legio Maria",
+      "Kategorial"
+    ]
+  },
+  {
+    "patterns": [
+      "wkri",
+      "wanita katolik",
+      "wanita katolik ri",
+      "perempuan katolik",
+      "ibu-ibu paroki"
+    ],
+    "answer": "👩 <b>WKRI — Wanita Katolik Republik Indonesia</b>\nParoki SMDTBA Tulungagung\n\nOrganisasi wanita Katolik yang aktif dalam kegiatan rohani dan sosial kemasyarakatan.",
+    "links": [
+      {
+        "text": "Profil Kategorial",
+        "url": "/kategorial"
+      }
+    ],
+    "quickReplies": [
+      "Kategorial",
+      "Agenda Paroki",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "gim",
+      "gerakan iman maria",
+      "doa snakel",
+      "snakel"
+    ],
+    "answer": "🙏 <b>GIM — Gerakan Iman Maria</b>\nParoki SMDTBA Tulungagung\n\nKelompok doa yang berfokus pada devosi kepada Bunda Maria, termasuk doa Snakel.",
+    "links": [
+      {
+        "text": "Profil Kategorial",
+        "url": "/kategorial"
+      }
+    ],
+    "quickReplies": [
+      "Legio Maria",
+      "Rosario",
+      "Kategorial"
+    ]
+  },
+  {
+    "patterns": [
+      "legio maria",
+      "legion of mary",
+      "legio",
+      "legiun maria"
+    ],
+    "answer": "⚔️ <b>Legio Maria — SMDTBA</b>\n\nKelompok apostolik Maria yang aktif dalam pelayanan rohani dan kunjungan umat. Info lengkap di halaman Kategorial.",
+    "links": [
+      {
+        "text": "Profil Kategorial",
+        "url": "/kategorial"
+      }
+    ],
+    "quickReplies": [
+      "GIM",
+      "Adorasi",
+      "Kategorial"
+    ]
+  },
+  {
+    "patterns": [
+      "marriage encounter",
+      "suami istri",
+      "keluarga katolik",
+      "keluarga terpanggil",
+      "pagutersanmarta",
+      "paguter"
+    ],
+    "answer": "💑 <b>ME — Marriage Encounter (SMDTBA)</b>\n\nKomunitas bagi pasangan suami istri Katolik untuk memperkuat ikatan pernikahan dalam iman. Juga ada <b>Paguyuban Keluarga Terpanggil (Pagutersanmarta)</b> SMDTBA.",
+    "links": [
+      {
+        "text": "Profil Kategorial",
+        "url": "/kategorial"
+      }
+    ],
+    "quickReplies": [
+      "Pernikahan",
+      "Sakramen",
+      "Kategorial"
+    ]
+  },
+  {
+    "patterns": [
+      "pemuda katolik",
+      "pk",
+      "pemuda",
+      "kaum muda",
+      "orang muda",
+      "omk",
+      "organisasi pemuda"
+    ],
+    "answer": "🌟 <b>Pemuda Katolik (PK) & OMK SMDTBA</b>\n\nOrganisasi kepemudaan Katolik Paroki Tulungagung yang aktif dalam kegiatan rohani, sosial, dan kemasyarakatan.",
+    "links": [
+      {
+        "text": "Profil Kategorial",
+        "url": "/kategorial"
+      },
+      {
+        "text": "Galeri Kegiatan",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Kategorial",
+      "Agenda Paroki",
+      "E-Lonceng"
+    ]
+  },
+  {
+    "patterns": [
+      "rosario hidup",
+      "living rosary"
+    ],
+    "answer": "📿 <b>Rosario Hidup — SMDTBA</b>\n\nKelompok devosi Rosario yang aktif berdoa bersama secara rutin di Paroki Tulungagung.",
+    "links": [
+      {
+        "text": "Profil Kategorial",
+        "url": "/kategorial"
+      }
+    ],
+    "quickReplies": [
+      "GIM",
+      "Legio Maria",
+      "Adorasi"
+    ]
+  },
+  {
+    "patterns": [
+      "ktm",
+      "komunitas tritunggal",
+      "tritunggal mahakudus"
+    ],
+    "answer": "✝️ <b>KTM — Komunitas Tritunggal Mahakudus</b>\nParoki SMDTBA Tulungagung\n\nKomunitas rohani yang berfokus pada penghayatan iman dalam Tritunggal Mahakudus.",
+    "links": [
+      {
+        "text": "Profil Kategorial",
+        "url": "/kategorial"
+      }
+    ],
+    "quickReplies": [
+      "PDKK",
+      "Adorasi",
+      "Kategorial"
+    ]
+  },
+  {
+    "patterns": [
+      "ssv",
+      "serikat sosial vinsensius",
+      "vinsensius",
+      "sosial vinsen",
+      "st maria ssv",
+      "rosali ssv"
+    ],
+    "answer": "💛 <b>SSV — Serikat Sosial Vinsensius</b>\n\nParoki memiliki 2 kelompok SSV:\n• <b>SSV St. Maria</b>\n• <b>SSV Rosali</b>\n\nBergerak di bidang pelayanan sosial kepada sesama yang membutuhkan.",
+    "links": [
+      {
+        "text": "Profil Kategorial",
+        "url": "/kategorial"
+      }
+    ],
+    "quickReplies": [
+      "Kategorial",
+      "Donasi",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "komedi",
+      "konveksi media digital",
+      "media digital paroki",
+      "kaos paroki",
+      "produk komedi",
+      "polo paroki",
+      "merchandise paroki",
+      "baju paroki"
+    ],
+    "answer": "👕 <b>KoMeDi — Konveksi Media Digital Paroki SMDTBA</b>\n\nUnit usaha paroki yang memproduksi merchandise dan pakaian bertema paroki:\n• Kaos\n• Polo\n• Dan produk lainnya\n\nKunjungi halaman KoMeDi untuk melihat katalog produk.",
+    "links": [
+      {
+        "text": "Halaman KoMeDi",
+        "url": "/komedi"
+      }
+    ],
+    "quickReplies": [
+      "Pasar Umat",
+      "Kontak Paroki",
+      "Agenda Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "harga tiket",
+      "zona tiket",
+      "kategori tiket",
+      "vvip",
+      "vip",
+      "kelas 1",
+      "reguler",
+      "tiket murah",
+      "tiket berapa"
+    ],
+    "answer": "🎟️ <b>Harga Tiket — Malam Kasih & Ngopi Bareng Romo Eko</b>\n📅 Jumat, 17 Juli 2026 | Crown Victoria Hotel\n\n• <b>VVIP</b>: Rp 1.000.000 (kursi menyerong eksklusif, meet & greet, merchandise)\n• <b>VIP</b>: Rp 500.000 (premium experience)\n• <b>Kelas 1</b>: Rp 250.000\n• <b>Reguler</b>: Rp 150.000\n\nTotal kuota: 1.200 kursi. Untuk pembangunan Griya Pastoral Umat.",
+    "links": [
+      {
+        "text": "Beli Tiket Sekarang",
+        "url": "/e-ticket/"
+      }
+    ],
+    "quickReplies": [
+      "Cara Beli Tiket",
+      "Griya Pastoral",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "cara beli tiket",
+      "cara pesan tiket",
+      "beli tiket online",
+      "pembelian tiket",
+      "bayar tiket",
+      "transfer tiket",
+      "pembayaran tiket",
+      "bca tiket"
+    ],
+    "answer": "🛒 <b>Cara Membeli Tiket Event:</b>\n\n1️⃣ <b>Pilih Tiket</b> — Pilih kategori (VVIP/VIP/Kelas 1/Reguler)\n2️⃣ <b>Pilih Tempat Duduk</b> — Pilih kursi sesuai keinginan\n3️⃣ <b>Selesaikan Pembayaran</b> — Transfer ke:\n   • Bank: <b>BCA</b>\n   • No. Rek: <b>0489898430</b>\n   • A/N: Gereja Katolik Paroki Santa Maria\n\nSetelah transfer, upload bukti pembayaran di website.",
+    "links": [
+      {
+        "text": "Beli Tiket Sekarang",
+        "url": "/e-ticket/"
+      }
+    ],
+    "quickReplies": [
+      "Harga Tiket",
+      "Griya Pastoral",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "crown victoria",
+      "lokasi event",
+      "tempat event",
+      "hotel event",
+      "venue event",
+      "hotel tulungagung"
+    ],
+    "answer": "📍 <b>Lokasi Event: Crown Victoria Hotel</b>\nTulungagung, Jawa Timur\n\nEvent: <b>Malam Kasih & Ngopi Bareng Romo Eko</b>\n📅 Jumat, 17 Juli 2026 | 18.00 – 21.00 WIB\n\nDana hasil event untuk Pembangunan Griya Pastoral Umat Paroki.",
+    "links": [
+      {
+        "text": "Info & Beli Tiket",
+        "url": "/e-ticket/"
+      }
+    ],
+    "quickReplies": [
+      "Harga Tiket",
+      "Cara Beli Tiket",
+      "Griya Pastoral"
+    ]
+  },
+  {
+    "patterns": [
+      "wa group event",
+      "grup whatsapp tiket",
+      "grup wa event",
+      "link grup",
+      "wa group tiket"
+    ],
+    "answer": "💬 Ada grup WhatsApp khusus peserta event. Link grup akan tersedia setelah pembelian tiket dikonfirmasi. Silakan cek informasi di halaman e-ticket.",
+    "links": [
+      {
+        "text": "Halaman E-Ticket",
+        "url": "/e-ticket/"
+      }
+    ],
+    "quickReplies": [
+      "Beli Tiket",
+      "Cara Beli Tiket",
+      "Kontak Paroki"
+    ]
+  },
+
+  {
+    "patterns": [
+      "baptis bayi",
+      "pembaptisan bayi",
+      "baptis anak",
+      "minta baptis bayi"
+    ],
+    "answer": "👶 <b>Baptis Bayi — Paroki SMDTBA:</b>\n\nJadwal Baptis Bayi biasanya diselenggarakan secara berkala. Orang tua dan wali baptis perlu hadir dalam pertemuan persiapan.\n\nSilakan hubungi sekretariat untuk mendaftar dan mengetahui jadwal terdekat.",
+    "links": [
+      {
+        "text": "Kontak Sekretariat",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "Kontak Paroki",
+      "Jadwal Misa",
+      "Agenda Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "pernikahan",
+      "nikah",
+      "menikah",
+      "pemberkatan pernikahan",
+      "daftar nikah",
+      "syarat nikah",
+      "persiapan nikah",
+      "kursus pernikahan",
+      "prk",
+      "bina calon pengantin"
+    ],
+    "answer": "💍 <b>Pernikahan / Pemberkatan di Paroki SMDTBA:</b>\n\nUntuk melangsungkan pernikahan Katolik, diperlukan:\n1. Kedua calon sudah dibaptis Katolik\n2. Ikuti Kursus Persiapan Pernikahan (PRK/Bina Calon Pengantin)\n3. Melengkapi berkas administrasi (Surat Baptis, KTP, dll)\n4. Mendaftar minimal 3 bulan sebelumnya\n\nHubungi sekretariat untuk informasi lengkap.",
+    "links": [
+      {
+        "text": "Kontak Sekretariat",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "Kontak Paroki",
+      "Jadwal Misa",
+      "Agenda Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "tobat",
+      "pengakuan dosa",
+      "confession",
+      "sakramen tobat",
+      "jadwal tobat"
+    ],
+    "answer": "🙏 <b>Sakramen Tobat (Pengakuan Dosa) — Paroki SMDTBA:</b>\n\nJadwal pengakuan dosa biasanya tersedia sebelum misa atau atas perjanjian dengan romo. Untuk jadwal spesifik, silakan hubungi sekretariat atau tanyakan langsung kepada romo.",
+    "links": [
+      {
+        "text": "Kontak Paroki",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "Jadwal Misa",
+      "Kontak Paroki",
+      "Agenda Paroki"
+    ]
+  },
+
+  {
+    "patterns": [
+      "pengurapan orang sakit",
+      "minyak suci",
+      "perminyakan",
+      "kunjungan orang sakit",
+      "pastoral orang sakit",
+      "sakit keras"
+    ],
+    "answer": "🩺 <b>Sakramen Pengurapan Orang Sakit:</b>\n\nJika ada umat yang sakit keras dan membutuhkan Sakramen Pengurapan, silakan segera menghubungi sekretariat paroki atau romo langsung. Pelayanan ini bisa dilakukan di rumah atau rumah sakit.",
+    "links": [
+      {
+        "text": "Kontak Paroki",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "Kontak Paroki",
+      "WhatsApp Sekretariat",
+      "Jadwal Misa"
+    ]
+  },
+  {
+    "patterns": [
+      "surat baptis",
+      "surat keterangan baptis",
+      "akta baptis",
+      "fotocopy baptis",
+      "legalisir baptis",
+      "surat gereja"
+    ],
+    "answer": "📄 <b>Surat Keterangan Baptis:</b>\n\nUntuk meminta surat keterangan baptis, silakan datang langsung ke sekretariat paroki pada jam kerja:\n• Buka: Senin, Selasa, Kamis, Jumat: 08.00 – 14.00 WIB\n• Rabu: Libur\n\nBawa identitas diri dan informasi data baptis Anda.",
+    "links": [
+      {
+        "text": "Kontak Paroki",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "Jam Sekretariat",
+      "Kontak Paroki",
+      "Jadwal Misa"
+    ]
+  },
+  {
+    "patterns": [
+      "misa requiem",
+      "misa arwah",
+      "misa kematian",
+      "misa pemakaman",
+      "misa tutup peti",
+      "pemakaman katolik",
+      "prosesi pemakaman"
+    ],
+    "answer": "✝️ <b>Misa Requiem / Pemakaman Katolik:</b>\n\nUntuk mengatur misa requiem atau misa pemakaman, silakan segera menghubungi sekretariat paroki. Pelayanan ini tersedia sesuai jadwal romo yang ada.",
+    "links": [
+      {
+        "text": "Kontak Darurat",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "Kontak Paroki",
+      "Nomor Telepon",
+      "WhatsApp Sekretariat"
+    ]
+  },
+  {
+    "patterns": [
+      "kronik",
+      "kronik paroki",
+      "catatan paroki",
+      "arsip kronik",
+      "liputan kronik"
+    ],
+    "answer": "📰 <b>Kronik Paroki SMDTBA:</b>\n\nKronik adalah catatan/dokumentasi kegiatan paroki yang ditulis secara berkala. Berisi liputan misa, kegiatan kategorial, stasi, dan berbagai momen paroki.",
+    "links": [
+      {
+        "text": "Halaman Kronik",
+        "url": "/artikel/kronik"
+      }
+    ],
+    "quickReplies": [
+      "Berita Paroki",
+      "Historia",
+      "Galeri Foto"
+    ]
+  },
+  {
+    "patterns": [
+      "historia",
+      "sejarah paroki",
+      "riwayat paroki",
+      "historia gereja"
+    ],
+    "answer": "📜 <b>Historia — Sejarah Paroki SMDTBA:</b>\n\nHalaman Historia memuat tulisan-tulisan tentang sejarah panjang Gereja Katolik Tulungagung, dari awal berdirinya hingga perkembangan saat ini. Paroki ini telah melayani lebih dari 100 tahun.",
+    "links": [
+      {
+        "text": "Halaman Historia",
+        "url": "/artikel/historia"
+      }
+    ],
+    "quickReplies": [
+      "Tentang Paroki",
+      "Kronik",
+      "Berita Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "artikel berita terbaru",
+      "berita paroki terkini",
+      "update berita paroki",
+      "info paroki terbaru",
+      "kabar paroki"
+    ],
+    "answer": "📢 <b>Berita & Artikel Paroki SMDTBA:</b>\n\nHalaman artikel berisi berita terbaru, refleksi iman, liputan kegiatan, dan informasi seputar Gereja Katolik. Diperbarui secara rutin oleh tim Komsos.",
+    "links": [
+      {
+        "text": "Artikel Berita",
+        "url": "/artikel/berita"
+      }
+    ],
+    "quickReplies": [
+      "Kronik",
+      "Historia",
+      "E-Lonceng"
+    ]
+  },
+  {
+    "patterns": [
+      "galeri terbaru",
+      "foto terbaru paroki",
+      "dokumentasi terbaru",
+      "kegiatan terbaru foto",
+      "album terbaru",
+      "foto paroki terbaru",
+      "update galeri",
+      "foto terkini"
+    ],
+    "answer": "🖼️ <b>Galeri Foto Terbaru Paroki SMDTBA:</b>\n\n<b>Mei 2026:</b>\n• <a href=\"/galeri?album=157\">Camino de Fatima</a>\n\n<b>April 2026:</b>\n• <a href=\"/galeri?album=156\">WKRI Hari Kartini</a>\n• <a href=\"/galeri?album=155\">Misa Bulan Panggilan</a>\n• <a href=\"/galeri?album=153\">Hari Raya Paskah 2026</a>\n• <a href=\"/galeri?album=152\">Vigili Paskah 2026</a>\n\n👉 <a href=\"/galeri\">Lihat Semua Album</a>",
+    "links": [
+      {
+        "text": "📸 Camino de Fatima 2026",
+        "url": "/galeri?album=157"
+      },
+      {
+        "text": "📸 Paskah 2026",
+        "url": "/galeri?album=153"
+      },
+      {
+        "text": "Semua Galeri",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Foto Paskah 2026",
+      "Foto Natal 2025",
+      "Semua Galeri"
+    ]
+  },
+  {
+    "patterns": [
+      "e lonceng",
+      "elonceng",
+      "lonceng paroki",
+      "buletin paroki",
+      "warta paroki",
+      "pengumuman mingguan",
+      "warta gereja"
+    ],
+    "answer": "🔔 <b>E-Lonceng Paroki SMDTBA:</b>\n\nE-Lonceng adalah buletin/warta paroki digital yang berisi:\n• Jadwal liturgi & kegiatan mingguan\n• Pengumuman paroki\n• Informasi kelompok & kategorial\n• Renungan & refleksi iman\n\nDiperbarui setiap minggu.",
+    "links": [
+      {
+        "text": "Buka E-Lonceng",
+        "url": "/e-lonceng"
+      }
+    ],
+    "quickReplies": [
+      "Agenda Paroki",
+      "Jadwal Misa",
+      "Berita Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "info paroki",
+      "agenda paroki",
+      "jadwal kegiatan",
+      "kegiatan paroki",
+      "agenda gereja",
+      "pengumuman",
+      "pengumuman paroki",
+      "acara paroki"
+    ],
+    "answer": "📅 <b>Info & Agenda Paroki SMDTBA:</b>\n\nHalaman Agenda memuat semua informasi resmi paroki:\n• Jadwal misa khusus (hari raya, novena, dll)\n• Kegiatan kategorial & komunitas\n• Pengumuman penting paroki\n• Dokumen yang bisa diunduh\n\nSelalu cek agenda untuk info terkini!",
+    "links": [
+      {
+        "text": "Info & Agenda",
+        "url": "/agenda"
+      }
+    ],
+    "quickReplies": [
+      "E-Lonceng",
+      "Jadwal Misa",
+      "Berita Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "misa syukur",
+      "misa ulang tahun",
+      "misa jubileum",
+      "misa perayaan",
+      "misa khusus"
+    ],
+    "answer": "🎉 <b>Misa Khusus & Misa Syukur:</b>\n\nUntuk misa syukur, ulang tahun imamat, pelantikan pengurus, atau misa perayaan lainnya, silakan menghubungi sekretariat paroki untuk mengatur jadwal.",
+    "links": [
+      {
+        "text": "Kontak Sekretariat",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "Jadwal Misa",
+      "Kontak Paroki",
+      "Agenda Paroki"
+    ]
+  },
+
+  {
+    "patterns": [
+      "biak",
+      "bina iman anak",
+      "anak sekolah minggu",
+      "anak gereja",
+      "sekolah minggu",
+      "sunday school"
+    ],
+    "answer": "⛪ <b>Album Foto BIAK & Bina Iman Anak:</b>\n\n<b>2025:</b>\n• <a href=\"/galeri?album=98\">Biak Paskah Ceria — April 2025</a>\n\nUntuk album lain, cari: <i>\"foto biak natal 2025\"</i>, dst.\nAtau lihat <a href=\"/galeri\">Semua Galeri Foto</a>.",
+    "links": [
+      {
+        "text": "📸 Biak Paskah Ceria 2025",
+        "url": "/galeri?album=98"
+      },
+      {
+        "text": "Semua Galeri",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Foto Biak Paskah 2025",
+      "Semua Galeri"
+    ]
+  },
+
+  {
+    "patterns": [
+      "download dokumen",
+      "unduh dokumen",
+      "download logo",
+      "logo paroki",
+      "logo komsos",
+      "logo keuskupan",
+      "doa download",
+      "pdf doa"
+    ],
+    "answer": "📥 <b>Dokumen yang Tersedia untuk Diunduh:</b>\n\n• Doa Bulan Panggilan (PDF)\n• Logo Paroki SMDTBA (PNG)\n• Logo Komsos SMDTBA (PNG)\n• Logo Keuskupan Surabaya (PNG)\n• Logo Pagutersanmarta (PNG)\n\nSemua tersedia di halaman Agenda Paroki.",
+    "links": [
+      {
+        "text": "Agenda & Dokumen",
+        "url": "/agenda"
+      }
+    ],
+    "quickReplies": [
+      "Agenda Paroki",
+      "E-Lonceng",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "keuskupan surabaya",
+      "uskup surabaya",
+      "monsignor",
+      "mgr",
+      "uskup didik",
+      "vikepus",
+      "vikep blitar"
+    ],
+    "answer": "⛪ <b>Keuskupan Surabaya:</b>\n\nParoki SMDTBA Tulungagung berada di bawah naungan <b>Keuskupan Surabaya</b>, yang meliputi wilayah Jawa Timur. Tulungagung masuk dalam Kevikepan Blitar.\n\nWebsite resmi: keuskupansurabaya.org",
+    "links": [
+      {
+        "text": "Tentang Paroki",
+        "url": "/tentang"
+      }
+    ],
+    "quickReplies": [
+      "Tentang Paroki",
+      "Jadwal Misa",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "pope",
+      "paus fransiskus",
+      "paus leo",
+      "paus leo xiv",
+      "vatikan",
+      "gereja roma",
+      "holy father"
+    ],
+    "answer": "✝️ <b>Paus (Pope):</b>\n\nKepala Gereja Katolik Roma adalah <b>Paus Leo XIV</b> (terpilih 2025). Sebelumnya dijabat oleh Paus Fransiskus yang wafat pada April 2025.\n\nParoki SMDTBA Tulungagung adalah bagian dari Gereja Katolik Roma di bawah kepemimpinan Paus.",
+    "links": [
+      {
+        "text": "Tentang Paroki",
+        "url": "/tentang"
+      }
+    ],
+    "quickReplies": [
+      "Keuskupan Surabaya",
+      "Tentang Paroki",
+      "Jadwal Misa"
+    ]
+  },
+  {
+    "patterns": [
+      "facebook",
+      "fb",
+      "facebook paroki",
+      "facebook gereja",
+      "facebook komsos"
+    ],
+    "answer": "📘 <b>Facebook Paroki SMDTBA:</b>\n\nFollow halaman Facebook resmi kami:\n👉 <b>Santa Maria DTBA</b>\nfacebook.com/SantaMariaDTBA",
+    "links": [
+      {
+        "text": "Facebook Paroki",
+        "url": "https://www.facebook.com/SantaMariaDTBA",
+        "external": true
+      }
+    ],
+    "quickReplies": [
+      "Instagram",
+      "YouTube",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "instagram",
+      "ig",
+      "instagram paroki",
+      "instagram komsos",
+      "@komsos"
+    ],
+    "answer": "📷 <b>Instagram Komsos Paroki SMDTBA:</b>\n\n👉 <b>@komsosparokitulungagung</b>\ninstagram.com/komsosparokitulungagung",
+    "links": [
+      {
+        "text": "Instagram Komsos",
+        "url": "https://www.instagram.com/komsosparokitulungagung/",
+        "external": true
+      }
+    ],
+    "quickReplies": [
+      "Facebook",
+      "YouTube",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "youtube",
+      "yt",
+      "youtube paroki",
+      "youtube komsos",
+      "live streaming",
+      "streaming misa",
+      "siaran langsung"
+    ],
+    "answer": "▶️ <b>YouTube Komsos Paroki SMDTBA:</b>\n\n👉 <b>@KomsosParokiTulungagung</b>\nyoutube.com/@KomsosParokiTulungagung\n\nBeberapa misa dan kegiatan paroki bisa ditonton melalui kanal YouTube ini.",
+    "links": [
+      {
+        "text": "YouTube Komsos",
+        "url": "https://www.youtube.com/@KomsosParokiTulungagung",
+        "external": true
+      }
+    ],
+    "quickReplies": [
+      "Instagram",
+      "Facebook",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "komsos",
+      "tim komsos",
+      "komunikasi sosial",
+      "media paroki",
+      "tim media"
+    ],
+    "answer": "📡 <b>Komsos (Komunikasi Sosial) Paroki SMDTBA:</b>\n\nTim Komsos mengelola semua media komunikasi paroki:\n• Website parokitulungagung.org\n• Instagram @komsosparokitulungagung\n• YouTube @KomsosParokiTulungagung\n• Facebook SantaMariaDTBA\n• E-Lonceng mingguan\n\n📱 WhatsApp Komsos: <b>085183068895</b>",
+    "links": [
+      {
+        "text": "💬 WhatsApp Komsos",
+        "url": "https://wa.me/6285183068895",
+        "external": true
+      },
+      {
+        "text": "Kontak Paroki",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "Instagram",
+      "YouTube",
+      "Facebook"
+    ]
+  },
+  {
+    "patterns": [
+      "parkir",
+      "tempat parkir",
+      "area parkir",
+      "fasilitas gereja",
+      "toilet gereja",
+      "aksesibilitas",
+      "difabel"
+    ],
+    "answer": "🅿️ Untuk informasi fasilitas gereja (parkir, toilet, aksesibilitas untuk difabel), silakan menghubungi sekretariat paroki secara langsung.",
+    "links": [
+      {
+        "text": "Kontak Paroki",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "Lokasi Gereja",
+      "Kontak Paroki",
+      "Jadwal Misa"
+    ]
+  },
+  {
+    "patterns": [
+      "aula paroki",
+      "gedung paroki",
+      "gedung serbaguna",
+      "griya pastoral",
+      "sewa aula",
+      "pinjam aula",
+      "penggunaan aula"
+    ],
+    "answer": "🏗️ <b>Griya Pastoral Umat Paroki SMDTBA</b>\n\nParoki sedang dalam tahap pembangunan Griya Pastoral Umat. Dana pembangunan didukung melalui event penggalangan dana (seperti Malam Kasih & Ngopi Bareng Romo Eko).\n\nUntuk informasi penggunaan fasilitas, hubungi sekretariat.",
+    "links": [
+      {
+        "text": "Beli Tiket Event",
+        "url": "/e-ticket/"
+      },
+      {
+        "text": "Kontak Paroki",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "E-Ticket",
+      "Kontak Paroki",
+      "Donasi"
+    ]
+  },
+  {
+    "patterns": [
+      "kebijakan privasi",
+      "privacy policy",
+      "privasi",
+      "data pribadi",
+      "penggunaan data"
+    ],
+    "answer": "🔒 Kebijakan Privasi website Paroki SMDTBA mengatur bagaimana data pengunjung dikelola. Silakan baca selengkapnya di halaman Kebijakan Privasi.",
+    "links": [
+      {
+        "text": "Kebijakan Privasi",
+        "url": "/kebijakan-privasi"
+      }
+    ],
+    "quickReplies": [
+      "Kebijakan Cookie",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "cookie",
+      "kebijakan cookie",
+      "cookies",
+      "persetujuan cookie"
+    ],
+    "answer": "🍪 Website Paroki SMDTBA menggunakan cookie untuk meningkatkan pengalaman pengguna. Info lengkap ada di halaman Kebijakan Cookie.",
+    "links": [
+      {
+        "text": "Kebijakan Cookie",
+        "url": "/kebijakan-cookie"
+      }
+    ],
+    "quickReplies": [
+      "Kebijakan Privasi",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "website",
+      "situs",
+      "web",
+      "aplikasi",
+      "app",
+      "mobile"
+    ],
+    "answer": "💻 Website resmi Paroki SMDTBA Tulungagung ini adalah sumber informasi lengkap seputar kegiatan, jadwal, dan kehidupan paroki. Tersedia pula dalam tampilan mobile yang responsif.",
+    "quickReplies": [
+      "Jadwal Misa",
+      "Galeri Foto",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "7 sakramen",
+      "tujuh sakramen",
+      "sakramen dalam gereja",
+      "daftar sakramen",
+      "jenis sakramen",
+      "apa saja sakramen"
+    ],
+    "answer": "✝️ <b>7 Sakramen dalam Gereja Katolik</b>\n\nGereja Katolik memiliki 7 sakramen sebagai tanda nyata dan efektif dari rahmat Allah. Baca artikel lengkapnya di website kami.",
+    "links": [
+      {
+        "text": "Baca: 7 Sakramen dalam Gereja Katolik",
+        "url": "/artikel/berita/7-sakramen-dalam-gereja-katolik"
+      }
+    ],
+    "quickReplies": [
+      "Baptis",
+      "Krisma",
+      "Pernikahan",
+      "Komuni Pertama"
+    ]
+  },
+  {
+    "patterns": [
+      "doa bersama",
+      "doa keluarga",
+      "doa di rumah",
+      "doa bersama keluarga",
+      "cara doa",
+      "membiasakan doa",
+      "doa harian keluarga"
+    ],
+    "answer": "🙏 <b>Cara Membiasakan Doa Bersama di Rumah</b>\n\nPanduan praktis dan sederhana bagi keluarga Katolik untuk membangun kebiasaan doa bersama setiap hari.",
+    "links": [
+      {
+        "text": "Baca: Cara Membiasakan Doa Bersama di Rumah",
+        "url": "/artikel/berita/cara-membiasakan-doa-bersama-di-rumah"
+      }
+    ],
+    "quickReplies": [
+      "Rosario",
+      "Agenda Paroki",
+      "Artikel Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "misteri jumat agung",
+      "keheningan jumat agung",
+      "makna jumat agung",
+      "refleksi jumat agung",
+      "misteri kemenangan"
+    ],
+    "answer": "✝️ <b>Misteri Kemenangan dalam Keheningan Jumat Agung</b>\n\nArtikel refleksi mendalam tentang makna Jumat Agung bagi umat Katolik.",
+    "links": [
+      {
+        "text": "Baca: Misteri Kemenangan Jumat Agung",
+        "url": "/artikel/berita/misteri-kemenangan-dalam-keheningan-jumat-agung"
+      }
+    ],
+    "quickReplies": [
+      "Jumat Agung",
+      "Kamis Putih",
+      "Vigili Paskah"
+    ]
+  },
+  {
+    "patterns": [
+      "keluarga katolik pendidikan",
+      "rekan kerja allah",
+      "pendidikan katolik",
+      "keluarga dan pendidikan",
+      "karya pendidikan"
+    ],
+    "answer": "👨‍👩‍👧 <b>Keluarga: Rekan Kerja Allah dalam Karya Pendidikan Katolik</b>\n\nArtikel tentang peran keluarga Katolik sebagai mitra Allah dalam mendidik anak.",
+    "links": [
+      {
+        "text": "Baca: Keluarga Rekan Kerja Allah",
+        "url": "/artikel/berita/keluarga-rekan-kerja-allah-dalam-karya-pendidikan-katolik"
+      }
+    ],
+    "quickReplies": [
+      "Doa Keluarga",
+      "Artikel Paroki",
+      "Kategorial"
+    ]
+  },
+  {
+    "patterns": [
+      "kata pertama paus leo",
+      "sambutan paus leo",
+      "pidato paus leo",
+      "paus leo xiv berbicara",
+      "ucapan paus leo",
+      "pesan pertama paus leo"
+    ],
+    "answer": "✝️ <b>Kata-Kata Pertama Paus Leo XIV kepada Dunia</b>\n\n\"Damai sejahtera bagi kita semua\" — sapaan pertama Paus Leo XIV saat terpilih tahun 2025.",
+    "links": [
+      {
+        "text": "Baca: Kata-Kata Pertama Paus Leo XIV",
+        "url": "/artikel/berita/kata-kata-pertama-paus-leo-xiv-kepada-dunia"
+      }
+    ],
+    "quickReplies": [
+      "Biografi Paus Leo",
+      "Paus",
+      "Artikel Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "biografi paus leo",
+      "profil paus leo",
+      "siapa paus leo",
+      "riwayat paus leo",
+      "latar belakang paus leo",
+      "pope leo biography"
+    ],
+    "answer": "✝️ <b>Pope Leo XIV — Biografi</b>\n\nLahir 14 September 1955 di Chicago, Illinois, USA. Ditahbiskan menjadi imam tahun 1982. Terpilih sebagai Paus pada 2025.",
+    "links": [
+      {
+        "text": "Baca: Biografi Paus Leo XIV",
+        "url": "/artikel/berita/pope-leo-xiv-a-biography"
+      }
+    ],
+    "quickReplies": [
+      "Kata-Kata Paus Leo",
+      "Paus",
+      "Artikel Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "arti minggu palma",
+      "makna minggu palma",
+      "refleksi minggu palma",
+      "disambut sebagai raja",
+      "palma dan derita",
+      "artikel minggu palma"
+    ],
+    "answer": "🌿 <b>Disambut sebagai Raja, Ditinggalkan dalam Derita: Arti Sejati Minggu Palma</b>\n\nArtikel refleksi tentang makna Minggu Palma yang membuka Pekan Suci.",
+    "links": [
+      {
+        "text": "Baca: Arti Sejati Minggu Palma",
+        "url": "/artikel/berita/disambut-sebagai-raja-ditinggalkan-dalam-derita-arti-sejati-minggu-palma"
+      }
+    ],
+    "quickReplies": [
+      "Minggu Palma",
+      "Kamis Putih",
+      "Jumat Agung"
+    ]
+  },
+  {
+    "patterns": [
+      "makna misa",
+      "arti misa",
+      "makna tersembunyi misa",
+      "simbol dalam misa",
+      "bagian misa",
+      "tanda salib misa",
+      "ekaristi makna"
+    ],
+    "answer": "⛪ <b>Makna Tersembunyi dalam Misa Katolik yang Jarang Disadari</b>\n\nMengungkap makna dari setiap bagian Misa Katolik, dari tanda salib hingga Ekaristi.",
+    "links": [
+      {
+        "text": "Baca: Makna Tersembunyi dalam Misa",
+        "url": "/artikel/berita/makna-tersembunyi-dalam-misa-katolik-yang-jarang-disadari"
+      }
+    ],
+    "quickReplies": [
+      "Jadwal Misa",
+      "7 Sakramen",
+      "Artikel Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "tahun baru bersama maria",
+      "bunda allah tahun baru",
+      "hari raya bunda allah",
+      "1 januari maria",
+      "memulai tahun bersama maria",
+      "santa maria bunda allah"
+    ],
+    "answer": "🙏 <b>Memulai Tahun Baru bersama Sang Ibu</b>\n\nRefleksi Hari Raya Santa Maria Bunda Allah pada 1 Januari — mengawali tahun baru bersama Bunda Maria.",
+    "links": [
+      {
+        "text": "Baca: Tahun Baru bersama Bunda Maria",
+        "url": "/artikel/berita/memulai-tahun-baru-bersama-sang-ibu"
+      }
+    ],
+    "quickReplies": [
+      "Rosario",
+      "GIM",
+      "Artikel Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "hari komunikasi sosial",
+      "pesan paus komunikasi",
+      "berbagi pengharapan",
+      "komunikasi sosial sedunia",
+      "pesan paus fransiskus komunikasi",
+      "kelembutan komunikasi"
+    ],
+    "answer": "📡 <b>Berbagi Pengharapan dengan Penuh Kelembutan</b>\n\nPesan Paus Fransiskus pada Hari Komunikasi Sosial Sedunia ke-59: \"Bagikanlah dengan lemah lembut pengharapan yang ada padamu.\"",
+    "links": [
+      {
+        "text": "Baca: Pesan Hari Komunikasi Sosial",
+        "url": "/artikel/berita/berbagi-pengharapan-dengan-penuh-kelembutan"
+      }
+    ],
+    "quickReplies": [
+      "Komsos",
+      "Artikel Paroki",
+      "E-Lonceng"
+    ]
+  },
+  {
+    "patterns": [
+      "santo yosef",
+      "misa santo yosef",
+      "hari raya yosef",
+      "yosef suami maria",
+      "19 maret",
+      "perayaan santo yosef"
+    ],
+    "answer": "🙏 <b>Misa Hari Raya Santo Yosef Suami Santa Perawan Maria</b>\n\nRefleksi tentang Santo Yosef yang selalu mendengarkan suara Allah dan menjadi teladan bagi para kepala keluarga.",
+    "links": [
+      {
+        "text": "Baca: Misa Hari Raya Santo Yosef",
+        "url": "/artikel/berita/misa-hari-raya-santo-yosef-suami-santa-perawan-maria"
+      }
+    ],
+    "quickReplies": [
+      "Jadwal Misa",
+      "Artikel Paroki",
+      "Agenda Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "expo panggilan blitar",
+      "expo panggilan kevikepan",
+      "gereja st yusuf blitar",
+      "panggilan remaja blitar",
+      "expo imamat blitar"
+    ],
+    "answer": "⛪ <b>Expo Panggilan di Gereja St. Yusuf Kevikepan Blitar</b>\n\nSekitar 500 remaja dari berbagai paroki di Kevikepan Blitar ambil bagian dalam kegiatan Expo Panggilan.",
+    "links": [
+      {
+        "text": "Baca: Expo Panggilan Kevikepan Blitar",
+        "url": "/artikel/berita/expo-panggilan-di-gereja-st-yusuf-kevikepan-blitar"
+      }
+    ],
+    "quickReplies": [
+      "Expo Panggilan",
+      "Agenda Paroki",
+      "Artikel Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "natal 2025 menteri agama",
+      "menteri agama natal",
+      "menteri agama kristiani",
+      "rawat kasih natal",
+      "pesan natal menteri agama"
+    ],
+    "answer": "🎄 <b>Natal 2025: Menteri Agama Ajak Umat Kristiani Rawat Kasih dan Iman dari Keluarga</b>\n\nPesan Natal 2025 dari Menteri Agama RI untuk umat Kristiani Indonesia.",
+    "links": [
+      {
+        "text": "Baca: Natal 2025 Menteri Agama",
+        "url": "/artikel/berita/natal-2025-menteri-agama-ajak-umat-kristiani-rawat-kasih-dan-iman-dari-keluarga"
+      }
+    ],
+    "quickReplies": [
+      "Misa Natal",
+      "Artikel Paroki",
+      "Agenda Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "rumpun kerasulan khusus",
+      "pertemuan kerasulan khusus",
+      "kerasulan khusus kevikepan",
+      "seksi kerasulan khusus"
+    ],
+    "answer": "🏛️ <b>Pertemuan Rumpun Bidang Kerasulan Khusus</b>\n\nSeksi-seksi pada rumpun Bidang Kerasulan Khusus di Kevikepan Blitar bertemu di Balai Paroki St. Petrus.",
+    "links": [
+      {
+        "text": "Baca: Pertemuan Kerasulan Khusus",
+        "url": "/artikel/berita/pertemuan-rumpun-bidang-kerasulan-khusus"
+      }
+    ],
+    "quickReplies": [
+      "DPP & BGKP",
+      "Bidang Kerasulan",
+      "Artikel Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "semua orang kudus",
+      "hari raya orang kudus",
+      "1 november",
+      "all saints day",
+      "pesta orang kudus",
+      "hari orang kudus"
+    ],
+    "answer": "✝️ <b>1 November: Hari Raya Semua Orang Kudus</b>\n\nArtikel tentang makna dan perayaan Hari Raya Semua Orang Kudus dalam tradisi Gereja Katolik.",
+    "links": [
+      {
+        "text": "Baca: Hari Raya Semua Orang Kudus",
+        "url": "/artikel/berita/1-november-hari-raya-semua-orang-kudus"
+      }
+    ],
+    "quickReplies": [
+      "Jadwal Misa",
+      "Artikel Paroki",
+      "Agenda Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "makna natal",
+      "nilai natal",
+      "refleksi natal",
+      "arti natal",
+      "natal refleksi",
+      "natal dalam kehidupan",
+      "artikel natal"
+    ],
+    "answer": "🎄 <b>NATAL: Makna, Nilai, dan Refleksi dalam Kehidupan</b>\n\nArtikel refleksi mendalam tentang makna Natal bagi umat Katolik dan kehidupan sehari-hari.",
+    "links": [
+      {
+        "text": "Baca: Natal Makna Nilai dan Refleksi",
+        "url": "/artikel/berita/natal-makna-nilai-dan-refleksi-dalam-kehidupan"
+      }
+    ],
+    "quickReplies": [
+      "Misa Natal",
+      "Pesan Natal KWI",
+      "Artikel Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "pesan natal kwi",
+      "pesan natal pgi",
+      "kwi pgi natal",
+      "pesan natal bersama",
+      "allah hadir menyelamatkan keluarga",
+      "natal kwi pgi"
+    ],
+    "answer": "🎄 <b>Pesan Natal Bersama KWI-PGI Tahun 2025</b>\n\n\"Allah Hadir untuk Menyelamatkan Keluarga\" — Pesan Natal bersama dari KWI dan PGI.",
+    "links": [
+      {
+        "text": "Baca: Pesan Natal KWI-PGI 2025",
+        "url": "/artikel/berita/pesan-natal-bersama-kwi-pgi-tahun-2025"
+      }
+    ],
+    "quickReplies": [
+      "Misa Natal",
+      "Makna Natal",
+      "Artikel Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "misa paguyuban",
+      "misa pagutersanmarta",
+      "kronik pagutersanmarta",
+      "misa keluarga terpanggil",
+      "paguter misa",
+      "kronik paguter"
+    ],
+    "answer": "💑 <b>Kronik: Misa Paguyuban Keluarga Terpanggil</b>\n\nMisa PAGUTER St. Maria DTBA Tulungagung — Paguyuban Keluarga Terpanggil.",
+    "links": [
+      {
+        "text": "Baca Kronik: Misa Paguyuban Keluarga Terpanggil",
+        "url": "/artikel/kronik/misa-paguyupan-keluarga-terpanggil"
+      }
+    ],
+    "quickReplies": [
+      "Pagutersanmarta",
+      "Kronik Paroki",
+      "Galeri Foto"
+    ]
+  },
+  {
+    "patterns": [
+      "bksn",
+      "bulan kitab suci",
+      "kitab suci nasional",
+      "bksn 2025",
+      "pertemuan bksn",
+      "yesus jalan kebenaran hidup",
+      "bksn pertemuan"
+    ],
+    "answer": "📖 <b>Kronik: BKSN 2025 — Pertemuan ke-4</b>\n\nBulan Kitab Suci Nasional (BKSN) 2025 dengan tema <b>\"Yesus: Jalan, Kebenaran, dan Hidup\"</b>.",
+    "links": [
+      {
+        "text": "Baca Kronik: BKSN 2025",
+        "url": "/artikel/kronik/bksn-2025-pertemuan-ke-4-yesusjalankebenaran-dan-hidup"
+      }
+    ],
+    "quickReplies": [
+      "Kronik Paroki",
+      "Agenda Paroki",
+      "Galeri Foto"
+    ]
+  },
+  {
+    "patterns": [
+      "sejarah paroki tulungagung",
+      "sejarah gereja tulungagung",
+      "historia paroki",
+      "sejarah smdtba",
+      "awal mula paroki",
+      "sebelum 1950 tulungagung",
+      "artikel sejarah paroki"
+    ],
+    "answer": "📜 <b>Historia: Sejarah Gereja Katolik Paroki Tulungagung</b>\n\nSebelum tahun 1950, di Tulungagung sudah ada persekutuan umat beriman. Baca perjalanan lengkap Paroki SMDTBA dari awal hingga kini.",
+    "links": [
+      {
+        "text": "Baca Historia: Sejarah Paroki Tulungagung",
+        "url": "/artikel/historia/sejarah-gereja-katolik-paroki-tulungagung"
+      }
+    ],
+    "quickReplies": [
+      "Tentang Paroki",
+      "Historia",
+      "Kronik Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "sejarah agama katolik",
+      "sejarah katolik dunia",
+      "awal mula katolik",
+      "katolik dari mana",
+      "perkembangan katolik dunia",
+      "asal usul katolik",
+      "artikel sejarah katolik"
+    ],
+    "answer": "📜 <b>Historia: Sejarah Agama Katolik — Dari Awal Mula hingga Perkembangan di Dunia</b>\n\nSejarah Gereja Katolik dari zaman Yesus Kristus hingga berkembang ke seluruh penjuru dunia.",
+    "links": [
+      {
+        "text": "Baca Historia: Sejarah Agama Katolik",
+        "url": "/artikel/historia/sejarah-agama-katolik-dari-awal-mula-hingga-perkembangan-di-dunia"
+      }
+    ],
+    "quickReplies": [
+      "Historia",
+      "Tentang Paroki",
+      "Artikel Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "gereja komunitas kecil",
+      "sejarah gereja mendunia",
+      "dari komunitas kecil",
+      "gereja katolik berkembang",
+      "pertumbuhan gereja katolik",
+      "sejarah institusi gereja"
+    ],
+    "answer": "📜 <b>Historia: Sejarah Gereja Katolik — Dari Komunitas Kecil Hingga Mendunia</b>\n\nGereja Katolik merupakan salah satu institusi tertua dan paling berpengaruh dalam sejarah peradaban manusia.",
+    "links": [
+      {
+        "text": "Baca Historia: Gereja dari Komunitas Kecil",
+        "url": "/artikel/historia/sejarah-gereja-katolik-dari-komunitas-kecil-hingga-mendunia"
+      }
+    ],
+    "quickReplies": [
+      "Historia",
+      "Sejarah Agama Katolik",
+      "Artikel Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "camino de fatima",
+      "foto camino fatima",
+      "foto camino de fatima",
+      "ziarah fatima 2026",
+      "camino fatima mei 2026",
+      "jalan kaki fatima",
+      "camino paroki 2026",
+      "ziarah berjalan kaki fatima",
+      "camino fatima paroki",
+      "galeri camino fatima",
+      "album camino fatima"
+    ],
+    "answer": "🚶 <b>Galeri: Camino de Fatima (Mei 2026)</b>\n\nFoto dokumentasi kegiatan Camino de Fatima Paroki SMDTBA — ziarah rohani berjalan kaki dalam semangat devosi kepada Bunda Maria Fatima.",
+    "links": [
+      {
+        "text": "📸 Buka Album: Camino de Fatima (Mei 2026)",
+        "url": "/galeri?album=157"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Galeri Foto",
+      "Ziarah Puhsarang",
+      "Rosario"
+    ]
+  },
+  {
+    "patterns": [
+      "1000 hari mgr vincentius",
+      "foto misa 1000 hari uskup",
+      "mgr vincentius soetikno",
+      "misa kenangan uskup",
+      "uskup soetikno wisaksono",
+      "1000 hari uskup wafat",
+      "galeri 1000 hari uskup",
+      "album misa kenangan uskup",
+      "misa 1000 hari mgr vincentius 2026",
+      "foto uskup vincentius soetikno"
+    ],
+    "answer": "⛪ <b>Galeri: Misa 1000 Hari Mgr. Vincentius Soetikno Wisaksono (Mei 2026)</b>\n\nPerayaan Ekaristi mengenang 1000 hari wafat Mgr. Vincentius Soetikno Wisaksono, berlangsung dengan khidmat dan penuh doa.",
+    "links": [
+      {
+        "text": "📸 Buka Album: Misa 1000 Hari Mgr. Vincentius (Mei 2026)",
+        "url": "/galeri?album=158"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Galeri Foto",
+      "Jadwal Misa",
+      "Historia Gereja"
+    ]
+  },
+  {
+    "patterns": [
+      "foto wkri kartini",
+      "wkri hari kartini",
+      "kartini paroki",
+      "perayaan hari kartini gereja",
+      "wkri merayakan kartini",
+      "galeri kartini 2026",
+      "album kartini wkri",
+      "wkri kartini april 2026",
+      "foto kartini paroki 2026"
+    ],
+    "answer": "👩 <b>Galeri: WKRI Merayakan Hari Kartini (April 2026)</b>\n\nFoto dokumentasi perayaan Hari Kartini oleh WKRI Paroki SMDTBA Tulungagung.",
+    "links": [
+      {
+        "text": "📸 Buka Album: WKRI Merayakan Hari Kartini (April 2026)",
+        "url": "/galeri?album=156"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "WKRI",
+      "Galeri Foto",
+      "Kategorial"
+    ]
+  },
+  {
+    "patterns": [
+      "foto misa bulan panggilan",
+      "foto bulan panggilan 2026",
+      "misa panggilan april 2026",
+      "bulan panggilan foto paroki",
+      "galeri bulan panggilan",
+      "album bulan panggilan 2026",
+      "foto misa panggilan",
+      "kegiatan bulan panggilan 2026"
+    ],
+    "answer": "⛪ <b>Galeri: Misa Bulan Panggilan (April 2026)</b>\n\nFoto dokumentasi Misa Bulan Panggilan Paroki SMDTBA — doa dan dukungan bagi panggilan imamat dan hidup religius.",
+    "links": [
+      {
+        "text": "📸 Buka Album: Misa Bulan Panggilan (April 2026)",
+        "url": "/galeri?album=155"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Expo Panggilan",
+      "Galeri Foto",
+      "Agenda Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "foto workshop ecoprint",
+      "ecoprint pse",
+      "sidomukticraft paroki",
+      "workshop pse ecoprint",
+      "ecoprint tulungagung paroki",
+      "galeri ecoprint",
+      "album ecoprint april 2026",
+      "workshop ecoprint 2026",
+      "foto kegiatan ecoprint"
+    ],
+    "answer": "🌿 <b>Galeri: Workshop Ecoprint — PSE & Sidomukticraft (April 2026)</b>\n\nFoto dokumentasi workshop Ecoprint bersama PSE dan Sidomukticraft Paroki SMDTBA.",
+    "links": [
+      {
+        "text": "📸 Buka Album: Workshop Ecoprint – PSE & Sidomukticraft (April 2026)",
+        "url": "/galeri?album=154"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Galeri Foto",
+      "PSE",
+      "Pasar Umat"
+    ]
+  },
+  {
+    "patterns": [
+      "foto paskah 2026",
+      "galeri paskah 2026",
+      "dokumentasi paskah 2026",
+      "foto hari raya paskah 2026",
+      "album paskah 2026",
+      "foto minggu paskah 2026",
+      "paskah 2026 foto",
+      "gambar paskah 2026",
+      "dokumentasi minggu paskah 2026"
+    ],
+    "answer": "🕯️ <b>Galeri: Hari Raya Paskah 2026</b>\n\nFoto dokumentasi perayaan Hari Raya Paskah 2026 di Paroki SMDTBA Tulungagung.",
+    "links": [
+      {
+        "text": "📸 Hari Raya Paskah 2026",
+        "url": "/galeri?album=153"
+      },
+      {
+        "text": "📸 Vigili Paskah 2026",
+        "url": "/galeri?album=152"
+      },
+      {
+        "text": "📸 Minggu Paskah 2025 – Stasi Dongko",
+        "url": "/galeri?album=97"
+      },
+      {
+        "text": "📸 Minggu Paskah 2025",
+        "url": "/galeri?album=96"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Foto Jumat Agung 2026",
+      "Foto Kamis Putih 2026",
+      "Galeri Foto"
+    ]
+  },
+  {
+    "patterns": [
+      "foto jumat agung 2026",
+      "ibadat jumat agung 2026",
+      "dokumentasi jumat agung 2026",
+      "galeri jumat agung 2026",
+      "album jumat agung 2026",
+      "foto ibadat jumat agung 2026",
+      "jumat agung 2026 foto",
+      "gambar jumat agung 2026"
+    ],
+    "answer": "✝️ <b>Galeri: Ibadat Jumat Agung 2026</b>\n\nFoto dokumentasi Ibadat Jumat Agung 2026 Paroki SMDTBA Tulungagung.",
+    "links": [
+      {
+        "text": "📸 Buka Album: Ibadat Jumat Agung 2026",
+        "url": "/galeri?album=151"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Foto Kamis Putih 2026",
+      "Foto Paskah 2026",
+      "Galeri Foto"
+    ]
+  },
+  {
+    "patterns": [
+      "foto kamis putih 2026",
+      "misa kamis putih 2026",
+      "dokumentasi kamis putih 2026",
+      "galeri kamis putih 2026",
+      "album kamis putih 2026",
+      "kamis putih 2026 foto",
+      "foto misa kamis putih 2026",
+      "gambar kamis putih 2026"
+    ],
+    "answer": "🍞 <b>Galeri: Misa Hari Raya Kamis Putih 2026</b>\n\nFoto dokumentasi Misa Kamis Putih 2026 di Paroki SMDTBA Tulungagung.",
+    "links": [
+      {
+        "text": "📸 Buka Album: Misa Hari Raya Kamis Putih 2026",
+        "url": "/galeri?album=150"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Foto Jumat Agung 2026",
+      "Foto Paskah 2026",
+      "Galeri Foto"
+    ]
+  },
+  {
+    "patterns": [
+      "foto minggu palma",
+      "album minggu palma",
+      "foto minggu palma 2026",
+      "misa minggu palma 2026",
+      "dokumentasi palma 2026",
+      "galeri minggu palma 2026",
+      "album minggu palma 2026",
+      "foto perarakan palma 2026",
+      "palma 2026 foto",
+      "gambar minggu palma 2026",
+      "foto daun palma 2026",
+      "perarakan palma 2026"
+    ],
+    "answer": "🌿 <b>Galeri: Misa Hari Raya Minggu Palma 2026</b>\n\nFoto dokumentasi Minggu Palma 2026, termasuk perarakan daun palma di Paroki SMDTBA dan Stasi Rejotangan.",
+    "links": [
+      {
+        "text": "📸 Misa Minggu Palma 2026 – Paroki",
+        "url": "/galeri?album=148"
+      },
+      {
+        "text": "📸 Minggu Palma 2026 – Stasi Rejotangan",
+        "url": "/galeri?album=149"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Foto Kamis Putih 2026",
+      "Foto Paskah 2026",
+      "Galeri Foto"
+    ]
+  },
+  {
+    "patterns": [
+      "foto rabu abu 2026",
+      "misa rabu abu 2026",
+      "dokumentasi rabu abu 2026",
+      "galeri rabu abu 2026",
+      "album rabu abu 2026",
+      "foto abu 2026",
+      "gambar rabu abu 2026",
+      "rabu abu 2026 foto",
+      "foto abu pagi 2026",
+      "foto abu malam 2026",
+      "foto prapaskah 2026"
+    ],
+    "answer": "🌑 <b>Galeri: Misa Rabu Abu 2026</b>\n\nFoto dokumentasi Misa Rabu Abu 2026 (Pagi & Malam) di Paroki SMDTBA — awal masa Prapaskah.",
+    "links": [
+      {
+        "text": "📸 Misa Rabu Abu Pagi 2026",
+        "url": "/galeri?album=137"
+      },
+      {
+        "text": "📸 Misa Rabu Abu Malam 2026",
+        "url": "/galeri?album=138"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Prapaskah",
+      "Galeri Foto",
+      "Jadwal Misa"
+    ]
+  },
+  {
+    "patterns": [
+      "foto imlek 2026",
+      "misa intensi imlek 2026",
+      "dokumentasi imlek paroki",
+      "galeri imlek 2026",
+      "album imlek 2026",
+      "foto misa imlek 2026",
+      "imlek paroki tulungagung 2026",
+      "gambar imlek 2026 gereja"
+    ],
+    "answer": "🧧 <b>Galeri: Misa Intensi Imlek 2026</b>\n\nFoto dokumentasi Misa Intensi Imlek 2026 untuk umat keturunan Tionghoa di Paroki SMDTBA.",
+    "links": [
+      {
+        "text": "📸 Buka Album: Misa Intensi Imlek 2026",
+        "url": "/galeri?album=136"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Misa Imlek",
+      "Galeri Foto",
+      "Jadwal Misa"
+    ]
+  },
+  {
+    "patterns": [
+      "foto rekoleksi panitia paskah",
+      "rekoleksi paskah 2026",
+      "dokumentasi rekoleksi paskah",
+      "foto panitia paskah",
+      "galeri rekoleksi panitia paskah",
+      "album rekoleksi paskah 2026",
+      "foto persiapan paskah 2026"
+    ],
+    "answer": "🌿 <b>Galeri: Rekoleksi Panitia Paskah 2026</b>\n\nFoto dokumentasi rekoleksi para panitia paskah Paroki SMDTBA sebagai persiapan spiritual Pekan Suci.",
+    "links": [
+      {
+        "text": "📸 Buka Album: Rekoleksi Panitia Paskah 2026",
+        "url": "/galeri?album=132"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Vigili Paskah",
+      "Galeri Foto",
+      "Agenda Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "foto natal 2025",
+      "galeri natal 2025",
+      "dokumentasi natal 2025",
+      "foto misa natal 2025",
+      "album natal 2025",
+      "foto natal pagi 2025",
+      "foto vigili natal 2025",
+      "foto natal misdinar 2025",
+      "gambar natal 2025",
+      "natal 2025 foto paroki"
+    ],
+    "answer": "🎄 <b>Galeri: Misa Natal 2025</b>\n\nFoto dokumentasi perayaan Natal 2025 (Pagi, Vigili, dan Natal Misdinar) di Paroki SMDTBA Tulungagung.",
+    "links": [
+      {
+        "text": "📸 Natal Pagi 2025",
+        "url": "/galeri?album=126"
+      },
+      {
+        "text": "📸 Vigili Natal 2025",
+        "url": "/galeri?album=125"
+      },
+      {
+        "text": "📸 Natal Misdinar 2025",
+        "url": "/galeri?album=128"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Misa Natal",
+      "Galeri Foto",
+      "Agenda Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "foto baptis anak 2025",
+      "foto baptis bayi 2025",
+      "dokumentasi baptis 2025",
+      "galeri baptis 2025",
+      "album baptis 2025",
+      "foto sakramen baptis 2025",
+      "foto pembaptisan 2025",
+      "gambar baptis 2025"
+    ],
+    "answer": "💧 <b>Galeri: Sakramen Baptis Anak (Desember 2025)</b>\n\nFoto dokumentasi penerimaan Sakramen Baptis bagi anak-anak di Paroki SMDTBA Desember 2025.",
+    "links": [
+      {
+        "text": "📸 Buka Album: Baptis Anak (Desember 2025)",
+        "url": "/galeri?album=127"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Sakramen Baptis",
+      "Galeri Foto",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "foto krisma 2025",
+      "galeri krisma 2025",
+      "sakramen krisma 2025",
+      "dokumentasi krisma 2025",
+      "album krisma 2025",
+      "foto penguatan 2025",
+      "krisma paroki 2025 foto",
+      "gambar krisma 2025"
+    ],
+    "answer": "🕊️ <b>Galeri: Sakramen Krisma (Mei 2025)</b>\n\nFoto dokumentasi penerimaan Sakramen Krisma (Penguatan) 2025 di Paroki SMDTBA Tulungagung.",
+    "links": [
+      {
+        "text": "📸 Buka Album: Sakramen Krisma 2025",
+        "url": "/galeri?album=102"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Sakramen Krisma",
+      "Galeri Foto",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "foto requiem paus fransiskus",
+      "misa requiem paus fransiskus",
+      "misa paus fransiskus wafat",
+      "requiem paus april 2025",
+      "foto misa arwah paus",
+      "galeri requiem paus 2025",
+      "album misa paus fransiskus",
+      "foto misa kenangan paus 2025"
+    ],
+    "answer": "✝️ <b>Galeri: Misa Requiem Bapa Paus Fransiskus (April 2025)</b>\n\nFoto dokumentasi Misa Requiem untuk mendoakan arwah Bapa Suci Paus Fransiskus di Paroki SMDTBA.",
+    "links": [
+      {
+        "text": "📸 Buka Album: Misa Requiem Bapa Paus Fransiskus (April 2025)",
+        "url": "/galeri?album=99"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Paus",
+      "Galeri Foto",
+      "Jadwal Misa"
+    ]
+  },
+  {
+    "patterns": [
+      "foto misa perdana uskup",
+      "misa perdana uskup smdtba",
+      "foto uskup paroki 2025",
+      "kunjungan uskup paroki 2025",
+      "misa perdana uskup tulungagung",
+      "galeri kunjungan uskup 2025",
+      "album misa perdana uskup",
+      "foto uskup keuskupan surabaya paroki 2025"
+    ],
+    "answer": "⛪ <b>Galeri: Misa Perdana Bapa Uskup di Paroki SMDTBA (Mei 2025)</b>\n\nFoto dokumentasi Misa Perdana kunjungan Bapa Uskup Keuskupan Surabaya ke Paroki SMDTBA Tulungagung.",
+    "links": [
+      {
+        "text": "📸 Buka Album: Misa Perdana Bapa Uskup di Paroki SMDTBA (Mei 2025)",
+        "url": "/galeri?album=101"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Keuskupan Surabaya",
+      "Galeri Foto",
+      "Romo Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "foto ziarah paguter",
+      "ziarah paguter 2025",
+      "ziarah yubileum paguter",
+      "ziarah yubileum keluarga 2025",
+      "galeri ziarah paguter",
+      "album ziarah paguter 2025",
+      "foto pagutersanmarta ziarah",
+      "ziarah yubileum pagutersanmarta"
+    ],
+    "answer": "🚶 <b>Galeri: Ziarah Yubileum Paguter (Oktober 2025)</b>\n\nFoto dokumentasi Ziarah Yubileum Paguyuban Keluarga Terpanggil (Pagutersanmarta) SMDTBA.",
+    "links": [
+      {
+        "text": "📸 Buka Album: Ziarah Yubileum Paguter (Oktober 2025)",
+        "url": "/galeri?album=120"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Pagutersanmarta",
+      "Ziarah",
+      "Galeri Foto"
+    ]
+  },
+  {
+    "patterns": [
+      "foto rekoleksi keluarga 2025",
+      "rekoleksi keluarga september 2025",
+      "galeri rekoleksi keluarga",
+      "album rekoleksi keluarga 2025",
+      "foto rekoleksi pintu terbuka",
+      "rekoleksi keluarga paroki 2025"
+    ],
+    "answer": "🌿 <b>Galeri: Rekoleksi Keluarga — \"Pintu yang Selalu Terbuka\" (September 2025)</b>\n\nFoto dokumentasi Rekoleksi Keluarga Paroki SMDTBA dengan tema yang penuh makna bagi kehidupan keluarga Katolik.",
+    "links": [
+      {
+        "text": "📸 Buka Album: Rekoleksi Keluarga – Pintu yang Selalu Terbuka (Sept 2025)",
+        "url": "/galeri?album=112"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Rekoleksi",
+      "Pagutersanmarta",
+      "Galeri Foto"
+    ]
+  },
+  {
+    "patterns": [
+      "foto misa syukur imamat",
+      "foto ulang tahun imamat romo",
+      "misa syukur tahbisan imamat",
+      "galeri ulang tahun imamat",
+      "album misa syukur imamat 2025",
+      "foto tahbisan imamat romo paroki",
+      "dokumentasi misa syukur imamat 2025"
+    ],
+    "answer": "🙏 <b>Galeri: Misa Syukur Ulang Tahun Tahbisan Imamat (September 2025)</b>\n\nFoto dokumentasi Misa Syukur peringatan ulang tahun tahbisan imamat ke-32 dan ke-14 romo paroki SMDTBA.",
+    "links": [
+      {
+        "text": "📸 Buka Album: Misa Syukur Ulang Tahun Tahbisan Imamat (Sept 2025)",
+        "url": "/galeri?album=113"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Romo Paroki",
+      "Jadwal Misa",
+      "Galeri Foto"
+    ]
+  },
+  {
+    "patterns": [
+      "foto workshop lektor 2025",
+      "pelatihan lektor paroki 2025",
+      "upgrading lektor organis 2025",
+      "workshop dekor altar 2025",
+      "galeri workshop liturgi 2025",
+      "album pelatihan liturgi 2025",
+      "foto upgrading petugas liturgi",
+      "dokumentasi workshop lektor dirigen 2025"
+    ],
+    "answer": "🎵 <b>Galeri: Workshop & Upgrading Petugas Liturgi (September 2025)</b>\n\nFoto dokumentasi Workshop Lektor, Pemazmur, Organis, Dekor Altar, dan Dirigen Paroki SMDTBA.",
+    "links": [
+      {
+        "text": "📸 Workshop Lektor (Sept 2025)",
+        "url": "/galeri?album=116"
+      },
+      {
+        "text": "📸 Upgrading Lektor, Mazmur, Organis, Dirigen (Sept 2025)",
+        "url": "/galeri?album=114"
+      },
+      {
+        "text": "📸 Workshop Dekor Altar (Sept 2025)",
+        "url": "/galeri?album=115"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Jadwal Petugas",
+      "Galeri Foto",
+      "Agenda Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "foto rekoleksi komuni pertama 2025",
+      "persiapan komuni pertama 2025",
+      "galeri rekoleksi komuni pertama",
+      "album komuni pertama 2025",
+      "foto rekoleksi ekaristi pertama 2025",
+      "dokumentasi komuni pertama 2025"
+    ],
+    "answer": "🍞 <b>Galeri: Rekoleksi Komuni Pertama (Juni 2025)</b>\n\nFoto dokumentasi Rekoleksi persiapan Komuni Pertama bagi anak-anak Paroki SMDTBA.",
+    "links": [
+      {
+        "text": "📸 Buka Album: Rekoleksi Komuni Pertama (Juni 2025)",
+        "url": "/galeri?album=107"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Komuni Pertama",
+      "BIAK",
+      "Galeri Foto"
+    ]
+  },
+  {
+    "patterns": [
+      "foto seribu mawar bunda maria",
+      "1000 mawar maria",
+      "bulan maria seribu mawar",
+      "galeri seribu mawar",
+      "album seribu mawar 2025",
+      "foto bulan mei maria 2025",
+      "misa penutupan bulan maria 2025",
+      "foto 1000 mawar maria 2025"
+    ],
+    "answer": "🌹 <b>Galeri: Seribu Mawar untuk Bunda Maria (Mei 2025)</b>\n\nFoto dokumentasi persembahan Seribu Mawar untuk Bunda Maria dan Misa Penutupan Bulan Maria.",
+    "links": [
+      {
+        "text": "📸 Seribu Mawar untuk Bunda Maria (Mei 2025)",
+        "url": "/galeri?album=106"
+      },
+      {
+        "text": "📸 Misa Seribu Mawar – Penutupan Bulan Maria",
+        "url": "/galeri?album=105"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "GIM",
+      "Legio Maria",
+      "Galeri Foto"
+    ]
+  },
+  {
+    "patterns": [
+      "foto donor darah 2026",
+      "donor darah maret 2026",
+      "galeri donor darah 2026",
+      "album donor darah 2026",
+      "dokumentasi donor darah paroki 2026",
+      "foto aksi donor darah gereja 2026",
+      "kegiatan donor darah paroki 2026"
+    ],
+    "answer": "❤️ <b>Galeri: Donor Darah (Maret 2026)</b>\n\nFoto dokumentasi aksi sosial Donor Darah Paroki SMDTBA sebagai wujud kepedulian kepada sesama.",
+    "links": [
+      {
+        "text": "📸 Donor Darah (Maret 2026)",
+        "url": "/galeri?album=140"
+      },
+      {
+        "text": "📸 Donor Darah (November 2024)",
+        "url": "/galeri?album=85"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Aksi Sosial",
+      "PSE",
+      "Galeri Foto"
+    ]
+  },
+  {
+    "patterns": [
+      "foto musker dpp bgkp",
+      "musyawarah kerja dpp 2025",
+      "musker 2026 2027",
+      "galeri musker dpp",
+      "album musker dpp bgkp",
+      "foto rapat kerja dpp 2025",
+      "musyawarah kerja bgkp 2025"
+    ],
+    "answer": "🏛️ <b>Galeri: Musker DPP/BGKP 2026-2027 (November 2025)</b>\n\nFoto dokumentasi Musyawarah Kerja DPP dan BGKP Paroki SMDTBA untuk periode 2026-2027.",
+    "links": [
+      {
+        "text": "📸 Buka Album: Musker DPP/BGKP 2026-2027 (Nov 2025)",
+        "url": "/galeri?album=124"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "DPP & BGKP",
+      "Galeri Foto",
+      "Agenda Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "foto dedikasi paroki",
+      "misa dedikasi ke 74",
+      "hut paroki 2025",
+      "galeri dedikasi paroki 2025",
+      "album misa dedikasi 2025",
+      "hari jadi paroki 2025 foto",
+      "foto ulang tahun paroki 2025"
+    ],
+    "answer": "⛪ <b>Galeri: Misa Dedikasi ke-74 (November 2025)</b>\n\nFoto perayaan Misa Dedikasi ke-74 Paroki SMDTBA Tulungagung.",
+    "links": [
+      {
+        "text": "📸 Buka Album: Misa Dedikasi ke-74 (Nov 2025)",
+        "url": "/galeri?album=123"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Tentang Paroki",
+      "Galeri Foto",
+      "Historia Gereja"
+    ]
+  },
+  {
+    "patterns": [
+      "foto pelantikan pengurus gereja",
+      "pelantikan pengurus paroki 2024",
+      "misa pelantikan 2024",
+      "galeri pelantikan pengurus",
+      "album pelantikan dpp bgkp 2024",
+      "foto pengurus baru paroki 2024"
+    ],
+    "answer": "🏛️ <b>Galeri: Misa Pelantikan Pengurus Gereja (Desember 2024)</b>\n\nFoto dokumentasi Misa Pelantikan Pengurus DPP dan BGKP Paroki SMDTBA periode 2024-2027.",
+    "links": [
+      {
+        "text": "📸 Buka Album: Misa Pelantikan Pengurus Gereja (Des 2024)",
+        "url": "/galeri?album=87"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "DPP & BGKP",
+      "Galeri Foto",
+      "Romo Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "foto ziarah misdinar 2025",
+      "ziarah yubileum misdinar",
+      "misdinar ziarah 2025",
+      "galeri ziarah misdinar",
+      "album ziarah misdinar 2025",
+      "foto putra altar ziarah 2025",
+      "ziarah yubileum putra altar 2025"
+    ],
+    "answer": "🚶 <b>Galeri: Ziarah Yubileum Misdinar Tulungagung (Juli 2025)</b>\n\nFoto dokumentasi Ziarah Yubileum para Misdinar (Putra Altar) Paroki SMDTBA Tulungagung.",
+    "links": [
+      {
+        "text": "📸 Buka Album: Ziarah Yubileum Misdinar Tulungagung (Juli 2025)",
+        "url": "/galeri?album=111"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Ziarah",
+      "Galeri Foto",
+      "Kategorial"
+    ]
+  },
+  {
+    "patterns": [
+      "foto pembukaan bulan rosario",
+      "bulan rosario 2025",
+      "foto rosario oktober 2025",
+      "galeri bulan rosario",
+      "album rosario oktober 2025",
+      "foto minggu misi sedunia ke 99",
+      "pembukaan rosario paroki 2025"
+    ],
+    "answer": "📿 <b>Galeri: Pembukaan Bulan Rosario & Minggu Misi Sedunia (Oktober 2025)</b>\n\nFoto dokumentasi Pembukaan Bulan Rosario dan Minggu Misi Sedunia ke-99 di Paroki SMDTBA.",
+    "links": [
+      {
+        "text": "📸 Pembukaan Bulan Rosario (Okt 2025)",
+        "url": "/galeri?album=119"
+      },
+      {
+        "text": "📸 Minggu Misi Sedunia Ke-99 – Doa Rosario (Okt 2025)",
+        "url": "/galeri?album=121"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Rosario",
+      "GIM",
+      "Galeri Foto"
+    ]
+  },
+  {
+    "patterns": [
+      "sarasehan umkm dosen ukwms",
+      "umkm ukwms paroki",
+      "sarasehan umkm 2025",
+      "galeri sarasehan umkm",
+      "album sarasehan umkm paroki",
+      "foto dosen ukwms paroki",
+      "dokumentasi sarasehan umkm 2025"
+    ],
+    "answer": "🎓 <b>Galeri: Sarasehan UMKM oleh Dosen UKWMS (November 2025)</b>\n\nFoto dokumentasi Sarasehan UMKM dari dosen Universitas Katolik Widya Mandala Surabaya (UKWMS) bagi pelaku usaha umat paroki.",
+    "links": [
+      {
+        "text": "📸 Buka Album: Sarasehan UMKM oleh Dosen UKWMS (Nov 2025)",
+        "url": "/galeri?album=122"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Pasar Umat",
+      "Galeri Foto",
+      "Agenda Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "foto pelatihan penulisan artikel",
+      "workshop penulisan paroki 2025",
+      "pelatihan komsos menulis 2025",
+      "galeri pelatihan penulisan",
+      "album workshop penulisan paroki",
+      "foto komsos menulis 2025"
+    ],
+    "answer": "✍️ <b>Galeri: Pelatihan Penulisan Artikel (Mei 2025)</b>\n\nFoto dokumentasi Pelatihan Penulisan Artikel oleh tim Komsos Paroki SMDTBA.",
+    "links": [
+      {
+        "text": "📸 Buka Album: Pelatihan Penulisan Artikel (Mei 2025)",
+        "url": "/galeri?album=100"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Komsos",
+      "Artikel Paroki",
+      "Galeri Foto"
+    ]
+  },
+  {
+    "patterns": [
+      "artikel sakramen baptis",
+      "baca artikel baptis",
+      "tulisan tentang baptis paroki",
+      "panduan sakramen baptis tulungagung",
+      "artikel baptis paroki tulungagung",
+      "info baptis dari artikel",
+      "artikel baptis bayi paroki"
+    ],
+    "answer": "📖 <b>Artikel: Sakramen Baptis di Paroki Tulungagung</b>\n\nBaca panduan lengkap tentang Sakramen Baptis di Paroki SMDTBA — proses pendaftaran baptis bayi dan dewasa.",
+    "links": [
+      {
+        "text": "Baca: Sakramen Baptis Paroki Tulungagung",
+        "url": "/artikel/berita/sakramen-baptis-paroki-tulungagung"
+      },
+      {
+        "text": "Baca: Sakramen Baptis Bayi",
+        "url": "/artikel/berita/sakramen-baptis-bayi-paroki-tulungagung"
+      }
+    ],
+    "quickReplies": [
+      "Daftar Baptis",
+      "Sakramen Krisma",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "artikel sakramen krisma",
+      "baca artikel krisma",
+      "tulisan tentang krisma paroki",
+      "panduan krisma paroki tulungagung",
+      "artikel krisma smdtba",
+      "info krisma dari artikel",
+      "panduan sakramen krisma tulungagung"
+    ],
+    "answer": "📖 <b>Artikel: Sakramen Krisma di Paroki Tulungagung</b>\n\nBaca panduan lengkap tentang Sakramen Krisma (Penguatan) di Paroki SMDTBA Tulungagung.",
+    "links": [
+      {
+        "text": "Baca: Sakramen Krisma Paroki Tulungagung",
+        "url": "/artikel/berita/sakramen-krisma-paroki-tulungagung"
+      }
+    ],
+    "quickReplies": [
+      "Daftar Krisma",
+      "Komuni Pertama",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "artikel sakramen tobat",
+      "baca artikel tobat",
+      "tulisan pengakuan dosa",
+      "artikel pengakuan dosa katolik",
+      "info sakramen tobat artikel",
+      "refleksi sakramen tobat",
+      "artikel rekonsiliasi katolik"
+    ],
+    "answer": "📖 <b>Artikel: Sakramen Tobat (Pengakuan Dosa)</b>\n\nBaca artikel tentang makna, cara, dan pentingnya Sakramen Tobat bagi umat Katolik.",
+    "links": [
+      {
+        "text": "Baca: Sakramen Tobat",
+        "url": "/artikel/berita/sakramen-tobat"
+      }
+    ],
+    "quickReplies": [
+      "Pengakuan Dosa",
+      "7 Sakramen",
+      "Artikel Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "artikel sakramen perkawinan",
+      "baca artikel pernikahan katolik",
+      "tulisan pernikahan gereja",
+      "artikel sakramen nikah katolik",
+      "panduan pernikahan gereja artikel",
+      "info sakramen perkawinan artikel"
+    ],
+    "answer": "💍 <b>Artikel: Sakramen Perkawinan di Gereja Katolik</b>\n\nBaca panduan lengkap tentang Sakramen Perkawinan Katolik — makna, persyaratan, dan persiapan.",
+    "links": [
+      {
+        "text": "Baca: Sakramen Perkawinan Gereja Katolik",
+        "url": "/artikel/berita/sakramen-perkawinan-gereja-katolik"
+      }
+    ],
+    "quickReplies": [
+      "Daftar Nikah",
+      "7 Sakramen",
+      "Kontak Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "artikel perarakan ekaristi",
+      "baca artikel perarakan ekaristi",
+      "tulisan prosesi ekaristi",
+      "artikel prosesi sakramen mahakudus",
+      "liputan perarakan ekaristi paroki",
+      "artikel ekaristi paroki tulungagung"
+    ],
+    "answer": "✝️ <b>Artikel: Perarakan Ekaristi Paroki Tulungagung</b>\n\nArtikel dan dokumentasi Perarakan Ekaristi (Prosesi Sakramen Mahakudus) di Paroki SMDTBA Tulungagung.",
+    "links": [
+      {
+        "text": "Baca: Perarakan Ekaristi Paroki Tulungagung",
+        "url": "/artikel/berita/perarakan-ekaristi-paroki-tulungagung"
+      }
+    ],
+    "quickReplies": [
+      "Galeri Foto",
+      "Jadwal Misa",
+      "Artikel Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "artikel ibadat jumat agung paroki",
+      "baca artikel jumat agung",
+      "liputan jumat agung gereja 2026",
+      "tulisan jumat agung paroki tulungagung",
+      "artikel pekan suci jumat agung"
+    ],
+    "answer": "✝️ <b>Artikel: Ibadat Jumat Agung Gereja Katolik Paroki Tulungagung</b>\n\nArtikel dan liputan Ibadat Jumat Agung di Paroki SMDTBA.",
+    "links": [
+      {
+        "text": "Baca: Ibadat Jumat Agung Paroki Tulungagung",
+        "url": "/artikel/berita/ibadat-jumat-agung-gereja-katolik-paroki-tulungagung"
+      }
+    ],
+    "quickReplies": [
+      "Foto Jumat Agung",
+      "Kamis Putih",
+      "Vigili Paskah"
+    ]
+  },
+  {
+    "patterns": [
+      "artikel misteri minggu palma",
+      "baca artikel minggu palma",
+      "tulisan tentang minggu palma",
+      "refleksi artikel palma",
+      "artikel makna pekan suci palma"
+    ],
+    "answer": "🌿 <b>Artikel: Misteri di Hari Minggu Palma</b>\n\nArtikel refleksi tentang makna dan misteri di balik perayaan Minggu Palma dalam Gereja Katolik.",
+    "links": [
+      {
+        "text": "Baca: Misteri di Hari Minggu Palma",
+        "url": "/artikel/berita/misteri-di-hari-minggu-palma"
+      },
+      {
+        "text": "Baca: Misteri Minggu Palma Gereja Katolik",
+        "url": "/artikel/berita/misteri-minggu-palma-gereja-katolik"
+      }
+    ],
+    "quickReplies": [
+      "Minggu Palma",
+      "Kamis Putih",
+      "Artikel Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "romo athanasius mulyadi artikel",
+      "artikel pastor athanasius mulyadi",
+      "tulisan romo athanasius",
+      "profil romo mulyadi",
+      "artikel romo mulyadi paroki"
+    ],
+    "answer": "🙏 <b>Artikel tentang Romo Athanasius Mulyadi</b>\n\nArtikel yang memuat profil dan tulisan dari Romo Athanasius Mulyadi.",
+    "links": [
+      {
+        "text": "Baca Artikel Romo Athanasius Mulyadi",
+        "url": "/artikel/berita/romo-athanasius-mulyadi"
+      }
+    ],
+    "quickReplies": [
+      "Romo Paroki",
+      "Asisten Imam",
+      "Artikel Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "artikel cara baca kitab suci",
+      "tips membaca kitab suci harian",
+      "panduan baca alkitab",
+      "membiasakan baca kitab suci artikel",
+      "artikel kitab suci umat katolik"
+    ],
+    "answer": "📖 <b>Artikel: Tips Membaca Kitab Suci</b>\n\nPanduan praktis membantu umat Katolik membiasakan membaca dan merenungkan Kitab Suci setiap hari.",
+    "links": [
+      {
+        "text": "Baca: Cara Membaca Kitab Suci",
+        "url": "/artikel/berita/baca-kitab-suci"
+      }
+    ],
+    "quickReplies": [
+      "BKSN",
+      "Doa Keluarga",
+      "Artikel Paroki"
+    ]
+  },
+  {
+    "patterns": [
+      "cara cari galeri berdasar bulan",
+      "filter galeri foto bulan",
+      "cari foto berdasarkan bulan",
+      "cara filter galeri",
+      "navigasi galeri tahun",
+      "cara buka album tertentu",
+      "cara cari album foto",
+      "cara lihat foto tahun tertentu",
+      "cara pakai galeri",
+      "cara gunakan galeri"
+    ],
+    "answer": "🖼️ <b>Cara Mencari Album di Galeri:</b>\n\n1. Buka halaman <a href=\"/galeri\">/galeri</a>\n2. Gunakan filter <b>Tahun</b> dan <b>Bulan</b> di bagian atas\n3. Atau ketik nama kegiatan di chatbot ini, contoh:\n   • <i>\"foto Paskah 2026\"</i>\n   • <i>\"album Natal 2025\"</i>\n   • <i>\"foto Krisma 2025\"</i>",
+    "links": [
+      {
+        "text": "📸 Buka Galeri",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Foto Paskah 2026",
+      "Foto Natal 2025",
+      "Semua Galeri"
+    ]
+  },
+  {
+    "patterns": [
+      "cara daftar umkm",
+      "daftar di pasar umat",
+      "cara masuk pasar umat",
+      "bergabung pasar umat",
+      "cara jual di pasar umat"
+    ],
+    "answer": "🛒 <b>Cara Bergabung di Pasar Umat (UMKM):</b>\n\nUntuk mendaftarkan usaha di Pasar Umat Paroki SMDTBA, silakan hubungi sekretariat atau tim Komsos paroki.",
+    "links": [
+      {
+        "text": "Pasar Umat / UMKM",
+        "url": "/umkmumat"
+      },
+      {
+        "text": "WhatsApp Komsos",
+        "url": "https://wa.me/6285183068895",
+        "external": true
+      }
+    ],
+    "quickReplies": [
+      "Pasar Umat",
+      "Kontak Paroki",
+      "KoMeDi"
+    ]
+  },
+  {
+    "patterns": [
+      "paskah",
+      "foto paskah",
+      "galeri paskah",
+      "foto hari raya paskah",
+      "dokumentasi paskah",
+      "album paskah",
+      "gambar paskah paroki",
+      "foto kebangkitan tuhan",
+      "foto paskah paroki"
+    ],
+    "answer": "🐣 <b>Album Foto Paskah — Semua Tahun:</b>\n\n<b>2026:</b>\n• <a href=\"/galeri?album=132\">Rekoleksi Panitia Paskah 2026</a>\n• <a href=\"/galeri?album=152\">Vigili Paskah 2026</a>\n• <a href=\"/galeri?album=153\">Hari Raya Paskah 2026</a>\n\n<b>2025:</b>\n• <a href=\"/galeri?album=94\">Vigili Paskah 2025</a>\n• <a href=\"/galeri?album=95\">Vigili Paskah Stasi Ngunut 2025</a>\n• <a href=\"/galeri?album=96\">Minggu Paskah 2025</a>\n• <a href=\"/galeri?album=97\">Minggu Paskah Stasi Dongko 2025</a>\n• <a href=\"/galeri?album=98\">Biak Paskah Ceria 2025</a>\n\n<b>2023:</b>\n• <a href=\"/galeri?album=77\">Malam Paskah 2023</a>\n\n<b>2018:</b>\n• <a href=\"/galeri?album=50\">Event Paskah Biak 2018</a>\n• <a href=\"/galeri?album=51\">Event Paskah SDK 2018</a>\n\n<b>2017:</b>\n• <a href=\"/galeri?album=40\">Misa Hari Raya Paskah 2017</a>\n\n<b>2016:</b>\n• <a href=\"/galeri?album=23\">Misa Paskah 2016</a>\n\n<b>2015:</b>\n• <a href=\"/galeri?album=2\">Misa Paskah 2015</a>",
+    "links": [
+      {
+        "text": "📸 Hari Raya Paskah 2026",
+        "url": "/galeri?album=153"
+      },
+      {
+        "text": "📸 Vigili Paskah 2026",
+        "url": "/galeri?album=152"
+      },
+      {
+        "text": "📸 Minggu Paskah 2025",
+        "url": "/galeri?album=96"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Foto Paskah 2026",
+      "Foto Vigili Paskah 2026",
+      "Foto Paskah 2025",
+      "Semua Galeri"
+    ]
+  },
+  {
+    "patterns": [
+      "foto natal",
+      "galeri natal",
+      "foto malam natal",
+      "foto hari natal",
+      "album natal",
+      "gambar natal paroki",
+      "foto natalan paroki",
+      "foto natal gereja"
+    ],
+    "answer": "🎄 <b>Album Foto Natal — Semua Tahun:</b>\n\n<b>2025:</b>\n• <a href=\"/galeri?album=126\">Natal Pagi 2025</a>\n• <a href=\"/galeri?album=125\">Vigili Natal 2025</a>\n\n<b>Tahun sebelumnya:</b>\nCari berdasar tahun, contoh: \"foto Natal 2024\", \"foto Natal 2023\".",
+    "links": [
+      {
+        "text": "📸 Natal Pagi 2025",
+        "url": "/galeri?album=126"
+      },
+      {
+        "text": "📸 Vigili Natal 2025",
+        "url": "/galeri?album=125"
+      },
+      {
+        "text": "Semua Galeri Foto",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Foto Natal 2025",
+      "Foto Vigili Natal 2025",
+      "Foto Paskah 2026",
+      "Semua Galeri"
+    ]
+  },
+  {
+    "patterns": [
+      "foto baptis bayi",
+      "foto baptis anak",
+      "galeri baptis",
+      "foto pembaptisan",
+      "album baptis",
+      "dokumentasi baptis paroki",
+      "foto pembaptisan paroki",
+      "gambar baptis gereja"
+    ],
+    "answer": "💧 <b>Album Foto Baptis — Paroki SMDTBA:</b>\n\n<b>2025:</b>\n• <a href=\"/galeri?album=127\">Baptis Anak — Desember 2025</a>\n\n<b>Tahun lain:</b>\nCari: <i>\"foto baptis 2024\"</i>, <i>\"foto baptis 2023\"</i>, dst.\nAtau lihat <a href=\"/galeri\">Semua Galeri Foto</a>.",
+    "links": [
+      {
+        "text": "📸 Baptis Anak Desember 2025",
+        "url": "/galeri?album=127"
+      },
+      {
+        "text": "Semua Galeri",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Foto Baptis 2025",
+      "Semua Galeri"
+    ]
+  },
+  {
+    "patterns": [
+      "foto krisma",
+      "galeri krisma",
+      "foto sakramen krisma",
+      "foto penguatan",
+      "album krisma",
+      "dokumentasi krisma paroki",
+      "foto penerimaan krisma",
+      "gambar krisma gereja"
+    ],
+    "answer": "🕊️ <b>Album Foto Krisma — Paroki SMDTBA:</b>\n\n<b>2025:</b>\n• <a href=\"/galeri?album=102\">Sakramen Krisma — Mei 2025</a>\n\nUntuk tahun lain, cari: <i>\"foto krisma 2024\"</i>, dst.\nAtau lihat <a href=\"/galeri\">Semua Galeri Foto</a>.",
+    "links": [
+      {
+        "text": "📸 Krisma Mei 2025",
+        "url": "/galeri?album=102"
+      },
+      {
+        "text": "Semua Galeri",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Foto Krisma 2025",
+      "Semua Galeri"
+    ]
+  },
+  {
+    "patterns": [
+      "foto ziarah",
+      "galeri ziarah",
+      "foto wisata rohani",
+      "album ziarah paroki",
+      "dokumentasi ziarah",
+      "gambar ziarah",
+      "foto puhsarang",
+      "foto ziarah paroki"
+    ],
+    "answer": "🚶 <b>Album Foto Ziarah — Paroki SMDTBA:</b>\n\n<b>2026:</b>\n• <a href=\"/galeri?album=157\">Camino de Fatima — Mei 2026</a>\n\n<b>2025:</b>\n• <a href=\"/galeri?album=120\">Ziarah Yubileum Paguter — Oktober 2025</a>\n• <a href=\"/galeri?album=111\">Ziarah Yubileum Misdinar — Juli 2025</a>\n\nAtau lihat <a href=\"/galeri\">Semua Galeri Foto</a>.",
+    "links": [
+      {
+        "text": "📸 Camino de Fatima 2026",
+        "url": "/galeri?album=157"
+      },
+      {
+        "text": "📸 Ziarah Paguter 2025",
+        "url": "/galeri?album=120"
+      },
+      {
+        "text": "Semua Galeri",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Foto Camino Fatima 2026",
+      "Foto Ziarah Paguter 2025",
+      "Semua Galeri"
+    ]
+  },
+  {
+    "patterns": [
+      "foto vigili natal",
+      "galeri vigili natal",
+      "foto misa malam natal",
+      "album vigili natal",
+      "foto natal malam",
+      "dokumentasi vigili natal",
+      "vigili natal 2025 foto",
+      "vigili natal 2024 foto"
+    ],
+    "answer": "🕯️ <b>Album Foto Vigili Natal — Paroki SMDTBA:</b>\n\n<b>2025:</b>\n• <a href=\"/galeri?album=125\">Vigili Natal 2025</a>\n\nUntuk tahun lain, cari: <i>\"foto vigili natal 2024\"</i>, dst.\nAtau lihat <a href=\"/galeri\">Semua Galeri Foto</a>.",
+    "links": [
+      {
+        "text": "📸 Vigili Natal 2025",
+        "url": "/galeri?album=125"
+      },
+      {
+        "text": "Semua Galeri",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Foto Natal 2025",
+      "Semua Galeri"
+    ]
+  },
+  {
+    "patterns": [
+      "foto komuni pertama",
+      "galeri komuni pertama",
+      "dokumentasi komuni pertama paroki",
+      "foto ekaristi pertama",
+      "album komuni pertama paroki",
+      "foto penerimaan komuni pertama"
+    ],
+    "answer": "🍞 <b>Album Foto Komuni Pertama — Paroki SMDTBA:</b>\n\n<b>2025:</b>\n• <a href=\"/galeri?album=107\">Rekoleksi Komuni Pertama — Juni 2025</a>\n\nUntuk tahun lain, cari: <i>\"foto komuni pertama 2024\"</i>, dst.\nAtau lihat <a href=\"/galeri\">Semua Galeri Foto</a>.",
+    "links": [
+      {
+        "text": "📸 Rekoleksi Komuni Pertama 2025",
+        "url": "/galeri?album=107"
+      },
+      {
+        "text": "Semua Galeri",
+        "url": "/galeri"
+      }
+    ],
+    "quickReplies": [
+      "Foto Komuni Pertama 2025",
+      "Semua Galeri"
+    ]
+  },
+  {
+    "patterns": [
+      "__fallback__"
+    ],
+    "answer": "Maaf, saya belum memiliki informasi untuk pertanyaan tersebut. 🙏\n\nSilakan coba kata kunci lain, atau hubungi langsung <b>Komsos Paroki Tulungagung</b> via WhatsApp untuk bantuan lebih lanjut.",
+    "links": [
+      {
+        "text": "💬 Chat WhatsApp Komsos Paroki",
+        "url": "https://wa.me/6285183068895",
+        "external": true
+      },
+      {
+        "text": "Kontak Paroki",
+        "url": "/kontak"
+      }
+    ],
+    "quickReplies": [
+      "Jadwal Misa",
+      "Galeri Foto",
+      "Agenda Paroki",
+      "Kontak Paroki"
+    ]
+  }
+]

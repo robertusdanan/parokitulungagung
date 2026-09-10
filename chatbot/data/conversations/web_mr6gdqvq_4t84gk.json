@@ -1,0 +1,21 @@
+{
+    "session_id": "web_mr6gdqvq_4t84gk",
+    "created_at": 1783175045,
+    "last_active": 1783175048,
+    "page_context": "https:\/\/www.parokitulungagung.org\/agenda (Info & Agenda Paroki – Gereja Katolik Tulungagung)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "Selamat malam. Saya ingin menanyakan jadwal katekumen",
+            "timestamp": 1783175048
+        },
+        {
+            "role": "assistant",
+            "content": "Selamat malam! Senang sekali Anda bertanya mengenai katekumen.\n\nUntuk informasi detail mengenai jadwal kelas katekumen atau persiapan baptis di Paroki SMDTBA, silakan cek langsung di halaman Agenda kami. Jika informasi yang Anda cari belum tersedia di sana, Anda dapat menghubungi sekretariat paroki untuk mendapatkan jadwal terbaru.\n\nSilakan kunjungi halaman Kontak kami untuk informasi lebih lanjut. Tuhan memberkati!",
+            "source": "gemini",
+            "timestamp": 1783175048
+        }
+    ],
+    "meta": []
+}

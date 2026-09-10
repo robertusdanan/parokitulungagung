@@ -1,0 +1,43 @@
+{
+    "session_id": "web_mqxummrc_qm1wtc",
+    "created_at": 1782654779,
+    "last_active": 1782654989,
+    "page_context": "https:\/\/www.parokitulungagung.org\/jadwal-misa (Jadwal Misa Tulungagung – Gereja Katolik Paroki Tulungagung)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "Kontak Paroki",
+            "timestamp": 1782654779
+        },
+        {
+            "role": "assistant",
+            "content": "Kontak Paroki SMDTBA Tulungagung:\n\nSilakan hubungi pada jam kerja untuk informasi lebih lanjut.",
+            "source": "kb",
+            "timestamp": 1782654779
+        },
+        {
+            "role": "user",
+            "content": "Kontak Paroki",
+            "timestamp": 1782654932
+        },
+        {
+            "role": "assistant",
+            "content": "Kontak Paroki SMDTBA Tulungagung:\n\nSilakan hubungi pada jam kerja untuk informasi lebih lanjut.",
+            "source": "kb",
+            "timestamp": 1782654932
+        },
+        {
+            "role": "user",
+            "content": "Kontak Paroki",
+            "timestamp": 1782654989
+        },
+        {
+            "role": "assistant",
+            "content": "Kontak Paroki SMDTBA Tulungagung:\n\nSilakan hubungi pada jam kerja untuk informasi lebih lanjut.",
+            "source": "kb",
+            "timestamp": 1782654989
+        }
+    ],
+    "meta": []
+}

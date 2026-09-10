@@ -1,0 +1,21 @@
+{
+    "session_id": "web_mr83zldx_qrz5so",
+    "created_at": 1783276411,
+    "last_active": 1783276414,
+    "page_context": "https:\/\/www.parokitulungagung.org\/ (Paroki Tulungagung)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "Cara mempublikasikan artikel bagaimana",
+            "timestamp": 1783276414
+        },
+        {
+            "role": "assistant",
+            "content": "Untuk mempublikasikan artikel di website Paroki SMDTBA, silakan hubungi tim Komsos kami. Anda dapat mengirimkan draf tulisan atau ide artikel Anda melalui sekretariat paroki agar dapat ditinjau dan diproses lebih lanjut oleh tim redaksi.\n\nUntuk informasi lebih lanjut mengenai prosedur pengiriman artikel, silakan kunjungi halaman Kontak kami. Kami sangat terbuka bagi umat yang ingin berbagi inspirasi atau warta iman melalui website paroki.",
+            "source": "gemini",
+            "timestamp": 1783276414
+        }
+    ],
+    "meta": []
+}

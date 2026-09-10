@@ -1,0 +1,19 @@
+# public/.htaccess
+# Folder ini isinya HANYA file yang diupload lewat panel admin
+# (dokumen, foto galeri, foto UMKM, jadwal petugas, dll).
+# Lapis pertahanan tambahan: apapun yang berhasil ter-upload ke sini,
+# jangan pernah dijalankan sebagai script — hanya disajikan sebagai file
+# statis. Ini melindungi dari web-shell walau seandainya ada bug validasi
+# tipe file di endpoint upload di masa depan.
+# Pengecualian: public/pdfviewer/viewer.php memang harus tetap bisa jalan.
+<IfModule mod_authz_core.c>
+  <FilesMatch "^(?!viewer\.php$).*\.(php|php[0-9]|phtml|pht|phar|cgi|pl|py|sh|asp|aspx)$">
+    Require all denied
+  </FilesMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+  <FilesMatch "^(?!viewer\.php$).*\.(php|php[0-9]|phtml|pht|phar|cgi|pl|py|sh|asp|aspx)$">
+    Order allow,deny
+    Deny from all
+  </FilesMatch>
+</IfModule>

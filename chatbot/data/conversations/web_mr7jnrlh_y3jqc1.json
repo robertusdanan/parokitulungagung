@@ -1,0 +1,21 @@
+{
+    "session_id": "web_mr7jnrlh_y3jqc1",
+    "created_at": 1783241018,
+    "last_active": 1783241018,
+    "page_context": "https:\/\/www.parokitulungagung.org\/?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQPNTY3MDY3MzQzMzUyNDI3AAGnCGu1oXYzuRY3iiyL6OfOjgH782HKWYxvGWgBxfrChh8rzSM52Lmw_0wAafk_aem_QzRKTmkQ2mPBfbKWG4Cvzg (Paroki Tulungagung)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "Kontak Paroki",
+            "timestamp": 1783241018
+        },
+        {
+            "role": "assistant",
+            "content": "Kontak Paroki SMDTBA Tulungagung:\n\nSilakan hubungi pada jam kerja untuk informasi lebih lanjut.",
+            "source": "kb",
+            "timestamp": 1783241018
+        }
+    ],
+    "meta": []
+}

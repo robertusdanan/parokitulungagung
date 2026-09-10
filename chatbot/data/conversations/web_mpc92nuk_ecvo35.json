@@ -1,0 +1,21 @@
+{
+    "session_id": "web_mpc92nuk_ecvo35",
+    "created_at": 1779172005,
+    "last_active": 1779172008,
+    "page_context": "https:\/\/www.parokitulungagung.org\/ (Gereja Katolik Tulungagung | Paroki SMDTBA)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "siapakah saya",
+            "timestamp": 1779172008
+        },
+        {
+            "role": "assistant",
+            "content": "Halo! Sebagai asisten virtual, saya tidak memiliki akses ke identitas pribadi atau data diri Anda. Namun, Anda adalah umat yang dikasihi Tuhan dan bagian dari keluarga besar Paroki Santa Maria Dengan Tidak Bernoda Asal (SMDTBA) Tulungagung. \n\nAda yang bisa saya bantu terkait informasi paroki atau kehidupan rohani Anda hari ini?",
+            "source": "gemini",
+            "timestamp": 1779172008
+        }
+    ],
+    "meta": []
+}

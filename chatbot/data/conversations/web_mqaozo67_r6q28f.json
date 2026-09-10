@@ -1,0 +1,32 @@
+{
+    "session_id": "web_mqaozo67_r6q28f",
+    "created_at": 1781254587,
+    "last_active": 1781254621,
+    "page_context": "https:\/\/www.parokitulungagung.org\/ (Gereja Katolik Tulungagung | Paroki SMDTBA)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "cara jadi katolil",
+            "timestamp": 1781254589
+        },
+        {
+            "role": "assistant",
+            "content": "Halo! Senang sekali Anda memiliki ketertarikan untuk mengenal iman Katolik lebih dalam.\n\nUntuk menjadi seorang Katolik, langkah awal yang biasanya dilakukan adalah mengikuti masa katekumenat atau kelas persiapan baptis. Di sana, Anda akan belajar tentang ajaran Gereja, Kitab Suci, dan kehidupan sakramental.\n\nBerikut langkah yang bisa Anda lakukan:\n• Menghubungi sekretariat paroki untuk menanyakan jadwal kelas katekumen (calon baptis).\n• Mengikuti bimbingan iman secara rutin bersama tim katekese.\n• Menjalani proses penerimaan sakramen baptis setelah masa persiapan selesai.\n\nUntuk informasi lebih lanjut mengenai pendaftaran atau jadwal kelas, silakan kunjungi halaman Kontak kami agar tim sekretariat dapat membantu Anda dengan lebih detail. Tuhan memberkati perjalanan iman Anda!",
+            "source": "gemini",
+            "timestamp": 1781254589
+        },
+        {
+            "role": "user",
+            "content": "kamu pakai engine apa?? atau llm apa???",
+            "timestamp": 1781254621
+        },
+        {
+            "role": "assistant",
+            "content": "Saya adalah asisten virtual yang dikembangkan untuk melayani umat di Paroki Santa Maria Dengan Tidak Bernoda Asal (SMDTBA) Tulungagung. Saya dirancang khusus untuk memberikan informasi seputar kehidupan paroki, jadwal kegiatan, serta pendampingan iman Katolik dengan cara yang ramah dan membantu.\n\nJika Anda memiliki pertanyaan mengenai kegiatan gereja, jadwal misa, atau ingin tahu lebih banyak tentang iman kita, jangan ragu untuk bertanya ya. Silakan kunjungi halaman Kontak kami jika ada hal spesifik yang ingin Anda tanyakan kepada pengurus paroki. Semoga hari Anda menyenangkan!",
+            "source": "gemini",
+            "timestamp": 1781254621
+        }
+    ],
+    "meta": []
+}

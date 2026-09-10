@@ -1,0 +1,43 @@
+{
+    "session_id": "web_mqxup75z_50wsvx",
+    "created_at": 1782654898,
+    "last_active": 1782655027,
+    "page_context": "https:\/\/www.parokitulungagung.org\/kontak (Kontak – Paroki Santa Maria Tidak Bernoda Asal Tulungagung – Paroki Tulungagung)",
+    "user_name": "",
+    "history": [
+        {
+            "role": "user",
+            "content": "Kontak Paroki",
+            "timestamp": 1782654898
+        },
+        {
+            "role": "assistant",
+            "content": "Kontak Paroki SMDTBA Tulungagung:\n\nSilakan hubungi pada jam kerja untuk informasi lebih lanjut.",
+            "source": "kb",
+            "timestamp": 1782654898
+        },
+        {
+            "role": "user",
+            "content": "Kontak Paroki",
+            "timestamp": 1782654939
+        },
+        {
+            "role": "assistant",
+            "content": "Kontak Paroki SMDTBA Tulungagung:\n\nSilakan hubungi pada jam kerja untuk informasi lebih lanjut.",
+            "source": "kb",
+            "timestamp": 1782654939
+        },
+        {
+            "role": "user",
+            "content": "Kontak Paroki",
+            "timestamp": 1782655027
+        },
+        {
+            "role": "assistant",
+            "content": "Kontak Paroki SMDTBA Tulungagung:\n\nSilakan hubungi pada jam kerja untuk informasi lebih lanjut.",
+            "source": "kb",
+            "timestamp": 1782655027
+        }
+    ],
+    "meta": []
+}

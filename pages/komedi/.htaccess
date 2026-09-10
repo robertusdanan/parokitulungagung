@@ -1,0 +1,6 @@
+# Komedi HTML: force revalidate agar style.css selalu fresh
+<FilesMatch "\.html$">
+  <IfModule mod_headers.c>
+    Header set Cache-Control "no-cache, must-revalidate"
+  </IfModule>
+</FilesMatch>
