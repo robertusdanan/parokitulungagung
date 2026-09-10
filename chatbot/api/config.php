@@ -23,9 +23,9 @@ define('GEMINI_MODELS', [
     'gemini-3.6-flash',
 ]);
 
-define('GEMINI_MAX_OUTPUT_TOKENS', 1200);
+define('GEMINI_MAX_OUTPUT_TOKENS', 1000);
 define('GEMINI_TEMPERATURE', 0.65);
-define('GEMINI_TIMEOUT', 15);
+define('GEMINI_TIMEOUT', 6);
 
 function gemini_endpoint(string $model, string $key): string
 {
