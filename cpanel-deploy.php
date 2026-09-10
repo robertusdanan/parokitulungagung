@@ -50,8 +50,14 @@ if (is_dir($repoDir)) {
 
     // Jalankan penyalinan file ke public_html
     if (strpos((string)$resPull, 'Updating') !== false || strpos((string)$resPull, 'Already up to date') !== false || strpos((string)$resPull, 'Fast-forward') !== false) {
-        $cmdCopy = "cp -a " . escapeshellarg($repoDir) . "/. " . escapeshellarg($webDir) . "/ 2>&1";
+        // Jalankan rsync tanpa folder .git ke public_html
+        $cmdCopy = "rsync -a --exclude='.git' --exclude='.github' " . escapeshellarg($repoDir) . "/ " . escapeshellarg($webDir) . "/ 2>&1";
         $resCopy = shell_exec($cmdCopy);
+        if ($resCopy === null || strpos((string)$resCopy, 'rsync: command not found') !== false) {
+            // Fallback jika rsync tidak ada: cp biasa tanpa folder .git
+            $cmdCopy = "cp -r -u " . escapeshellarg($repoDir) . "/* " . escapeshellarg($webDir) . "/ 2>&1";
+            $resCopy = shell_exec($cmdCopy);
+        }
         $output['file_deploy'] = 'Files copied successfully';
         if ($resCopy) {
             $output['file_deploy_error'] = trim((string)$resCopy);
