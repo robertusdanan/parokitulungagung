@@ -123,10 +123,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .register-logo .cross{font-size:32px;color:var(--accent);display:block;margin-bottom:6px}
     .register-logo h1{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text-primary);margin-bottom:4px}
     .register-logo p{font-size:13px;color:var(--text-secondary)}
-    .role-info{background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.2);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:20px;font-size:12.5px;color:var(--text-secondary);line-height:1.7}
-    .role-info strong{color:var(--accent)}
-    .role-info ul{margin:6px 0 0 16px}
-    .role-info li{margin-bottom:2px}
     .pw-strength{height:3px;border-radius:2px;margin-top:5px;background:var(--border);transition:all .3s}
     .pw-strength-text{font-size:11.5px;margin-top:3px}
     .login-error{background:rgba(224,82,82,.12);border:1px solid rgba(224,82,82,.3);color:var(--danger);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;margin-bottom:16px}
@@ -161,15 +157,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <a href="/admin/index.php<?= $redirectTo ? '?redirect=' . urlencode($redirectTo) : '' ?>" class="btn btn-primary register-btn">Masuk Sekarang →</a>
 
     <?php else: ?>
-
-    <div class="role-info">
-      <strong>Akses yang akan diberikan:</strong>
-      <ul>
-        <li>Menulis &amp; edit artikel di <strong>Berita, Kronik, Historia</strong> milik sendiri (status draft)</li>
-        <li>Tambah &amp; kelola <strong>promosi UMKM milik sendiri</strong> (status draft)</li>
-        <li>Publish artikel &amp; UMKM hanya oleh <strong>Editor/Superadmin</strong></li>
-      </ul>
-    </div>
 
     <?php if ($error): ?>
     <div class="login-error"><?= htmlspecialchars($error) ?></div>

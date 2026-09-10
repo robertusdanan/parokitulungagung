@@ -525,9 +525,11 @@ function slugify(string $text): string
 /**
  * Escape HTML untuk output aman
  */
-function e(?string $str): string
-{
-    return htmlspecialchars($str ?? '', ENT_QUOTES, 'UTF-8');
+if (!function_exists('e')) {
+    function e(?string $str): string
+    {
+        return htmlspecialchars($str ?? '', ENT_QUOTES, 'UTF-8');
+    }
 }
 
 /**

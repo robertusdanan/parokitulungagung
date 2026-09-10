@@ -149,7 +149,9 @@ function _buildResetEmail(string $nama, string $username, string $resetUrl): str
 HTML;
 }
 
-function e(string $s): string { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
+if (!function_exists('e')) {
+    function e(?string $s): string { return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
+}
 ?>
 <!doctype html>
 <html lang="id">

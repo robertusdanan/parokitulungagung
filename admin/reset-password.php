@@ -18,7 +18,9 @@ $error   = '';
 $success = false;
 $user    = null;
 
-function e(string $s): string { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
+if (!function_exists('e')) {
+    function e(?string $s): string { return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
+}
 
 // Validasi token
 if (!$token || strlen($token) !== 64 || !preg_match('/^[a-f0-9]+$/', $token)) {
