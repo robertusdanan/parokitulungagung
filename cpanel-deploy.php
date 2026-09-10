@@ -18,6 +18,24 @@ if (($_GET['token'] ?? '') !== $secretToken) {
     exit;
 }
 
+if (($_GET['action'] ?? '') === 'read_error_log') {
+    $logs = [];
+    $candidates = [
+        __DIR__ . '/error_log',
+        __DIR__ . '/admin/error_log',
+        __DIR__ . '/admin/api/error_log',
+        '/home/ejtkecoh/logs/parokitulungagung.org.php.error.log',
+    ];
+    foreach ($candidates as $f) {
+        if (file_exists($f)) {
+            $lines = file($f, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            $logs[basename(dirname($f)) . '/' . basename($f)] = array_slice($lines, -25);
+        }
+    }
+    echo json_encode(['status' => 'success', 'logs' => $logs], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    exit;
+}
+
 $repoDir = '/home/ejtkecoh/repositories/parokitulungagung';
 $webDir  = '/home/ejtkecoh/public_html';
 
