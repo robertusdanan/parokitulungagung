@@ -7,54 +7,20 @@ date_default_timezone_set('Asia/Jakarta');
 // ── Load secrets dari luar public_html ──────────────────────
 require_once dirname(__DIR__, 3) . '/private/secrets.php';
 
-// ─── GEMINI API KEYS ──────────────────────────────────────
-// Diambil langsung dari secrets.php (array), lalu di-expose
-// sebagai GEMINI_API_KEYS agar gemini.php bisa akses via:
-//   $keys = array_values(GEMINI_API_KEYS);
+// ─── GEMINI API KEYS & MODELS ─────────────────────────────
 define('GEMINI_API_KEYS', SECRET_GEMINI_API_KEYS);
 
-// ─── GROQ API KEYS ────────────────────────────────────────
-define('GROQ_API_KEYS', SECRET_GROQ_API_KEYS);
-
-// ─── GROQ SETTINGS ────────────────────────────────────────
-define('GROQ_ENDPOINT', 'https://api.groq.com/openai/v1/chat/completions');
-
-define('GROQ_MODELS', [
-    'llama-3.1-8b-instant',
-    'llama-3.3-70b-versatile',
-    'mixtral-8x7b-32768',
-]);
-
-define('GROQ_MAX_OUTPUT_TOKENS', 250);
-define('GROQ_TEMPERATURE',       0.6);
-define('GROQ_TIMEOUT',           15);
-
-
 define('GEMINI_MODELS', [
-    'gemini-3.1-flash-lite',
-    'gemini-3-flash',
     'gemini-2.5-flash-lite',
+    'gemini-3.6-flash',
+    'gemini-flash-latest',
     'gemini-2.5-flash',
 ]);
 
-/*
-|--------------------------------------------------------------------------
-| GEMINI SETTINGS
-|--------------------------------------------------------------------------
-*/
-define('GEMINI_MAX_OUTPUT_TOKENS', 250);
-define('GEMINI_TEMPERATURE', 0.6);
+define('GEMINI_MAX_OUTPUT_TOKENS', 700);
+define('GEMINI_TEMPERATURE', 0.65);
 define('GEMINI_TIMEOUT', 15);
-/*
-|--------------------------------------------------------------------------
-| gemini_endpoint($model, $key)
-|--------------------------------------------------------------------------
-| Dipanggil oleh gemini.php dengan 2 argumen:
-|   $endpoint = gemini_endpoint($model, $key);
-|
-| Membangun URL lengkap endpoint Gemini untuk model & key tertentu.
-|--------------------------------------------------------------------------
-*/
+
 function gemini_endpoint(string $model, string $key): string
 {
     return 'https://generativelanguage.googleapis.com/v1beta/models/'
@@ -62,6 +28,21 @@ function gemini_endpoint(string $model, string $key): string
         . ':generateContent?key='
         . $key;
 }
+
+// ─── GROQ API KEYS & MODELS ───────────────────────────────
+define('GROQ_API_KEYS', SECRET_GROQ_API_KEYS);
+define('GROQ_ENDPOINT', 'https://api.groq.com/openai/v1/chat/completions');
+
+define('GROQ_MODELS', [
+    'qwen/qwen3.8-27b',
+    'qwen/qwen3.6-27b',
+    'openai/gpt-oss-120b',
+    'groq/compound',
+]);
+
+define('GROQ_MAX_OUTPUT_TOKENS', 700);
+define('GROQ_TEMPERATURE',       0.65);
+define('GROQ_TIMEOUT',           15);
 
 // ──────────────────────────────────────────────────────────
 // PATH DATA
@@ -73,23 +54,17 @@ define('LOG_DIR',   DATA_DIR . 'logs/');
 define('CACHE_DIR', DATA_DIR . 'cache/');
 
 // ──────────────────────────────────────────────────────────
-// ANTI-SPAM
+// ANTI-SPAM & LIMITS
 // ──────────────────────────────────────────────────────────
-define('RATE_LIMIT_MAX',    15);
+define('RATE_LIMIT_MAX',    25);
 define('RATE_LIMIT_WINDOW', 60);
-define('MAX_MSG_LENGTH',    500);
+define('MAX_MSG_LENGTH',    1000);
 
 // ──────────────────────────────────────────────────────────
 // MEMORY
 // ──────────────────────────────────────────────────────────
-define('MAX_HISTORY',     5);
+define('MAX_HISTORY',     6);
 define('SESSION_TIMEOUT', 1800);
-
-// ──────────────────────────────────────────────────────────
-// AUTO LEARNING
-// ──────────────────────────────────────────────────────────
-define('AUTO_LEARN_ENABLED',   true);
-define('AUTO_LEARN_THRESHOLD', 3);
 
 // ──────────────────────────────────────────────────────────
 // WEBSITE INFO
@@ -99,35 +74,27 @@ if (!defined('SITE_BASE')) {
     if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
         $scheme = $_SERVER['HTTP_X_FORWARDED_PROTO'];
     }
-    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $host = $_SERVER['HTTP_HOST'] ?? 'www.parokitulungagung.org';
     define('SITE_BASE', $scheme . '://' . $host);
 }
 
 define('SITE_NAME', 'Paroki Santa Maria Dengan Tidak Bernoda Asal (SMDTBA) Tulungagung');
-define('SITE_URL',  rtrim(SITE_BASE, '/'));
+define('SITE_URL',  'https://www.parokitulungagung.org');
 define('SITE_LANG', 'id');
 
 // ──────────────────────────────────────────────────────────
-// CACHE
+// CACHE & DEBUG
 // ──────────────────────────────────────────────────────────
 define('CACHE_TTL',         300);
-define('ARTICLE_CACHE_TTL', 3600);
-
-// ──────────────────────────────────────────────────────────
-// DEBUG
-// ──────────────────────────────────────────────────────────
+define('ARTICLE_CACHE_TTL', 1800);
 define('DEBUG_MODE', false);
-
-// ──────────────────────────────────────────────────────────
-// CORS
-// ──────────────────────────────────────────────────────────
 define('ALLOWED_ORIGIN', '*');
 
 // ──────────────────────────────────────────────────────────
-// CREATE DIRECTORY
+// CREATE DIRECTORIES
 // ──────────────────────────────────────────────────────────
 foreach ([CONV_DIR, LOG_DIR, CACHE_DIR] as $dir) {
     if (!is_dir($dir)) {
-        mkdir($dir, 0750, true);
+        @mkdir($dir, 0755, true);
     }
 }
