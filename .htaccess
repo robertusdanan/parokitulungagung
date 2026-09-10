@@ -1,6 +1,7 @@
 # =========================================================
 # CORE
 # =========================================================
+DirectoryIndex index.php index.html
 Options -Indexes -MultiViews
 RewriteEngine On
 RewriteBase /
@@ -21,11 +22,7 @@ RewriteRule ^ https://www.parokitulungagung.org%{REQUEST_URI} [R=301,L]
 # =========================================================
 # PROTEKSI DIREKTORI CACHE RUNTIME
 # =========================================================
-<IfModule mod_authz_core.c>
-  <Directory "cache/runtime">
-    Require all denied
-  </Directory>
-</IfModule>
+RewriteRule ^cache/runtime(/.*)?$ - [F,L]
 
 # =========================================================
 # PROTEKSI FILE SENSITIF (error_log, .log, .env, .sql, .bak, dll)

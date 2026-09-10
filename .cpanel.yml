@@ -2,6 +2,7 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/ejtkecoh/public_html
-    - /bin/cp -R * $DEPLOYPATH/
-    - /bin/cp -R .* $DEPLOYPATH/ 2>/dev/null || true
+    - /bin/cp -a . $DEPLOYPATH/
     - /bin/rm -rf $DEPLOYPATH/.git $DEPLOYPATH/.gitignore $DEPLOYPATH/.cpanel.yml
+    - /bin/find $DEPLOYPATH -type d -exec /bin/chmod 755 {} +
+    - /bin/find $DEPLOYPATH -type f -exec /bin/chmod 644 {} +
