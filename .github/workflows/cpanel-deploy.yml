@@ -1,0 +1,40 @@
+name: Deploy to cPanel
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Trigger cPanel Auto Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger cPanel Git Update & Deploy
+        run: |
+          set -e
+          BASE_URL="${{ secrets.CPANEL_URL }}"
+          BASE_URL="${BASE_URL%/}"
+          USER="${{ secrets.CPANEL_USER }}"
+          TOKEN="${{ secrets.CPANEL_TOKEN }}"
+          REPO="/home/ejtkecoh/repositories/parokitulungagung"
+
+          echo "Mengirim trigger Update Git ke cPanel..."
+          UPDATE_RES=$(curl -s -k -X POST \
+            -H "Authorization: cpanel ${USER}:${TOKEN}" \
+            "${BASE_URL}/execute/VersionControl/update" \
+            -d "repository_root=${REPO}")
+          echo "Respon Update: ${UPDATE_RES}"
+
+          echo "Mengirim trigger Deployment ke cPanel..."
+          DEPLOY_RES=$(curl -s -k -X POST \
+            -H "Authorization: cpanel ${USER}:${TOKEN}" \
+            "${BASE_URL}/execute/VersionControlDeployment/create" \
+            -d "repository_root=${REPO}")
+          echo "Respon Deploy: ${DEPLOY_RES}"
+
+          if echo "${DEPLOY_RES}" | grep -qE '"status":[ ]*1'; then
+            echo "Deployment cPanel berhasil diantrekan dan dieksekusi!"
+          else
+            echo "Peringatan: Periksa respon deployment cPanel di atas."
+          fi
