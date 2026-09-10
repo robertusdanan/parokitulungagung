@@ -43,7 +43,8 @@ jobs:
           UPDATE_RES=$(curl -s -k -X POST \
             -H "Authorization: cpanel ${USER}:${TOKEN}" \
             "${BASE_URL}/execute/VersionControl/update" \
-            -d "repository_root=${REPO}")
+            -d "repository_root=${REPO}" \
+            -d "branch=main")
           echo "Respon Update: ${UPDATE_RES}"
 
           echo "Mengirim trigger Deployment ke cPanel..."
