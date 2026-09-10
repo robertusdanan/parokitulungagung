@@ -43,13 +43,13 @@ $output['time'] = date('Y-m-d H:i:s');
 
 // Opsi 1: Coba jalankan Git Pull secara langsung (Synchronous & Instan)
 if (is_dir($repoDir)) {
-    // Jalankan git pull di folder repository dengan reset bersih
-    $cmdPull = "cd " . escapeshellarg($repoDir) . " && git reset --hard && git pull origin main 2>&1";
+    // Jalankan git fetch dan reset bersih ke origin/main
+    $cmdPull = "cd " . escapeshellarg($repoDir) . " && git fetch origin main 2>&1 && git reset --hard origin/main 2>&1";
     $resPull = shell_exec($cmdPull);
     $output['git_pull'] = trim((string)$resPull);
 
     // Jalankan penyalinan file ke public_html
-    if (strpos((string)$resPull, 'Updating') !== false || strpos((string)$resPull, 'Already up to date') !== false || strpos((string)$resPull, 'Fast-forward') !== false) {
+    if (strpos((string)$resPull, 'HEAD is now at') !== false || strpos((string)$resPull, 'Updating') !== false || strpos((string)$resPull, 'Already up to date') !== false || strpos((string)$resPull, 'Fast-forward') !== false) {
         // Jalankan rsync tanpa folder .git ke public_html
         $cmdCopy = "rsync -a --exclude='.git' --exclude='.github' " . escapeshellarg($repoDir) . "/ " . escapeshellarg($webDir) . "/ 2>&1";
         $resCopy = shell_exec($cmdCopy);
