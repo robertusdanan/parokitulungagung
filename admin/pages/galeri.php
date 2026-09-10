@@ -1707,8 +1707,10 @@ async function runAlbumUpload(folderName, fileEntries) {
       });
       const db = await rb.json();
       if (db.success && db.dispatched) {
+        ok += queuedVideos;
         addLog(`✓ ${db.count} video dikirim sebagai 1 job GitHub Actions (bukan ${db.count} run terpisah).`, 'ok');
       } else if (db.success) {
+        ok += queuedVideos;
         addLog(`⚠ Batch video: ${db.note || 'gagal dispatch, fallback dipakai.'}`, 'err');
       } else {
         addLog(`✗ Gagal mengirim batch video: ${db.error}`, 'err');
@@ -1727,7 +1729,11 @@ async function runAlbumUpload(folderName, fileEntries) {
 
   // Tampilkan ringkasan
   res.style.display = 'block';
-  res.innerHTML = `<strong style="color:var(--text-primary)">✅ Upload "${escHtml(folderName)}" selesai</strong>
+  res.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <strong style="color:var(--text-primary)">✅ Upload "${escHtml(folderName)}" selesai</strong>
+      <button type="button" onclick="document.getElementById('albumUploadResult').style.display='none'" style="background:var(--bg-card2);border:1px solid var(--border);color:var(--text-muted);width:24px;height:24px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:13px;line-height:1;transition:all .15s" onmouseover="this.style.color='var(--text-primary)';this.style.borderColor='var(--accent)'" onmouseout="this.style.color='var(--text-muted)';this.style.borderColor='var(--border)'" title="Tutup">✕</button>
+    </div>
     <div style="display:flex;gap:16px;margin-top:6px;font-size:12px">
       <span style="color:var(--success)">✓ ${ok} berhasil</span>
       <span style="color:var(--text-muted)">⊘ ${skipped} dilewati</span>

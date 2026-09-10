@@ -1732,6 +1732,7 @@ async function runR2Upload(folderName, fileEntries) {
       if (db.success && db.dispatched) {
         dispatchedVideos = db.count || queuedVideos;
         githubUrl = db.github_url || null;
+        ok += queuedVideos;
       } else {
         ok += queuedVideos;
       }
@@ -1744,12 +1745,17 @@ async function runR2Upload(folderName, fileEntries) {
   if (box) {
     box.style.display = 'block';
     const githubBadge = dispatchedVideos > 0 ? `
-      <div style="margin-top:10px;padding:10px 12px;border-radius:8px;background:var(--bg-accent);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
-        <span style="font-size:13px;color:var(--text-accent)">🐙 ${dispatchedVideos} video dikirim ke GitHub Actions untuk dikompresi</span>
-        ${githubUrl ? `<a href="${githubUrl}" target="_blank" rel="noopener" style="font-size:12.5px;font-weight:600;color:var(--text-accent);white-space:nowrap">Lihat progres di GitHub →</a>` : ''}
+      <div style="margin-top:12px;padding:10px 14px;border-radius:8px;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.25);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+        <span style="font-size:12.5px;color:var(--text-primary);display:inline-flex;align-items:center;gap:6px">🐙 <b>${dispatchedVideos} video</b> berhasil dikirim ke antrean kompresi GitHub Actions</span>
+        ${githubUrl ? `<a href="${githubUrl}" target="_blank" rel="noopener" style="font-size:12px;font-weight:600;color:var(--accent);text-decoration:none;padding:4px 10px;border-radius:6px;background:rgba(99,102,241,0.15);white-space:nowrap;transition:all .15s">Lihat Antrean GitHub →</a>` : ''}
       </div>` : '';
     box.innerHTML = `
-      <div style="font-weight:600;font-size:13.5px;margin-bottom:10px;color:var(--text-primary)">☁️ Upload "${escHtml(folderName)}" Selesai</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div style="font-weight:600;font-size:13.5px;color:var(--text-primary);display:flex;align-items:center;gap:6px">
+          <span>☁️</span> <span>Upload "${escHtml(folderName)}" Selesai</span>
+        </div>
+        <button type="button" onclick="document.getElementById('r2Result').style.display='none'" style="background:var(--bg-card2);border:1px solid var(--border);color:var(--text-muted);width:26px;height:26px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:14px;line-height:1;transition:all .15s" onmouseover="this.style.color='var(--text-primary)';this.style.borderColor='var(--accent)'" onmouseout="this.style.color='var(--text-muted)';this.style.borderColor='var(--border)'" title="Tutup">✕</button>
+      </div>
       <div class="compress-result-row">
         <div class="compress-stat-box"><div class="compress-stat-num" style="color:var(--success)">${ok}</div><div class="compress-stat-label">Berhasil</div></div>
         <div class="compress-stat-box"><div class="compress-stat-num" style="color:var(--text-muted)">${skipped}</div><div class="compress-stat-label">Dilewati</div></div>
