@@ -1,0 +1,6 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/ejtkecoh/public_html/
+    - /bin/cp -a . $DEPLOYPATH/
+    - /bin/rm -rf $DEPLOYPATH/.git $DEPLOYPATH/.gitignore $DEPLOYPATH/.cpanel.yml
