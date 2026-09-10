@@ -31,6 +31,19 @@
   </div>
 </div>
 <?php render_login_portal_script(); ?>
+<script>
+(function(){
+  window.togglemenudiv = window.togglemenudiv || function(){
+    var m = document.getElementById('divmenu');
+    if (m) m.style.display = (m.style.display === 'none' || m.style.display === '') ? 'block' : 'none';
+  };
+  var b = document.getElementById('btnmenu');
+  if (b && !b.dataset.boundMenu) {
+    b.dataset.boundMenu = '1';
+    b.addEventListener('click', window.togglemenudiv);
+  }
+})();
+</script>
 
 <div id="outer-wrapper">
 <a id="top"></a>

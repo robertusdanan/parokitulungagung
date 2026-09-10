@@ -564,5 +564,6 @@ body {
 </main>
 
 <?php include __DIR__ . '/../components/footer.php'; ?>
+<script src="/js/app.js?v=<?= substr(md5_file(__DIR__ . '/../js/app.js'), 0, 8) ?>"></script>
 </body>
 </html>

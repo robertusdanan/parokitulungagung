@@ -763,7 +763,7 @@ $extraCss = [];
 </head>
 
 <body class="pnl-page">
-<?php include __DIR__ . '/../components/menu.php'; ?>
+<?php $headerTitle = ''; include __DIR__ . '/../components/page_header.php'; ?>
 
 <!-- ══════════════════════════════════════════════════════════
      HERO
@@ -1014,5 +1014,6 @@ $extraCss = [];
   });
 })();
 </script>
+<script src="/js/app.js?v=<?= substr(md5_file(__DIR__ . '/../js/app.js'), 0, 8) ?>"></script>
 </body>
 </html>
