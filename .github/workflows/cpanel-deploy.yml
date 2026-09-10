@@ -10,9 +10,29 @@ jobs:
     name: Trigger cPanel Auto Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger cPanel Git Update & Deploy
+      - name: Trigger Instant Sync Deploy
         run: |
-          set -e
+          echo "Memulai pemicu deployment instan..."
+          DEPLOY_URL="https://www.parokitulungagung.org/cpanel-deploy.php?token=paroki_deploy_secure_908430316"
+          
+          # Kirim request ke deployment PHP script secara synchronous
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" "$DEPLOY_URL")
+          HTTP_CODE=$(echo "$RESPONSE" | tr -d '\r' | tail -n 1 | cut -d':' -f2)
+          BODY=$(echo "$RESPONSE" | head -n -1)
+          
+          echo "HTTP Status Code: $HTTP_CODE"
+          echo "Response Body: $BODY"
+          
+          if [ "$HTTP_CODE" -eq 200 ] && echo "$BODY" | grep -q '"status":"success"'; then
+            echo "Sukses: Deployment sinkron selesai seketika (Instant Deploy Berhasil)!"
+            exit 0
+          else
+            echo "Peringatan: Deploy instan gagal atau dibatasi. Mencoba fallback ke cPanel UAPI..."
+          fi
+
+      - name: Fallback to cPanel UAPI Queue Deploy
+        if: always() # Jalankan jika langkah instan di atas gagal atau dilewati
+        run: |
           BASE_URL="${{ secrets.CPANEL_URL }}"
           BASE_URL="${BASE_URL%/}"
           USER="${{ secrets.CPANEL_USER }}"
@@ -34,7 +54,8 @@ jobs:
           echo "Respon Deploy: ${DEPLOY_RES}"
 
           if echo "${DEPLOY_RES}" | grep -qE '"status":[ ]*1'; then
-            echo "Deployment cPanel berhasil diantrekan dan dieksekusi!"
+            echo "Deployment cPanel berhasil diantrekan!"
           else
-            echo "Peringatan: Periksa respon deployment cPanel di atas."
+            echo "Error: Gagal memicu deployment fallback cPanel."
+            exit 1
           fi
