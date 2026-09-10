@@ -1,5 +1,6 @@
 <?php
 // pages/tvdigital.php
+require_once __DIR__ . '/../includes/functions.php';
 while (ob_get_level() > 0) { ob_end_clean(); }
 
 /* ════════════════════════════════════════════════════════

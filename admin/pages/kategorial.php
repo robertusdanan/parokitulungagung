@@ -18,7 +18,7 @@ $TABLE = 'kelompok_profil';
 
 $BUILT_IN_SLUGS = [
     'adorasi','pdkk','wanita-katolik','gim','legiomaria',
-    'me','pk','rosariohidup','ktm','ssvmaria','ssvrosali'
+    'me','pk','pkkt','rosariohidup','ktm','ssvmaria','ssvrosali'
 ];
 $BUILT_IN_ICONS = [
     'adorasi'        => iconKategorialUrl('adorasi.png'),
@@ -28,6 +28,7 @@ $BUILT_IN_ICONS = [
     'legiomaria'     => iconKategorialUrl('legiomaria.png'),
     'me'             => iconKategorialUrl('me.png'),
     'pk'             => iconKategorialUrl('pk.png'),
+    'pkkt'           => iconKategorialUrl('pkkt.png'),
     'rosariohidup'   => iconKategorialUrl('rosariohidup.png'),
     'ktm'            => iconKategorialUrl('ktm.png'),
     'ssvmaria'       => iconKategorialUrl('ssvmaria.png'),
@@ -883,7 +884,8 @@ async function pengUpload(id, input) {
     form.append('folder', 'person');
     const resp = await fetch('/admin/api/upload_image.php', { method:'POST', body:form, credentials:'same-origin' });
     const data = await resp.json();
-    if (!data.success) { toast('Error', data.error||'Upload gagal', 'error'); return; }
+    const errText = data.detail ? `${data.error || 'Upload gagal'} (${data.detail})` : (data.error || 'Upload gagal');
+    if (!data.success) { toast('Error', errText, 'error'); return; }
 
     row.querySelector('.pengurus-foto').value = data.url;
     wrap.innerHTML = `
@@ -892,7 +894,7 @@ async function pengUpload(id, input) {
       <input type="file" id="pengFile_${id}" accept="image/jpeg,image/png,image/webp" onchange="pengUpload(${id},this)">`;
     toast('Berhasil', 'Foto ' + (row.querySelector('.pengurus-nama')?.value||'pengurus') + ' diupload', 'success');
   } catch(err) {
-    toast('Error','Gagal upload foto','error'); console.error(err);
+    toast('Error', 'Gagal upload foto: ' + (err.message || err), 'error'); console.error(err);
   } finally {
     spin.remove(); input.value = '';
   }
@@ -1058,7 +1060,8 @@ async function saveKategorial() {
     closeModal('katModal');
     setTimeout(()=>location.reload(), 900);
   } else {
-    toast('Error', res.error||'Gagal menyimpan', 'error');
+    const detailMsg = res.detail ? `${res.error || 'Gagal menyimpan'} (${res.detail})` : (res.error || 'Gagal menyimpan');
+    toast('Error', detailMsg, 'error');
   }
 }
 

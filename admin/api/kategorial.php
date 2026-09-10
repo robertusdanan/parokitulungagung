@@ -17,16 +17,18 @@ register_shutdown_function(function () {
         http_response_code(500);
         header('Content-Type: application/json; charset=utf-8');
         // Kembalikan pesan error agar mudah debug
+        $msg = $err['message'] ?? 'Unknown error';
         echo json_encode([
-            'error'  => 'Fatal PHP error',
-            'detail' => $err['message'],
-            'file'   => basename($err['file']),
-            'line'   => $err['line'],
+            'error'  => 'Fatal PHP error: ' . $msg,
+            'detail' => $msg,
+            'file'   => basename($err['file'] ?? ''),
+            'line'   => $err['line'] ?? 0,
         ], JSON_UNESCAPED_UNICODE);
     }
 });
 
 // ── 3. Load ───────────────────────────────────────────────────────────
+require_once __DIR__ . '/../../includes/functions.php';
 require_once __DIR__ . '/../includes/functions.php';
 adminBoot();
 
@@ -61,7 +63,7 @@ $TABLE  = 'kelompok_profil';
 
 $BUILT_IN_SLUGS = [
     'adorasi','pdkk','wanita-katolik','gim','legiomaria',
-    'me','pk','rosariohidup','ktm','ssvmaria','ssvrosali'
+    'me','pk','pkkt','rosariohidup','ktm','ssvmaria','ssvrosali'
 ];
 
 function getValidSlugs($db, string $table, array $builtIn): array
@@ -74,7 +76,8 @@ function getValidSlugs($db, string $table, array $builtIn): array
     return $cache;
 }
 
-switch ($action) {
+try {
+    switch ($action) {
 
     case 'getAll': {
         $rows = $db->readWhere($TABLE, [], 'slug.asc', '*');
@@ -133,6 +136,11 @@ switch ($action) {
         try { getLogger()->log($user, 'UPDATE', 'kategorial', 'Update: ' . $slug); }
         catch (Throwable $e) { /* opsional */ }
 
+        if (function_exists('invalidateAllRelatedCaches')) {
+            try { invalidateAllRelatedCaches('kategorial', 'kelompok_profil'); }
+            catch (Throwable $e) { /* opsional */ }
+        }
+
         sendJson(['success' => true, 'data' => $data]);
     }
 
@@ -148,9 +156,22 @@ switch ($action) {
         try { getLogger()->log($user, 'DELETE', 'kategorial', 'Hapus: ' . $slug); }
         catch (Throwable $e) { /* opsional */ }
 
+        if (function_exists('invalidateAllRelatedCaches')) {
+            try { invalidateAllRelatedCaches('kategorial', 'kelompok_profil'); }
+            catch (Throwable $e) { /* opsional */ }
+        }
+
         sendJson(['success' => true]);
     }
 
     default:
         sendJson(['error' => 'Action tidak dikenal: ' . $action], 400);
+    }
+} catch (Throwable $e) {
+    sendJson([
+        'error'  => $e->getMessage(),
+        'detail' => $e->getTraceAsString(),
+        'file'   => basename($e->getFile()),
+        'line'   => $e->getLine()
+    ], 500);
 }

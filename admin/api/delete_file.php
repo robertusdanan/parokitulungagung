@@ -15,7 +15,7 @@
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/functions.php';
 adminBoot();
-requireLogin();
+$user = requireLogin();
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -64,7 +64,7 @@ if (!unlink($filePath)) {
 // ── Log ────────────────────────────────────────────────────────────────
 try {
     $logger = getLogger();
-    $logger->log('delete_file', 'dokumen_paroki', null, null, ['nama_file' => $namaFile, 'dest' => $dest]);
+    $logger->log($user, 'DELETE', 'dokumen_paroki', "Hapus file {$dest}/{$namaFile}");
 } catch (Throwable $e) {
     // Log gagal tidak fatal
 }
