@@ -9,7 +9,7 @@
 <?php require_once __DIR__ . '/header_auth.php'; ?>
 
 <div id="divmenubar">
-  <button id="btnmenu" aria-label="Buka menu navigasi">
+  <button id="btnmenu" onclick="window.togglemenudiv && window.togglemenudiv(event)" aria-label="Buka menu navigasi">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
       <line x1="3" y1="6" x2="21" y2="6"/>
       <line x1="3" y1="12" x2="21" y2="12"/>
@@ -32,17 +32,11 @@
 </div>
 <?php render_login_portal_script(); ?>
 <script>
-(function(){
-  window.togglemenudiv = window.togglemenudiv || function(){
-    var m = document.getElementById('divmenu');
-    if (m) m.style.display = (m.style.display === 'none' || m.style.display === '') ? 'block' : 'none';
-  };
-  var b = document.getElementById('btnmenu');
-  if (b && !b.dataset.boundMenu) {
-    b.dataset.boundMenu = '1';
-    b.addEventListener('click', window.togglemenudiv);
-  }
-})();
+window.togglemenudiv = function(e){
+  if (e && e.preventDefault) e.preventDefault();
+  var m = document.getElementById('divmenu');
+  if (m) m.style.display = (m.style.display === 'none' || m.style.display === '') ? 'block' : 'none';
+};
 </script>
 
 <div id="outer-wrapper">

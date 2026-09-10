@@ -223,7 +223,7 @@ window._hidePageLoader = _hideLoader;
 
   // ── Bind tombol menu ────────────────────────────────────────
   var btnMenu = document.getElementById('btnmenu');
-  if (btnMenu) btnMenu.addEventListener('click', window.togglemenudiv);
+  if (btnMenu && !btnMenu.getAttribute('onclick')) btnMenu.addEventListener('click', window.togglemenudiv);
 
   // ── Tutup photo modal ───────────────────────────────────────
   var boxModal  = document.getElementById('boxModal');
