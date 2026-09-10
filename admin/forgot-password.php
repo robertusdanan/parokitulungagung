@@ -167,7 +167,7 @@ function e(string $s): string { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8')
   <div class="login-bg-art"></div>
   <div class="login-box">
     <div class="login-logo">
-      <span class="cross">✝</span>
+      <img src="https://img.parokitulungagung.org/assets/parokitulungagung.webp" alt="Logo Paroki SMDTBA" class="login-logo-img" width="56" height="56">
       <h1>SMDTBA</h1>
       <p>Reset Password</p>
     </div>

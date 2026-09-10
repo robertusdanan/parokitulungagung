@@ -119,6 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .register-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 50%,rgba(201,168,76,.06) 0%,transparent 70%),radial-gradient(ellipse 40% 60% at 80% 30%,rgba(82,148,224,.04) 0%,transparent 70%);pointer-events:none}
     .register-box{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:40px;width:100%;max-width:460px;position:relative;z-index:1;box-shadow:var(--shadow)}
     .register-logo{text-align:center;margin-bottom:28px}
+    .register-logo-img{width:56px;height:56px;object-fit:contain;display:block;margin:0 auto 10px}
     .register-logo .cross{font-size:32px;color:var(--accent);display:block;margin-bottom:6px}
     .register-logo h1{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text-primary);margin-bottom:4px}
     .register-logo p{font-size:13px;color:var(--text-secondary)}
@@ -145,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <div class="register-bg"></div>
   <div class="register-box">
     <div class="register-logo">
-      <span class="cross">✝</span>
+      <img src="https://img.parokitulungagung.org/assets/parokitulungagung.webp" alt="Logo Paroki SMDTBA" class="register-logo-img" width="56" height="56">
       <h1>Daftar Akun</h1>
       <p>Paroki SMDTBA Tulungagung</p>
     </div>
