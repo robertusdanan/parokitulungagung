@@ -579,7 +579,7 @@ $canDelete = userCan($user, 'delete');
                   <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
                 </svg>
                 <p><strong>Seret folder foto/video ke sini</strong> — akan otomatis dikompres &amp; diupload ke R2</p>
-                <small>Nama folder yang di-drop akan dipakai APA ADANYA sebagai nama album di R2. Foto → WebP (kualitas 72, maks 2048px). Video → H.264 (kalau ffmpeg tersedia di server).</small>
+                <small>Nama folder yang di-drop akan dipakai APA ADANYA sebagai nama album di R2. Foto → WebP (kualitas 60, maks 1600px). Video → H.264 (kalau ffmpeg tersedia di server).</small>
                 <div style="margin-top:10px">
                   <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('r2FolderInput').click()">Atau klik untuk pilih folder</button>
                   <label style="display:inline-flex;align-items:center;gap:6px;margin-left:12px;font-size:12px;color:var(--text-secondary);cursor:pointer">
@@ -641,7 +641,7 @@ $canDelete = userCan($user, 'delete');
                   <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
                 </svg>
                 <p style="margin:6px 0 2px"><strong>Seret foto/video ke sini</strong> untuk ditambahkan ke album ini</p>
-                <small>Aturan sama seperti upload album baru: Foto → WebP (kualitas 72, maks 2048px), Video → dikompres via GitHub Actions/ffmpeg.</small>
+                <small>Aturan sama seperti upload album baru: Foto → WebP (kualitas 60, maks 1600px), Video → dikompres via GitHub Actions/ffmpeg.</small>
                 <div style="margin-top:8px">
                   <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('r2AlbumAddInput').click()">Atau klik untuk pilih file</button>
                 </div>
@@ -1572,8 +1572,79 @@ async function handleR2AlbumAddInputChange(e) {
   await openR2Album(r2CurrentAlbum); // refresh grid file di album ini
 }
 
+// ── Helper upload video Direct-to-R2 via Presigned PUT URL ────────────────
+function uploadVideoDirectPresigned(fileEntry, folderName, onProgress) {
+  return new Promise(async function (resolve) {
+    try {
+      const fd = new FormData();
+      fd.append('folder', folderName);
+      fd.append('relpath', fileEntry.relpath);
+      const res = await fetch('/admin/api/r2_get_presigned_url.php', { method: 'POST', body: fd });
+      const info = await res.json();
+
+      if (!info.success || !info.presigned_url) {
+        return resolve({ success: false, error: info.error || 'Gagal membuat presigned URL' });
+      }
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('PUT', info.presigned_url, true);
+
+      let lastLoaded = 0;
+      let lastTime = Date.now();
+      let speedStr = '';
+
+      if (xhr.upload && onProgress) {
+        xhr.upload.onprogress = function (e) {
+          if (e.lengthComputable && e.total > 0) {
+            const now = Date.now();
+            const dt = (now - lastTime) / 1000;
+            if (dt >= 0.4) {
+              const bytesPerSec = (e.loaded - lastLoaded) / dt;
+              speedStr = (bytesPerSec / (1024 * 1024)).toFixed(1) + ' MB/s (Direct R2)';
+              lastLoaded = e.loaded;
+              lastTime = now;
+            }
+            onProgress(e.loaded, e.total, speedStr);
+          }
+        };
+      }
+
+      xhr.onload = function () {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve({ success: true, queued: true, is_video: true, direct_r2: true });
+        } else {
+          resolve({ success: false, error: 'HTTP ' + xhr.status + ' Direct R2' });
+        }
+      };
+
+      xhr.onerror = function () {
+        resolve({ success: false, error: 'CORS/Network error Direct R2' });
+      };
+
+      xhr.ontimeout = function () {
+        resolve({ success: false, error: 'Timeout Direct R2' });
+      };
+
+      xhr.timeout = 1800000; // 30 menit
+      xhr.setRequestHeader('Content-Type', fileEntry.file.type || 'video/mp4');
+      xhr.send(fileEntry.file);
+    } catch (e) {
+      resolve({ success: false, error: e.message });
+    }
+  });
+}
+
 // ── Helper upload 1 file dengan XHR + progress event live ───────────────────
-function uploadOneR2File(fileEntry, folderName, skipExisting, onProgress) {
+async function uploadOneR2File(fileEntry, folderName, skipExisting, onProgress) {
+  const isVid = /\.(mp4|mov|avi|mkv|wmv|3gp|m4v)$/i.test(fileEntry.relpath);
+  if (isVid) {
+    const directRes = await uploadVideoDirectPresigned(fileEntry, folderName, onProgress);
+    if (directRes.success) {
+      return directRes;
+    }
+    // Jika Direct R2 gagal (misal CORS belum aktif di Cloudflare), fallback ke streaming PHP server
+  }
+
   return new Promise(function (resolve) {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '/admin/api/r2_folder_upload.php', true);

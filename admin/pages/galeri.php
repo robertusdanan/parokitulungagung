@@ -1515,7 +1515,76 @@ function readDirRecursive(dirEntry, basePath) {
   });
 }
 
-function uploadOneAlbumFile(fileEntry, folderName, onProgress) {
+function uploadVideoDirectPresignedGaleri(fileEntry, folderName, onProgress) {
+  return new Promise(async function (resolve) {
+    try {
+      const fd = new FormData();
+      fd.append('folder', folderName);
+      fd.append('relpath', fileEntry.relpath);
+      const res = await fetch('/admin/api/r2_get_presigned_url.php', { method: 'POST', body: fd });
+      const info = await res.json();
+
+      if (!info.success || !info.presigned_url) {
+        return resolve({ success: false, error: info.error || 'Gagal membuat presigned URL' });
+      }
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('PUT', info.presigned_url, true);
+
+      let lastLoaded = 0;
+      let lastTime = Date.now();
+      let speedStr = '';
+
+      if (xhr.upload && onProgress) {
+        xhr.upload.onprogress = function (e) {
+          if (e.lengthComputable && e.total > 0) {
+            const now = Date.now();
+            const dt = (now - lastTime) / 1000;
+            if (dt >= 0.4) {
+              const bytesPerSec = (e.loaded - lastLoaded) / dt;
+              speedStr = (bytesPerSec / (1024 * 1024)).toFixed(1) + ' MB/s (Direct R2)';
+              lastLoaded = e.loaded;
+              lastTime = now;
+            }
+            onProgress(e.loaded, e.total, speedStr);
+          }
+        };
+      }
+
+      xhr.onload = function () {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve({ success: true, queued: true, is_video: true, direct_r2: true });
+        } else {
+          resolve({ success: false, error: 'HTTP ' + xhr.status + ' Direct R2' });
+        }
+      };
+
+      xhr.onerror = function () {
+        resolve({ success: false, error: 'CORS/Network error Direct R2' });
+      };
+
+      xhr.ontimeout = function () {
+        resolve({ success: false, error: 'Timeout Direct R2' });
+      };
+
+      xhr.timeout = 1800000; // 30 menit
+      xhr.setRequestHeader('Content-Type', fileEntry.file.type || 'video/mp4');
+      xhr.send(fileEntry.file);
+    } catch (e) {
+      resolve({ success: false, error: e.message });
+    }
+  });
+}
+
+async function uploadOneAlbumFile(fileEntry, folderName, onProgress) {
+  const isVid = /\.(mp4|mov|avi|mkv|wmv|3gp|m4v)$/i.test(fileEntry.relpath);
+  if (isVid) {
+    const directRes = await uploadVideoDirectPresignedGaleri(fileEntry, folderName, onProgress);
+    if (directRes.success) {
+      return directRes;
+    }
+  }
+
   return new Promise(function (resolve) {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '/admin/api/r2_folder_upload.php', true);

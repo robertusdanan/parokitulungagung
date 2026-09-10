@@ -26,9 +26,9 @@
 
 final class R2FolderCompressor
 {
-    // ── Aturan kompresi (SAMA dengan gphotos-migrator/config.php) ──────
-    public const IMAGE_QUALITY        = 72;
-    public const IMAGE_MAX_DIMENSION  = 2048;
+    // ── Aturan kompresi (Foto: kualitas 60, dimensi maks 1600px) ──────
+    public const IMAGE_QUALITY        = 60;
+    public const IMAGE_MAX_DIMENSION  = 1600;
     public const VIDEO_CRF            = 30;
     public const VIDEO_PRESET         = 'veryfast';
     public const VIDEO_MAX_HEIGHT     = 1080;

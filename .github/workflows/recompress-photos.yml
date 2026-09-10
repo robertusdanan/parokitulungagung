@@ -1,0 +1,58 @@
+name: Recompress R2 Photos (Quality 60 / 1600px)
+
+on:
+  workflow_dispatch:
+    inputs:
+      prefix:
+        description: 'Prefix folder R2 yang ingin dioptimasi'
+        required: true
+        default: 'galerifoto/'
+        type: string
+      dry_run:
+        description: 'Mode Simulasi (Dry Run - tidak menimpa file)'
+        required: true
+        default: false
+        type: boolean
+      limit:
+        description: 'Batas jumlah file (kosongkan untuk semua)'
+        required: false
+        default: ''
+        type: string
+  repository_dispatch:
+    types: [recompress-photos-r2]
+
+jobs:
+  optimize:
+    name: Recompress Existing Photos in Cloudflare R2
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install pillow boto3
+
+      - name: Run Photo Recompression Script
+        env:
+          R2_ENDPOINT_URL: ${{ secrets.SECRET_R2_ENDPOINT || secrets.R2_ENDPOINT_URL }}
+          R2_ACCESS_KEY_ID: ${{ secrets.SECRET_R2_ACCESS_KEY_WRITE || secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.SECRET_R2_SECRET_KEY_WRITE || secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET_NAME: ${{ secrets.SECRET_R2_BUCKET || secrets.R2_BUCKET_NAME || 'parokitulungagung' }}
+          R2_PREFIX: ${{ github.event.inputs.prefix || github.event.client_payload.prefix || 'galerifoto/' }}
+          DRY_RUN: ${{ github.event.inputs.dry_run || github.event.client_payload.dry_run || 'false' }}
+        run: |
+          LIMIT_ARG=""
+          if [ -n "${{ github.event.inputs.limit }}" ]; then
+            LIMIT_ARG="--limit ${{ github.event.inputs.limit }}"
+          fi
+          python3 scripts/recompress_photos_r2.py $LIMIT_ARG

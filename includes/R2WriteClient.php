@@ -253,6 +253,33 @@ final class R2WriteClient
         return $this->endpoint . $canonicalPath . '?' . $canonicalQuery . '&X-Amz-Signature=' . $signature;
     }
 
+    /** Buat presigned PUT URL sementara untuk upload direct dari browser ke R2. */
+    public function getPresignedPutUrl(string $key, int $expirySeconds = 3600): string
+    {
+        $now             = gmdate('Ymd\THis\Z');
+        $dateStamp       = gmdate('Ymd');
+        $credentialScope = "{$dateStamp}/{$this->region}/{$this->service}/aws4_request";
+        $canonicalPath   = self::canonicalUriFor($this->bucket, $key);
+
+        $query = [
+            'X-Amz-Algorithm'     => 'AWS4-HMAC-SHA256',
+            'X-Amz-Credential'    => $this->accessKey . '/' . $credentialScope,
+            'X-Amz-Date'          => $now,
+            'X-Amz-Expires'       => (string)$expirySeconds,
+            'X-Amz-SignedHeaders' => 'host',
+        ];
+        ksort($query);
+        $canonicalQuery = http_build_query($query, '', '&', PHP_QUERY_RFC3986);
+
+        $canonicalHeaders = "host:{$this->host}\n";
+        $payloadHash = 'UNSIGNED-PAYLOAD';
+        $canonicalRequest = implode("\n", ['PUT', $canonicalPath, $canonicalQuery, $canonicalHeaders, 'host', $payloadHash]);
+        $stringToSign = implode("\n", ['AWS4-HMAC-SHA256', $now, $credentialScope, hash('sha256', $canonicalRequest)]);
+        $signature = hash_hmac('sha256', $stringToSign, $this->signingKey($dateStamp));
+
+        return $this->endpoint . $canonicalPath . '?' . $canonicalQuery . '&X-Amz-Signature=' . $signature;
+    }
+
     // ═══════════════════════════ INTERNAL ═══════════════════════════
 
     private function putSmall(string $key, string $localPath, string $contentType, int $size, array $metaHeaders): void
