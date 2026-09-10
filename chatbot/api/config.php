@@ -25,7 +25,7 @@ define('GEMINI_MODELS', [
 
 define('GEMINI_MAX_OUTPUT_TOKENS', 1000);
 define('GEMINI_TEMPERATURE', 0.65);
-define('GEMINI_TIMEOUT', 6);
+define('GEMINI_TIMEOUT', 4);
 
 function gemini_endpoint(string $model, string $key): string
 {
