@@ -241,7 +241,7 @@ $extraCss = ['/css/content.css'];
             $jsEsc = fn(string $s): string =>
                 "'" . strtr($s, ["'" => "\\'", '\\' => '\\\\']) . "'";
             $onclick = $foto
-                ? 'ShowPhotoBox(' . $jsEsc($nama) . ',' . $jsEsc($foto) . ",\\'ASISTEN IMAM\\'," . $jsEsc($wilayah) . ')'
+                ? 'ShowPhotoBox(' . $jsEsc($nama) . ',' . $jsEsc($foto) . ",'ASISTEN IMAM'," . $jsEsc($wilayah) . ')'
                 : '';
         ?>
         <div class="profile-item"
