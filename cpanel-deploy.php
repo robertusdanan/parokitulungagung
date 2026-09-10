@@ -19,20 +19,19 @@ if (($_GET['token'] ?? '') !== $secretToken) {
 }
 
 if (($_GET['action'] ?? '') === 'read_error_log') {
+    $iniLog = ini_get('error_log');
+    $findLogs = shell_exec("find /home/ejtkecoh/ -name 'error_log' 2>/dev/null");
+    $logFiles = array_filter(explode("\n", trim((string)$findLogs)));
+    if ($iniLog && !in_array($iniLog, $logFiles)) $logFiles[] = $iniLog;
+
     $logs = [];
-    $candidates = [
-        __DIR__ . '/error_log',
-        __DIR__ . '/admin/error_log',
-        __DIR__ . '/admin/api/error_log',
-        '/home/ejtkecoh/logs/parokitulungagung.org.php.error.log',
-    ];
-    foreach ($candidates as $f) {
-        if (file_exists($f)) {
+    foreach ($logFiles as $f) {
+        if (file_exists($f) && is_readable($f)) {
             $lines = file($f, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-            $logs[basename(dirname($f)) . '/' . basename($f)] = array_slice($lines, -25);
+            $logs[$f] = array_slice($lines, -25);
         }
     }
-    echo json_encode(['status' => 'success', 'logs' => $logs], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    echo json_encode(['status' => 'success', 'ini_error_log' => $iniLog, 'logs' => $logs], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
     exit;
 }
 
