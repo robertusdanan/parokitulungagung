@@ -80,8 +80,8 @@ $FOLDERS = [
     'jadwal_petugas' => ['storage' => 'r2',    'r2_prefix' => defined('R2_JADWAL_PETUGAS_PREFIX') ? R2_JADWAL_PETUGAS_PREFIX : 'jadwal_petugas/', 'max_w' => 1600, 'max_h' => 1200, 'quality' => 85, 'label' => 'Jadwal Petugas'],
     'artikel'        => ['storage' => 'r2',    'r2_prefix' => defined('R2_ARTIKEL_PREFIX') ? R2_ARTIKEL_PREFIX : 'artikel/',  'max_w' => 960,  'max_h' => 720,  'quality' => 80, 'label' => 'Artikel'],
     'gereja'         => ['storage' => 'r2',    'r2_prefix' => 'assets/gereja/',                                            'max_w' => 1600, 'max_h' => 1200, 'quality' => 80, 'label' => 'Foto Gereja'],
-    'assets'         => ['storage' => 'r2',    'r2_prefix' => defined('R2_ASSETS_PREFIX') ? R2_ASSETS_PREFIX : 'assets/',   'max_w' => 1600, 'max_h' => 1200, 'quality' => 80, 'label' => 'Assets', 'raw' => true],
-    'root_img'       => ['storage' => 'r2',    'r2_prefix' => defined('R2_ASSETS_PREFIX') ? R2_ASSETS_PREFIX : 'assets/',   'max_w' => 1600, 'max_h' => 1200, 'quality' => 80, 'label' => 'Assets', 'raw' => true],
+    'assets'         => ['storage' => 'r2',    'r2_prefix' => defined('R2_ASSETS_PREFIX') ? R2_ASSETS_PREFIX : 'assets/',   'max_w' => 1600, 'max_h' => 1200, 'quality' => 80, 'label' => 'Assets'],
+    'root_img'       => ['storage' => 'r2',    'r2_prefix' => defined('R2_ASSETS_PREFIX') ? R2_ASSETS_PREFIX : 'assets/',   'max_w' => 1600, 'max_h' => 1200, 'quality' => 80, 'label' => 'Assets'],
     'person'         => ['storage' => 'r2',    'r2_prefix' => defined('R2_PERSON_PREFIX') ? R2_PERSON_PREFIX : 'person/',  'crop' => 'square200', 'quality' => 82, 'label' => 'Foto Person'],
     'icon'           => ['storage' => 'r2',    'r2_prefix' => defined('R2_ICON_PREFIX') ? R2_ICON_PREFIX : 'icon/',         'raw' => true, 'label' => 'Icon'],
     'icon_kategorial'=> ['storage' => 'r2',    'r2_prefix' => defined('R2_ICON_KAT_PREFIX') ? R2_ICON_KAT_PREFIX : 'icon/kategorial/', 'raw' => true, 'label' => 'Icon Kategorial'],
@@ -243,7 +243,7 @@ if (!empty($cfg['crop']) && $cfg['crop'] === 'square200') {
 if (!empty($cfg['raw'])) {
     $extIn  = strtolower(pathinfo($file['name'] ?? 'file', PATHINFO_EXTENSION));
     $extOut = $extIn ?: 'bin';
-    $filename = $slug . '-' . $suffix . '.' . $extOut;
+    $filename = $slug . '.' . $extOut;
     $r2Key    = rtrim($cfg['r2_prefix'], '/') . '/' . $filename;
 
     try {
@@ -270,7 +270,7 @@ if (!empty($cfg['raw'])) {
 
 // ── Folder dengan kompresi + konversi WebP ───────────────────────────────
 $extOut  = $webpOk ? 'webp' : 'jpg';
-$filename = $slug . '-' . $suffix . '.' . $extOut;
+$filename = $slug . '.' . $extOut;
 $r2Key    = rtrim($cfg['r2_prefix'], '/') . '/' . $filename;
 
 $src = null;
@@ -282,7 +282,7 @@ elseif ($mimeType === 'image/gif' && function_exists('imagecreatefromgif')) $src
 if (!$src) {
     // GD gagal → upload mentah apa adanya (fallback aman)
     $rawExt  = $mimeType === 'image/png' ? 'png' : ($mimeType === 'image/webp' ? 'webp' : 'jpg');
-    $rawName = $slug . '-' . $suffix . '.' . $rawExt;
+    $rawName = $slug . '.' . $rawExt;
     $rawKey  = rtrim($cfg['r2_prefix'], '/') . '/' . $rawName;
     try {
         $r2 = getR2WriteClient();
