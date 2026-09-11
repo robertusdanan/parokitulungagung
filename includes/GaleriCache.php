@@ -120,6 +120,34 @@ if (!function_exists('galeriPhotoCacheInvalidate')) {
 }
 
 /**
+ * Hapus cache album berdasarkan nama folder R2 — dipanggil saat callback
+ * kompresi video selesai di GitHub Actions, supaya web publik langsung
+ * mengambil file video terbaru dari R2 tanpa perlu simpan ulang manual di admin.
+ */
+if (!function_exists('galeriPhotoCacheInvalidateByFolder')) {
+    function galeriPhotoCacheInvalidateByFolder(string $folder): int
+    {
+        $dir = galeriCacheDir();
+        if (!is_dir($dir)) return 0;
+        $folderNorm = trim($folder);
+        if ($folderNorm === '') return 0;
+
+        $deleted = 0;
+        foreach (glob($dir . '/album_*.json') ?: [] as $f) {
+            $raw = @file_get_contents($f);
+            if ($raw === false) continue;
+            $data = json_decode($raw, true);
+            if (is_array($data) && isset($data['folder'])) {
+                if (strcasecmp(trim((string)$data['folder']), $folderNorm) === 0) {
+                    if (@unlink($f)) $deleted++;
+                }
+            }
+        }
+        return $deleted;
+    }
+}
+
+/**
  * Hapus semua cache album sekaligus (flush total).
  * @return int Jumlah file yang berhasil dihapus.
  */

@@ -23,6 +23,7 @@
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/functions.php';
 require_once __DIR__ . '/../includes/R2AlbumCache.php';
+require_once __DIR__ . '/../../includes/GaleriCache.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -61,6 +62,11 @@ if ($album === '' || !in_array($status, ['done', 'failed'], true)) {
 // Cache album basi -> dihitung ulang otomatis saat panel R2 dibuka lagi.
 r2AlbumCacheInvalidateStats($album);
 r2AlbumCacheAddNameIfMissing($album);
+
+// Invalidate cache web publik galeri foto supaya video terkompres langsung muncul
+if (function_exists('galeriPhotoCacheInvalidateByFolder')) {
+    galeriPhotoCacheInvalidateByFolder($album);
+}
 
 if ($status === 'failed') {
     error_log("[r2_video_job_callback] GitHub Actions GAGAL kompres video. album={$album} target={$targetKey} pesan={$message}");

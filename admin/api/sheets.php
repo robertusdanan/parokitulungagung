@@ -183,6 +183,14 @@ try {
                 $insert[$col] = $rowData[$col] ?? '';
             }
             $result = $db->insert($table, $insert);
+            $newId = (int)($result[$pk] ?? 0);
+            if ($page === 'galeri') {
+                if ($newId > 0) galeriPhotoCacheInvalidate($newId);
+                $folder = trim((string)($rowData['Link'] ?? ''));
+                if ($folder !== '' && function_exists('galeriPhotoCacheInvalidateByFolder')) {
+                    galeriPhotoCacheInvalidateByFolder($folder);
+                }
+            }
             $logger->log($currentUser, 'CREATE', $page,
                 'Baris baru: ' . json_encode(array_slice($insert, 0, 2), JSON_UNESCAPED_UNICODE));
             invalidateAllRelatedCaches($page, $table);
@@ -207,7 +215,13 @@ try {
             // Album galeri diubah (judul/folder/dll) → cache foto R2-nya
             // sudah tidak pasti valid lagi, hapus supaya diambil ulang
             // dari R2 di kunjungan berikutnya.
-            if ($page === 'galeri') galeriPhotoCacheInvalidate((int)$recordId);
+            if ($page === 'galeri') {
+                galeriPhotoCacheInvalidate((int)$recordId);
+                $folder = trim((string)($rowData['Link'] ?? ''));
+                if ($folder !== '' && function_exists('galeriPhotoCacheInvalidateByFolder')) {
+                    galeriPhotoCacheInvalidateByFolder($folder);
+                }
+            }
             $logger->log($currentUser, 'UPDATE', $page, 'Update ID: ' . $recordId);
             invalidateAllRelatedCaches($page, $table);
             apiJson(['success' => true]);
