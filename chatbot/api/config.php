@@ -12,6 +12,20 @@ if (file_exists($secretsFile)) {
 }
 require_once dirname(__DIR__, 2) . '/includes/config.php';
 
+// ─── 9ROUTER / OPENAI ROUTER CONFIG ─────────────────────────────
+if (!defined('ROUTER_API_KEY')) {
+    define('ROUTER_API_KEY', defined('SECRET_ROUTER_API_KEY') ? SECRET_ROUTER_API_KEY : '');
+}
+if (!defined('ROUTER_ENDPOINT')) {
+    define('ROUTER_ENDPOINT', defined('SECRET_ROUTER_ENDPOINT') ? SECRET_ROUTER_ENDPOINT : 'https://9router.kaventara.id/v1/chat/completions');
+}
+if (!defined('ROUTER_MODEL')) {
+    define('ROUTER_MODEL', defined('SECRET_ROUTER_MODEL') ? SECRET_ROUTER_MODEL : 'chatbot-paroki');
+}
+define('ROUTER_MAX_OUTPUT_TOKENS', 800);
+define('ROUTER_TEMPERATURE',       0.65);
+define('ROUTER_TIMEOUT',           8);
+
 // ─── GEMINI API KEYS & MODELS ─────────────────────────────
 if (!defined('GEMINI_API_KEYS')) {
     define('GEMINI_API_KEYS', defined('SECRET_GEMINI_API_KEYS') ? SECRET_GEMINI_API_KEYS : []);

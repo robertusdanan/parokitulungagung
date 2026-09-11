@@ -7,6 +7,9 @@ error_log
 cache/**
 !cache/**/
 !cache/**/.gitkeep
+chatbot/data/cache/**
+!chatbot/data/cache/**/
+!chatbot/data/cache/**/.gitkeep
 GA4/cache/**
 !GA4/cache/**/
 !GA4/cache/**/.gitkeep

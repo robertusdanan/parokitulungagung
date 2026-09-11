@@ -6,6 +6,7 @@
 
 require_once __DIR__ . '/config.php';
 require_once dirname(__DIR__, 2) . '/includes/functions.php';
+require_once dirname(__DIR__, 2) . '/includes/StoriesManager.php';
 
 class ArticleReader
 {
@@ -86,6 +87,8 @@ class ArticleReader
             'dpp'        => self::searchDPP($keywords),
             'umkm'       => self::searchUMKM($keywords),
             'agenda'     => self::searchAgenda($keywords),
+            'galeri'     => self::searchGaleri($keywords),
+            'stories'    => self::searchStories($keywords),
         ];
 
         return $results;
@@ -168,6 +171,24 @@ class ArticleReader
             $lines = ["【AGENDA & INFO PAROKI TERKAIT】:"];
             foreach ($data['agenda'] as $ag) {
                 $lines[] = "• {$ag['judul']} — {$ag['keterangan']} (Tautan: /agenda)";
+            }
+            $sections[] = implode("\n", $lines);
+        }
+
+        // 8. Galeri Foto & Album
+        if (!empty($data['galeri'])) {
+            $lines = ["【GALERI FOTO & ALBUM TERKAIT】:"];
+            foreach ($data['galeri'] as $g) {
+                $lines[] = "• Album: {$g['judul']} ({$g['tanggal']}) (Tautan: {$g['url']})";
+            }
+            $sections[] = implode("\n", $lines);
+        }
+
+        // 9. Stories & Dokumentasi
+        if (!empty($data['stories'])) {
+            $lines = ["【STORIES & DOKUMENTASI MEDIA TERKAIT】:"];
+            foreach ($data['stories'] as $st) {
+                $lines[] = "• {$st['caption']} (Tautan: /stories)";
             }
             $sections[] = implode("\n", $lines);
         }
@@ -339,18 +360,113 @@ class ArticleReader
 
     private static function searchAgenda(array $keywords): array
     {
-        $hasAgendaKw = false;
+        $data = function_exists('fetchSupabaseCached') ? fetchSupabaseCached('info_paroki', [], 'tanggal.asc') : [];
+        if (!is_array($data) || empty($data)) return [];
+
+        $matched = [];
+        foreach ($data as $item) {
+            $judul = $item['judul'] ?? ($item['kegiatan'] ?? '');
+            $ket   = $item['keterangan'] ?? ($item['deskripsi'] ?? '');
+            $tgl   = $item['tanggal'] ?? '';
+            $haystack = mb_strtolower($judul . ' ' . $ket . ' ' . $tgl);
+
+            $score = 0;
+            foreach ($keywords as $kw) {
+                if (mb_strpos($haystack, $kw) !== false) $score += 2;
+            }
+            if ($score > 0) {
+                $matched[] = [
+                    'score'      => $score,
+                    'judul'      => html_entity_decode($judul, ENT_QUOTES|ENT_HTML5, 'UTF-8'),
+                    'keterangan' => html_entity_decode($ket, ENT_QUOTES|ENT_HTML5, 'UTF-8'),
+                    'tanggal'    => $tgl,
+                    'url'        => SITE_URL . '/agenda'
+                ];
+            }
+        }
+
+        usort($matched, fn($a, $b) => $b['score'] <=> $a['score']);
+        return array_slice($matched, 0, 5);
+    }
+
+    private static function searchGaleri(array $keywords): array
+    {
+        $data = function_exists('fetchSupabaseCached') ? fetchSupabaseCached('galeri_foto', [], 'Tanggal.desc') : [];
+        if (!is_array($data) || empty($data)) return [];
+
+        $matched = [];
+        foreach ($data as $item) {
+            $judul = $item['Judul'] ?? '';
+            $tgl   = $item['Tanggal'] ?? '';
+            $bulan = $item['Bulan'] ?? '';
+            $haystack = mb_strtolower($judul . ' ' . $tgl . ' ' . $bulan);
+
+            $score = 0;
+            foreach ($keywords as $kw) {
+                if (mb_strpos($haystack, $kw) !== false) $score += 2;
+            }
+            if ($score > 0) {
+                $matched[] = [
+                    'score'   => $score,
+                    'judul'   => html_entity_decode($judul, ENT_QUOTES|ENT_HTML5, 'UTF-8'),
+                    'tanggal' => $tgl,
+                    'album_id'=> $item['id'] ?? null,
+                    'url'     => SITE_URL . '/galeri-album/' . ($item['id'] ?? '')
+                ];
+            }
+        }
+
+        usort($matched, fn($a, $b) => $b['score'] <=> $a['score']);
+        return array_slice($matched, 0, 5);
+    }
+
+    private static function searchStories(array $keywords): array
+    {
+        $hasStoryKw = false;
         foreach ($keywords as $kw) {
-            if (in_array($kw, ['agenda', 'acara', 'kegiatan', 'pengumuman', 'warta', 'jadwal', 'retret', 'rekoleksi'], true)) {
-                $hasAgendaKw = true;
+            if (in_array($kw, ['story', 'stories', 'video', 'dokumentasi', 'reel', 'status'], true)) {
+                $hasStoryKw = true;
                 break;
             }
         }
-        if (!$hasAgendaKw) return [];
 
-        return [
-            ['judul' => 'Agenda & Warta Kegiatan Paroki', 'keterangan' => 'Jadwal kegiatan rutin, misa hari raya, dan pengumuman paroki terupdate dapat dilihat di halaman /agenda']
-        ];
+        if (class_exists('StoriesManager')) {
+            $stories = StoriesManager::getStories();
+            if (is_array($stories) && !empty($stories)) {
+                $matched = [];
+                foreach ($stories as $st) {
+                    $caption = $st['caption'] ?? ($st['title'] ?? '');
+                    $haystack = mb_strtolower($caption);
+
+                    $score = $hasStoryKw ? 1 : 0;
+                    foreach ($keywords as $kw) {
+                        if (mb_strpos($haystack, $kw) !== false) $score += 2;
+                    }
+
+                    if ($score > 0) {
+                        $matched[] = [
+                            'score'   => $score,
+                            'caption' => html_entity_decode($caption, ENT_QUOTES|ENT_HTML5, 'UTF-8'),
+                            'type'    => $st['type'] ?? 'media',
+                            'url'     => SITE_URL . '/stories'
+                        ];
+                    }
+                }
+                if (!empty($matched)) {
+                    usort($matched, fn($a, $b) => $b['score'] <=> $a['score']);
+                    return array_slice($matched, 0, 4);
+                }
+            }
+        }
+
+        if ($hasStoryKw) {
+            return [[
+                'caption' => 'Koleksi Stories & Dokumentasi Paroki SMDTBA Tulungagung',
+                'url'     => SITE_URL . '/stories'
+            ]];
+        }
+
+        return [];
     }
 
     public static function clearOldCache(): int

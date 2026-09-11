@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/knowledge.php';
 require_once __DIR__ . '/articles.php';
+require_once __DIR__ . '/router.php';
 require_once __DIR__ . '/gemini.php';
 require_once __DIR__ . '/groq.php';
 require_once __DIR__ . '/memory.php';
@@ -92,8 +93,8 @@ if ($pageUrl) {
     }
 }
 
-// ─── Panggil AI (Gemini dengan fallback ke Groq) ───────────
-$aiResult = GeminiAI::ask(
+// ─── Panggil AI (9Router dengan fallback ke Gemini & Groq) ─
+$aiResult = RouterAI::ask(
     userMessage: $message,
     history:     $memory->getGeminiHistory(),
     pageContext: $pageText,
@@ -101,7 +102,7 @@ $aiResult = GeminiAI::ask(
 );
 
 $answer = $aiResult['answer'];
-$source = $aiResult['provider'] ?? 'gemini';
+$source = $aiResult['provider'] ?? '9router';
 if ($aiResult['error']) {
     $source = 'fallback';
 }
