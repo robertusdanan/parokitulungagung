@@ -384,7 +384,7 @@ adminHeader('Manajemen User', 'users', $user);
         <?php
         // Susun halaman per section
         $permSections = [
-            'Data Paroki' => ['galeri','romo_paroki','wilayah','asisten_imam','dpp_bgkp','agenda','dokumen_paroki','jadwal_petugas_gambar','umkm','media','kategorial'],
+            'Data Paroki' => ['galeri','stories','romo_paroki','wilayah','asisten_imam','dpp_bgkp','agenda','dokumen_paroki','jadwal_petugas_gambar','umkm','media','kategorial'],
             'Artikel'     => ['berita','kronik','historia'],
             'Sistem'      => ['master'],
         ];

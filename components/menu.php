@@ -28,6 +28,11 @@ require_once __DIR__ . '/../includes/functions.php';
         <span class="tulisan">Galeri</span>
       </a>
 
+      <a href="/stories" class="divtombol">
+        <img class="imgtombol" src="<?= iconUrl('icon_kronik.png') ?>" alt="Stories Paroki" width="48" height="48" loading="lazy" decoding="async">
+        <span class="tulisan">Stories</span>
+      </a>
+
       <a href="/profil-lingkungan" class="divtombol">
         <img class="imgtombol" src="<?= iconUrl('icon_square_lingkungan.png') ?>" alt="Profil Wilayah dan Lingkungan" width="48" height="48" loading="lazy" decoding="async">
         <span class="tulisan">Wilayah</span>

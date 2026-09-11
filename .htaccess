@@ -137,6 +137,7 @@ RewriteRule ^galeri/album/([0-9]+)/[^/]+/?$ pages/galeri-album.php?id=$1 [L,QSA]
 RewriteRule ^galeri/album/([0-9]+)/?$       pages/galeri-album.php?id=$1 [L,QSA]
 
 RewriteRule ^galeri/?$            pages/galeri.php            [L]
+RewriteRule ^stories/?$           pages/stories.php           [L]
 RewriteRule ^profil-ai/?$         pages/profil-ai.php         [L]
 RewriteRule ^profil-dpp/?$        pages/profil-dpp.php        [L]
 RewriteRule ^profil-lingkungan/?$ pages/profil-lingkungan.php [L]
@@ -228,7 +229,7 @@ ErrorDocument 505 /error.php?code=505
 
 # ── Halaman statis: cache 30 menit, 5 menit di browser ──
 <IfModule mod_rewrite.c>
-  RewriteCond %{REQUEST_URI} ^/(galeri|agenda|jadwal-misa|tentang|kontak|kategorial|profil-ai|profil-dpp|profil-lingkungan|umkmumat)/?$
+  RewriteCond %{REQUEST_URI} ^/(galeri|stories|agenda|jadwal-misa|tentang|kontak|kategorial|profil-ai|profil-dpp|profil-lingkungan|umkmumat)/?$
   RewriteRule ^ - [E=IS_STATIC_PAGE:1]
 </IfModule>
 <IfModule mod_headers.c>

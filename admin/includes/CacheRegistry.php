@@ -101,6 +101,12 @@ if (!function_exists('getCacheGroups')) {
                 'dir'         => $root . '/cache/media',
                 'patterns'    => ['*.json'],
             ],
+            'stories' => [
+                'label'       => 'Cache Stories',
+                'description' => 'Metadata media Stories (foto & video) sinkronisasi R2.',
+                'dir'         => $root . '/cache/stories',
+                'patterns'    => ['*.json'],
+            ],
             'chatbot' => [
                 'label'       => 'Cache Chatbot',
                 'description' => 'Cache konteks jawaban chatbot AI. Data rate-limit & rotasi API key tidak ikut dihapus (bukan cache).',

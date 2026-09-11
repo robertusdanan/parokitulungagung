@@ -107,6 +107,7 @@ if (!defined('R2_DOWNLOADS_PREFIX'))      define('R2_DOWNLOADS_PREFIX',      'do
 if (!defined('R2_JADWAL_PETUGAS_PREFIX')) define('R2_JADWAL_PETUGAS_PREFIX', 'jadwal_petugas/');
 if (!defined('R2_UMKM_PREFIX'))           define('R2_UMKM_PREFIX',           'umkm/');
 if (!defined('R2_ASSETS_PREFIX'))         define('R2_ASSETS_PREFIX',         'assets/');
+if (!defined('R2_STORIES_PREFIX'))        define('R2_STORIES_PREFIX',        'stories/');
 
 // ── Prefix staging video sementara sebelum dikompresi GitHub Actions ──
 // Key di dalamnya berbentuk deterministik:
@@ -147,7 +148,7 @@ if (!defined('MAIL_PASSWORD'))  define('MAIL_PASSWORD',  SECRET_MAIL_PASSWORD);
 
 // ── Halaman data ───────────────────────────────────────────────────────
 if (!defined('ALL_PAGES')) define('ALL_PAGES', [
-    'galeri','wilayah','asisten_imam','dpp_bgkp','romo_paroki',
+    'galeri','stories','wilayah','asisten_imam','dpp_bgkp','romo_paroki',
     'agenda','umkm','media','kategorial',
     'master_lingkungan','master_bidang','master_koordinator','dokumen_paroki',
     'jadwal_petugas_gambar',
@@ -161,6 +162,7 @@ if (!defined('PAGE_LABELS')) define('PAGE_LABELS', [
     'dokumen_paroki'        => 'Dokumen Download',
     'jadwal_petugas_gambar' => 'Jadwal Petugas',
     'galeri'                => 'Galeri Foto',
+    'stories'               => 'Stories',
     'wilayah'               => 'Profil Wilayah',
     'asisten_imam'          => 'Asisten Imam',
     'dpp_bgkp'              => 'DPP & BGKP',
