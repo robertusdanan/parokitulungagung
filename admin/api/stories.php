@@ -13,6 +13,7 @@ require_once __DIR__ . '/../includes/functions.php';
 require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../../includes/StoriesManager.php';
 require_once __DIR__ . '/../../includes/R2FolderCompressor.php';
+require_once __DIR__ . '/../../includes/GitHubDispatcher.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -78,55 +79,63 @@ if ($method === 'POST') {
         $cdnUrl = defined('R2_CDN_URL') ? rtrim(R2_CDN_URL, '/') : 'https://img.parokitulungagung.org';
 
         if ($isVideo) {
-            // ── PROSES VIDEO ──
-            $compResult = R2FolderCompressor::compress($tmpPath);
-            $videoPathToUpload = $compResult['path'];
-            $targetExt = $compResult['extOverride'] ?: strtolower(pathinfo($origName, PATHINFO_EXTENSION) ?: 'mp4');
-            $targetKey = StoriesManager::R2_PREFIX . $safeBase . $uniqueSuffix . '.' . $targetExt;
+            // ── PROSES VIDEO: OFFLOAD KE GITHUB ACTIONS ──
+            // Target format selalu .mp4 untuk kompatibilitas web maksimal
+            $targetKey    = StoriesManager::R2_PREFIX . $safeBase . $uniqueSuffix . '.mp4';
+            $posterKey    = StoriesManager::R2_PREFIX . $safeBase . $uniqueSuffix . '.webp';
+            $stagingPrefix = (defined('R2_PENDING_VIDEO_PREFIX') ? R2_PENDING_VIDEO_PREFIX : '_pending_video/') . 'stories/';
+            $stagingKey   = $stagingPrefix . $safeBase . $uniqueSuffix . '.mp4';
+
+            $mimeType = R2FolderCompressor::mimeTypeFor($origName);
+            if (empty($mimeType) || $mimeType === 'application/octet-stream') {
+                $mimeType = 'video/mp4';
+            }
 
             try {
-                $r2->putObjectFromFile($targetKey, $videoPathToUpload, $compResult['contentType'] ?: 'video/mp4', [
-                    'cache-control' => 'public, max-age=31536000, immutable'
+                // 1) Upload mentah ke R2 staging
+                $r2->putObjectFromFile($stagingKey, $tmpPath, $mimeType, [
+                    'original-filename' => basename($origName),
+                    'uploaded-via'      => 'admin-stories-staging',
                 ]);
             } catch (Throwable $e) {
-                if ($compResult['isTemp'] && file_exists($compResult['path'])) @unlink($compResult['path']);
-                apiJson(['success' => false, 'error' => 'Gagal upload video ke Cloudflare R2: ' . $e->getMessage()], 500);
+                apiJson(['success' => false, 'error' => 'Gagal upload video ke server: ' . $e->getMessage()], 500);
             }
 
-            // Ekstrak poster WebP dari frame detik 1
-            $posterKey = null;
-            $posterUrl = null;
-            $posterTmp = R2FolderCompressor::extractVideoPoster($videoPathToUpload);
-            if ($posterTmp && file_exists($posterTmp)) {
-                $posterKey = StoriesManager::R2_PREFIX . $safeBase . $uniqueSuffix . '_poster.webp';
+            // 2) Dispatch ke GitHub Actions (compress-video-batch)
+            $dispatched = false;
+            if (defined('SECRET_GITHUB_TOKEN') && defined('SECRET_GITHUB_REPO')) {
                 try {
-                    $r2->putObjectFromFile($posterKey, $posterTmp, 'image/webp', [
-                        'cache-control' => 'public, max-age=31536000, immutable'
+                    $gh = new GitHubDispatcher(SECRET_GITHUB_TOKEN, SECRET_GITHUB_REPO);
+                    $gh->dispatch('compress-video-batch', [
+                        'album'          => 'stories',
+                        'staging_prefix' => $stagingPrefix,
+                        'target_prefix'  => StoriesManager::R2_PREFIX,
                     ]);
-                    $posterUrl = $cdnUrl . '/' . $posterKey;
+                    $dispatched = true;
                 } catch (Throwable $e) {
-                    error_log('[stories.php] Gagal upload poster video: ' . $e->getMessage());
+                    error_log('[stories.php] Dispatch GitHub Actions gagal: ' . $e->getMessage());
                 }
-                @unlink($posterTmp);
-            }
-
-            if ($compResult['isTemp'] && file_exists($compResult['path'])) {
-                @unlink($compResult['path']);
             }
 
             $storyData = [
-                'type'        => 'video',
-                'file_name'   => $baseRawName,
-                'r2_key'      => $targetKey,
-                'url'         => $cdnUrl . '/' . $targetKey,
-                'poster_key'  => $posterKey,
-                'poster_url'  => $posterUrl,
-                'description' => $description,
-                'size'        => $compResult['outputSize'] ?: $fileSize,
+                'type'         => 'video',
+                'file_name'    => $baseRawName,
+                'r2_key'       => $targetKey,
+                'url'          => $cdnUrl . '/' . $targetKey,
+                'poster_key'   => $posterKey,
+                'poster_url'   => $cdnUrl . '/' . $posterKey,
+                'video_status' => 'processing',
+                'description'  => $description,
+                'size'         => $fileSize,
             ];
 
             $saved = StoriesManager::addStory($storyData);
-            apiJson(['success' => true, 'item' => $saved]);
+            apiJson([
+                'success'    => true,
+                'item'       => $saved,
+                'dispatched' => $dispatched,
+                'note'       => 'Video sedang dikompresi otomatis di cloud. Poster dan video web-ready akan tampil setelah selesai.'
+            ]);
 
         } else {
             // ── PROSES FOTO (WebP q60 max 1600px) ──

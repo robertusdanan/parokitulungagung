@@ -204,7 +204,38 @@ final class StoriesManager
         @rename($tmp, $path);
     }
 
-    private static function saveAll(array $items): bool
+    public static function handleVideoWebhookCallback(array $targetKeys): bool
+    {
+        if (empty($targetKeys)) return false;
+        $items = self::getStories(true);
+        $changed = false;
+        $cdnUrl = defined('R2_CDN_URL') ? rtrim(R2_CDN_URL, '/') : 'https://img.parokitulungagung.org';
+
+        foreach ($items as &$item) {
+            $key = $item['r2_key'] ?? '';
+            // Cek apakah key atau varian ekstensi cocok dengan salah satu target_keys
+            foreach ($targetKeys as $tk) {
+                if ($key === $tk || pathinfo($key, PATHINFO_FILENAME) === pathinfo($tk, PATHINFO_FILENAME)) {
+                    $item['video_status'] = 'ready';
+                    $item['r2_key'] = $tk;
+                    $item['url'] = $cdnUrl . '/' . $tk;
+                    $posterKey = preg_replace('/\.[a-zA-Z0-9]+$/', '.webp', $tk);
+                    $item['poster_key'] = $posterKey;
+                    $item['poster_url'] = $cdnUrl . '/' . $posterKey;
+                    $changed = true;
+                    break;
+                }
+            }
+        }
+        unset($item);
+
+        if ($changed) {
+            return self::saveAll($items);
+        }
+        return false;
+    }
+
+    public static function saveAll(array $items): bool
     {
         $items = self::sortItems($items);
         self::saveLocalCache($items);

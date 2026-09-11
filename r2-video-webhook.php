@@ -76,6 +76,17 @@ if (function_exists('galeriPhotoCacheInvalidateByFolder')) {
     galeriPhotoCacheInvalidateByFolder($album);
 }
 
+// Update Stories jika album stories atau ada target key stories/
+if ($album === 'stories' || strpos(implode(' ', $targetKeys), 'stories/') !== false) {
+    $storiesMgrFile = __DIR__ . '/includes/StoriesManager.php';
+    if (file_exists($storiesMgrFile)) {
+        require_once $storiesMgrFile;
+        if (class_exists('StoriesManager')) {
+            StoriesManager::handleVideoWebhookCallback($targetKeys);
+        }
+    }
+}
+
 // Invalidate cache admin R2 jika ada
 $adminCacheFile = __DIR__ . '/admin/includes/R2AlbumCache.php';
 if (file_exists($adminCacheFile)) {
