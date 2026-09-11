@@ -93,8 +93,8 @@ if ($pageUrl) {
     }
 }
 
-// ─── Panggil AI (9Router dengan fallback ke Gemini & Groq) ─
-$aiResult = RouterAI::ask(
+// ─── Panggil AI (Groq -> Gemini -> 9Router) ───────────
+$aiResult = GroqAI::ask(
     userMessage: $message,
     history:     $memory->getGeminiHistory(),
     pageContext: $pageText,
@@ -102,7 +102,7 @@ $aiResult = RouterAI::ask(
 );
 
 $answer = $aiResult['answer'];
-$source = $aiResult['provider'] ?? '9router';
+$source = $aiResult['provider'] ?? 'groq';
 if ($aiResult['error']) {
     $source = 'fallback';
 }

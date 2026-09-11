@@ -42,17 +42,18 @@ class RouterAI
             }
         }
 
-        if (DEBUG_MODE) {
-            error_log('[9Router] Gagal atau key kosong, beralih ke Gemini...');
-        }
+        return [
+            'answer'     => self::fallbackMessage(),
+            'latency_ms' => round((microtime(true) - $start) * 1000, 2),
+            'error'      => true,
+            'model'      => null,
+            'provider'   => 'none',
+        ];
+    }
 
-        // Fallback ke Gemini (yang nantinya fallback ke Groq jika Gemini gagal)
-        return GeminiAI::ask(
-            userMessage: $userMessage,
-            history:     $history,
-            pageContext: $pageContext,
-            articleText: $articleText
-        );
+    private static function fallbackMessage(): string
+    {
+        return 'Berkah Dalem. 🙏 Layanan asisten cerdas saat ini sedang sibuk. Silakan tanyakan kembali nanti atau hubungi <a href="https://wa.me/628563678844" target="_blank"><b>WhatsApp Sekretariat (+62 856-3678-844)</b></a> dan kunjungi <a href="/kontak"><b>Halaman Kontak</b></a> kami.';
     }
 
     private static function callApi(array $payload): ?array

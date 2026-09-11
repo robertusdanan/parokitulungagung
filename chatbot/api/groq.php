@@ -6,6 +6,7 @@
 
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/knowledge.php';
+require_once __DIR__ . '/gemini.php';
 
 class GroqAI
 {
@@ -40,13 +41,17 @@ class GroqAI
             }
         }
 
-        return [
-            'answer'     => self::fallbackMessage(),
-            'latency_ms' => round((microtime(true) - $start) * 1000, 2),
-            'error'      => true,
-            'model'      => null,
-            'provider'   => 'none',
-        ];
+        // Groq gagal → Fallback ke Gemini
+        if (DEBUG_MODE) {
+            error_log('[Groq] Semua key/model Groq gagal, beralih ke Gemini...');
+        }
+
+        return GeminiAI::ask(
+            userMessage: $userMessage,
+            history:     $history,
+            pageContext: $pageContext,
+            articleText: $articleText
+        );
     }
 
     private static function callWithKeyAndModelFallback(array $payload): ?array

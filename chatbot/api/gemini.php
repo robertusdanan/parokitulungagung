@@ -7,7 +7,7 @@
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/knowledge.php';
 require_once __DIR__ . '/articles.php';
-require_once __DIR__ . '/groq.php';
+require_once __DIR__ . '/router.php';
 
 class GeminiAI
 {
@@ -43,29 +43,17 @@ class GeminiAI
             }
         }
 
-        // Gemini gagal → fallback ke Groq
+        // Gemini gagal → fallback ke 9Router
         if (DEBUG_MODE) {
-            error_log('[Gemini] Semua key & model gagal, beralih ke Groq...');
+            error_log('[Gemini] Semua key & model gagal, beralih ke 9Router...');
         }
 
-        $groqResult = GroqAI::ask(
+        return RouterAI::ask(
             userMessage: $userMessage,
             history:     $history,
             pageContext: $pageContext,
             articleText: $articleText
         );
-
-        if (!$groqResult['error']) {
-            return $groqResult;
-        }
-
-        return [
-            'answer'     => self::fallbackMessage(),
-            'latency_ms' => round((microtime(true) - $start) * 1000, 2),
-            'error'      => true,
-            'model'      => null,
-            'provider'   => 'none',
-        ];
     }
 
     private static function callWithKeyAndModelFallback(array $payload): ?array
