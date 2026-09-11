@@ -133,11 +133,13 @@ jsonOut(200, [
 
 /**
  * Filter topik yang dilarang keras (pornografi, kekerasan ekstrem, narkotika)
+ * dan filter teknis / coding / jailbreak / data rahasia
  */
 function checkSevereOffTopic(string $input): ?string
 {
     $n = ' ' . mb_strtolower(trim($input)) . ' ';
 
+    // 1. Filter Konten Berbahaya & Ilegal
     $severePatterns = [
         '/\b(pornografi|bokep|xxx|video dewasa|open bo|judi online|slot gacor|judol)\b/',
         '/\b(narkoba|sabu-sabu|ganja|kokain|heroin|ekstasi)\b/',
@@ -150,6 +152,24 @@ function checkSevereOffTopic(string $input): ?string
             return 'Terima kasih telah menghubungi kami. 🙏<br><br>'
                 . 'Sebagai asisten Customer Service resmi Paroki SMDTBA Tulungagung, kami hadir khusus untuk membantu hal-hal yang berkaitan dengan <b>kehidupan menggereja, iman Katolik, dan pelayanan informasi paroki</b>.<br><br>'
                 . 'Pertanyaan Anda berada di luar cakupan layanan kami. Untuk informasi pelayanan paroki, silakan kunjungi <a href="/kontak"><b>Halaman Kontak</b></a> atau tanyakan seputar jadwal misa dan kegiatan gereja.';
+        }
+    }
+
+    // 2. Filter Jailbreak, Permintaan Kode/Sistem, API Key, Database, & Non-Church Technical
+    $techJailbreakPatterns = [
+        '/\b(ignore\s+all\s+previous\s+instructions|system\s+prompt|show\s+prompt|print\s+prompt|reveal\s+prompt)\b/i',
+        '/\b(dan\s+mode|developer\s+mode|jailbreak|root\s+access|override\s+rules)\b/i',
+        '/\b(api[_\s]?key|secret[_\s]?key|database[_\s]?password|db[_\s]?pass|supabase[_\s]?key|groq[_\s]?key|gemini[_\s]?key)\b/i',
+        '/\b(select\s+\*\s+from|drop\s+table|insert\s+into|union\s+select|sql\s+injection)\b/i',
+        '/\b(write\s+a\s+python|write\s+a\s+php|write\s+code|bikin\s+kode|buatkan\s+program|buat\s+script|kodingan)\b/i',
+        '/\b(function\s*\(|class\s+\w+|import\s+os|system\(|exec\()\b/i',
+    ];
+
+    foreach ($techJailbreakPatterns as $pattern) {
+        if (preg_match($pattern, $n)) {
+            return 'Berkah Dalem. 🙏<br><br>'
+                . 'Mohon maaf, sebagai Asisten CS Paroki, kami <b>tidak memiliki akses atau wewenang terhadap hal teknis, koding, maupun konfigurasi sistem</b>.<br><br>'
+                . 'Layanan ini khusus diperuntukkan untuk membantu informasi seputar <b>jadwal misa, pelayanan sakramen, kegiatan paroki, dan iman Katolik</b>. Silakan tanyakan hal-hal yang berkaitan dengan pelayanan paroki kami. Terima kasih!';
         }
     }
 

@@ -157,6 +157,17 @@ class GeminiAI
 
     private static function formatToSafeHtml(string $text): string
     {
+        // 1. Hapus tag reasoning / thought jika ada
+        $text = preg_replace('/<(thought|think|reasoning)[^>]*>.*?<\/\1>/si', '', $text);
+
+        // 2. Deteksi kebocoran kode atau bahasa teknis / dev / caveman
+        if (preg_match('/```|<?php|function\s*\(|SELECT\s+.*FROM|sk-[a-zA-Z0-9]|Terima input|Kirim detail masalah/i', $text)) {
+            return 'Berkah Dalem. 🙏 Silakan sampaikan pertanyaan Anda seputar jadwal misa, pelayanan sakramen, atau kegiatan Paroki SMDTBA Tulungagung. Kami siap membantu!';
+        }
+
+        // 3. Redaksi otomatis token/key jika ada
+        $text = preg_replace('/(sk-[a-zA-Z0-9_-]{10,}|sb_[a-zA-Z0-9_-]{10,}|AIza[a-zA-Z0-9_-]{10,}|gsk_[a-zA-Z0-9_-]{10,})/', '[REDACTED_KEY]', $text);
+
         // Strip common prompt leak artifacts like "(HTML format):" or "```html"
         $text = preg_replace('/^```[a-z]*\s*/i', '', $text);
         $text = preg_replace('/\s*```$/', '', $text);
