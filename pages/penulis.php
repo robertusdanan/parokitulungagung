@@ -102,11 +102,16 @@ function fetchAuthorUser(string $rawName): array
     return $result;
 }
 
-// ── Helper: cari foto profil dari uid ────────────────────────────────────
-function resolveAuthorPhoto(string $uid): string
+// ── Helper: cari foto profil dari uid + username (fallback ke default) ─
+function resolveAuthorPhoto(?string $uid, ?string $username = null): string
 {
-    if (!$uid) return '';
-    return adminFotoUrl($uid);
+    return resolveAdminFotoUrl($uid, $username);
+}
+
+// ── Helper: cek apakah user punya foto profil sendiri ────────────────
+function authorHasOwnPhoto(?string $uid, ?string $username = null): bool
+{
+    return userHasProfilePhoto($uid, $username);
 }
 
 // ── Cache halaman penulis ────────────────────────────────────────────────
@@ -163,7 +168,8 @@ $authorName    = htmlspecialchars($authorData['name'], ENT_QUOTES, 'UTF-8');
 $authorUrl     = 'https://www.parokitulungagung.org/penulis/' . $slug;
 $articleCount  = count($authorArticles);
 $authorInitial = strtoupper(mb_substr(strip_tags($authorData['name']), 0, 1, 'UTF-8'));
-$authorPhoto   = resolveAuthorPhoto($authorUser['id'] ?? '');
+$authorPhoto   = resolveAuthorPhoto($authorUser['id'] ?? '', $authorUser['username'] ?? '');
+$authorHasOwn  = authorHasOwnPhoto($authorUser['id'] ?? '', $authorUser['username'] ?? '');
 
 // Bio, jabatan, sosmed dari data user
 $authorBio     = trim($authorUser['bio']       ?? '');
@@ -237,9 +243,9 @@ $personSchema = [
     'knowsAbout'  => ['Liturgi Katolik', 'Kehidupan Gereja', 'Paroki Tulungagung', 'Iman Katolik'],
 ];
 
-// Tambahkan foto jika ada
+// Tambahkan foto jika ada (URL sudah absolut dari CDN R2).
 if ($authorPhoto) {
-    $personSchema['image'] = 'https://www.parokitulungagung.org' . $authorPhoto;
+    $personSchema['image'] = $authorPhoto;
 }
 
 // Tambahkan sameAs (sosmed) jika ada
@@ -771,7 +777,7 @@ $extraCss = [];
 <header class="pnl-hero" itemscope itemtype="https://schema.org/Person" itemid="<?= htmlspecialchars($authorUrl) ?>">
   <link itemprop="url" href="<?= htmlspecialchars($authorUrl) ?>">
   <?php if ($authorPhoto): ?>
-    <link itemprop="image" href="https://www.parokitulungagung.org<?= htmlspecialchars($authorPhoto) ?>">
+    <link itemprop="image" href="<?= htmlspecialchars($authorPhoto) ?>">
   <?php endif; ?>
   <meta itemprop="jobTitle" content="<?= htmlspecialchars($authorJabatan ?: 'Penulis Artikel', ENT_QUOTES, 'UTF-8') ?>">
   <meta itemprop="description" content="<?= htmlspecialchars($seoDescBase, ENT_QUOTES, 'UTF-8') ?>">
@@ -781,7 +787,7 @@ $extraCss = [];
 
     <!-- Avatar: foto nyata atau inisial -->
     <div class="pnl-avatar-wrap">
-      <?php if ($authorPhoto): ?>
+      <?php if ($authorHasOwn): ?>
       <img class="pnl-avatar-img"
            src="<?= htmlspecialchars($authorPhoto, ENT_QUOTES, 'UTF-8') ?>"
            alt="Foto <?= $authorName ?>"

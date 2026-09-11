@@ -16,8 +16,11 @@ if ($fresh) {
 }
 $authorSlug = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower(strip_tags($user['nama'] ?: $user['username']))), '-');
 
-// Path foto profil user ini dari R2 CDN
-$fotoPath = !empty($user['id']) ? adminFotoUrl($user['id']) : '';
+// Path foto profil user ini.
+// - Default: foto hasil upload sebelumnya (resolveAdminFotoUrl cek R2).
+// - Saat belum pernah upload: otomatis pakai default-person.webp.
+$fotoPath     = resolveAdminFotoUrl($user['id'] ?? null, $user['username'] ?? null);
+$hasOwnPhoto  = userHasProfilePhoto($user['id'] ?? null, $user['username'] ?? null);
 
 adminHeader('Pengaturan Profil', 'profil', $user);
 ?>
@@ -304,13 +307,11 @@ adminHeader('Pengaturan Profil', 'profil', $user);
   <!-- ── Kolom kiri: Avatar ─────────────────────────────────────────── -->
   <div class="avatar-card">
     <div class="avatar-wrap">
-      <?php if ($fotoPath): ?>
-        <img src="<?= e($fotoPath) ?>" class="avatar-img" id="avatarImg" alt="Foto Profil">
-      <?php else: ?>
-        <div class="avatar-initials" id="avatarInitials">
+      <img src="<?= e($fotoPath) ?>" class="avatar-img" id="avatarImg" alt="Foto Profil">
+      <?php if (!$hasOwnPhoto): ?>
+        <div class="avatar-initials" id="avatarInitials" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#c9931a,#f0c040);color:#1c0e00;font-weight:800;font-size:64px;font-family:var(--font-sans);border-radius:50%;">
           <?= strtoupper(substr($user['username'], 0, 1)) ?>
         </div>
-        <img src="" class="avatar-img" id="avatarImg" alt="" style="display:none">
       <?php endif; ?>
 
       <button class="avatar-upload-btn" onclick="document.getElementById('fotoInput').click()"
@@ -356,7 +357,7 @@ adminHeader('Pengaturan Profil', 'profil', $user);
       • Dipotong jadi kotak 200×200px<br>
       • Foto lama otomatis tergantikan
     </div>
-    <?php if ($fotoPath): ?>
+    <?php if ($hasOwnPhoto): ?>
     <button type="button" onclick="hapusFoto()"
       style="margin-top:10px;font-size:12px;color:var(--danger);background:none;border:1px solid rgba(220,80,80,.3);border-radius:6px;padding:5px 14px;cursor:pointer;width:100%;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px"
       onmouseover="this.style.background='rgba(220,80,80,.08)'" onmouseout="this.style.background='none'">
@@ -727,6 +728,27 @@ function updateSidebarAvatar(path) {
     `<img src="${escHtml(path)}?t=${Date.now()}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" alt="">`;
 }
 
+// ── Hapus foto profil ────────────────────────────────────────────────
+async function hapusFoto() {
+  if (!confirm('Hapus foto profil? Anda akan kembali memakai avatar default.')) return;
+  const btn = document.querySelector('button[onclick="hapusFoto()"]');
+  if (btn) btn.disabled = true;
+  try {
+    const data = await apiPost('/admin/api/profil.php', { action: 'hapus_foto' });
+    if (data && data.success) {
+      // Refresh halaman agar resolver-side cache juga fresh dan avatar
+      // di sidebar / halaman publik langsung ikut default.
+      window.location.reload();
+    } else {
+      toast('Gagal', (data && data.error) || 'Tidak bisa menghapus foto.', 'error');
+      if (btn) btn.disabled = false;
+    }
+  } catch (e) {
+    toast('Error', 'Gagal menghubungi server', 'error');
+    if (btn) btn.disabled = false;
+  }
+}
+
 // ── Save Informasi (username + email + bio + jabatan + sosmed) ─────────
 async function saveInfo() {
   const btn       = document.getElementById('btnSaveInfo');
@@ -895,8 +917,9 @@ function togglePw(inputId, btn) {
 
 // ── Init: setup listener & set foto profil di sidebar jika ada ─────────
 document.addEventListener('DOMContentLoaded', function () {
-  <?php if ($fotoPath): ?>
-  // Set foto di sidebar langsung
+  <?php if ($hasOwnPhoto): ?>
+  // Set foto di sidebar langsung (hanya jika user punya foto sendiri,
+  // supaya inisial tetap untuk user yang masih default).
   const p = "<?= e(strtok($fotoPath, '?')) ?>";
   updateSidebarAvatar(p);
   <?php endif; ?>

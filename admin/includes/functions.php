@@ -27,6 +27,7 @@ function adminBoot(): void {
     require_once $inc . '/Mailer.php';
     require_once $inc . '/CacheRegistry.php';
     require_once $inc . '/../../includes/SupabaseArticleManager.php';
+    require_once $inc . '/../../includes/functions.php';
 }
 
 function jsonBody(): array {
@@ -241,11 +242,12 @@ function adminHeader(string $pageTitle, string $activePage, array $user): void {
 
     <div class="sidebar-footer">
       <?php
-      $profilFotoPath = !empty($user['id']) ? adminFotoUrl($user['id']) : '';
+      $profilFotoPath = resolveAdminFotoUrl($user['id'] ?? null, $user['username'] ?? null);
+      $hasOwnPhoto    = userHasProfilePhoto($user['id'] ?? null, $user['username'] ?? null);
       ?>
       <a href="/admin/profil.php" class="user-info" style="text-decoration:none;flex:1;min-width:0" title="Pengaturan Profil">
-        <div class="user-avatar" style="<?= $profilFotoPath ? 'background:transparent;padding:0;overflow:hidden' : '' ?>">
-          <?php if ($profilFotoPath): ?>
+        <div class="user-avatar" style="<?= $hasOwnPhoto ? 'background:transparent;padding:0;overflow:hidden' : '' ?>">
+          <?php if ($hasOwnPhoto): ?>
             <img src="<?= e($profilFotoPath) ?>" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block" alt="<?= e($user['username']) ?>">
           <?php else: ?>
             <?= strtoupper(substr($user['username'], 0, 1)) ?>

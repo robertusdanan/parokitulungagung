@@ -873,6 +873,124 @@ function adminFotoUrl(string $uid): string
 }
 
 /**
+ * URL foto profil admin berdasarkan USERNAME (format baru).
+ * Mis. username "robertusdanan" → "https://img.parokitulungagung.org/assets/admin/robertusdanan.webp"
+ * Nama file di-slug agar aman untuk URL R2.
+ */
+function adminFotoUrlByUsername(string $username): string
+{
+    $username = trim($username);
+    if ($username === '') return '';
+    $slug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $username) ?? '');
+    $slug = trim($slug, '-');
+    if ($slug === '') return '';
+    $base = defined('R2_CDN_URL') ? rtrim(R2_CDN_URL, '/') : 'https://img.parokitulungagung.org';
+    return $base . '/assets/admin/' . rawurlencode($slug) . '.webp';
+}
+
+/**
+ * URL default untuk foto profil yang belum diatur.
+ * Digunakan oleh semua user yang belum pernah mengunggah foto profil.
+ */
+function defaultPersonUrl(): string
+{
+    $base = defined('R2_CDN_URL') ? rtrim(R2_CDN_URL, '/') : 'https://img.parokitulungagung.org';
+    return $base . '/assets/default-person.webp';
+}
+
+/**
+ * Cache path untuk hasil HEAD check terhadap URL R2.
+ * Disimpan di tmp selama 6 jam agar tidak membebani R2.
+ */
+function _adminPhotoCheckCachePath(string $key): string
+{
+    $dir = sys_get_temp_dir() . '/paroki-photo-cache';
+    if (!is_dir($dir)) {
+        @mkdir($dir, 0700, true);
+    }
+    return $dir . '/' . md5($key) . '.cache';
+}
+
+/**
+ * Cek apakah objek R2 ada (HEAD). Cache 6 jam.
+ * Return true jika ada (HTTP 200/304), false jika tidak.
+ */
+function r2ObjectExists(string $url): bool
+{
+    if ($url === '') return false;
+    $cachePath = _adminPhotoCheckCachePath($url);
+    if (file_exists($cachePath) && (time() - filemtime($cachePath)) < 6 * 3600) {
+        $cached = trim((string)@file_get_contents($cachePath));
+        if ($cached === '1') return true;
+        if ($cached === '0') return false;
+    }
+    $exists = false;
+    if (function_exists('curl_init')) {
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL            => $url,
+            CURLOPT_NOBODY         => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 5,
+            CURLOPT_CONNECTTIMEOUT => 3,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_SSL_VERIFYPEER => false,
+        ]);
+        curl_exec($ch);
+        $code = (int)curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+        curl_close($ch);
+        $exists = ($code >= 200 && $code < 400);
+    } else {
+        // Fallback tanpa cURL: pakai get_headers.
+        $hdrs = @get_headers($url, 1);
+        if (is_array($hdrs) && !empty($hdrs[0])) {
+            $codeLine = (string)$hdrs[0];
+            preg_match('~HTTP/\S+\s+(\d+)~i', $codeLine, $m);
+            $code = (int)($m[1] ?? 0);
+            $exists = ($code >= 200 && $code < 400);
+        }
+    }
+    @file_put_contents($cachePath, $exists ? '1' : '0');
+    return $exists;
+}
+
+/**
+ * Cek apakah user pernah meng-upload foto profil (file WebP ada di R2).
+ * Memakai pola filename baru (username) terlebih dahulu, fallback ke pola lama (uid).
+ */
+function userHasProfilePhoto(?string $uid, ?string $username = null): bool
+{
+    if ($username !== null && $username !== '') {
+        if (r2ObjectExists(adminFotoUrlByUsername($username))) return true;
+    }
+    if ($uid !== null && $uid !== '') {
+        if (r2ObjectExists(adminFotoUrl($uid))) return true;
+    }
+    return false;
+}
+
+/**
+ * Resolusi URL foto profil final untuk sebuah user record.
+ * Dipakai di semua tempat yang merender avatar admin/penulis.
+ * Aturan:
+ *   1. Jika username tersedia DAN file <username>.webp ada di R2 → pakai URL by username
+ *   2. Else jika uid tersedia DAN file profil-<uid>.webp ada di R2 → pakai URL by uid (kompabilitas)
+ *   3. Else → pakai default-person.webp
+ */
+function resolveAdminFotoUrl(?string $uid, ?string $username = null): string
+{
+    if ($username !== null && $username !== '') {
+        $byName = adminFotoUrlByUsername($username);
+        if (r2ObjectExists($byName)) return $byName;
+    }
+    if ($uid !== null && $uid !== '') {
+        $byId = adminFotoUrl($uid);
+        if (r2ObjectExists($byId)) return $byId;
+    }
+    return defaultPersonUrl();
+}
+
+/**
  * URL publik gambar artikel dari R2 bucket.
  * SEBELUMNYA: "/img/artikel/<file>" (lokal)
  * SEKARANG  : "https://img.parokitulungagung.org/artikel/<file>"

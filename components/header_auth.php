@@ -34,8 +34,13 @@ if (!defined('HEADER_AUTH_LOADED')) {
             $GLOBALS['__adminUser'] = $user;
 
             // ── Cari foto profil admin dari R2 CDN ──
+            // Menggunakan resolver yang otomatis fallback ke default-person.webp
+            // bila user belum pernah mengunggah foto.
             if (!empty($user['id'])) {
-                $GLOBALS['__adminFotoPath'] = adminFotoUrl($user['id']);
+                $GLOBALS['__adminFotoPath'] = resolveAdminFotoUrl(
+                    $user['id'] ?? null,
+                    $user['username'] ?? null
+                );
             }
 
             // ── Tentukan tujuan "Tulis Artikel" sesuai hak akses ──
@@ -91,6 +96,8 @@ function render_login_portal(): void
     $displayName = !empty($user['nama']) ? $user['nama'] : $user['username'];
     $initial     = strtoupper(substr($displayName, 0, 1));
     $roleLabel   = ($user['role'] === ROLE_SUPERADMIN) ? 'Super Admin' : 'Admin';
+    // Tampilkan inisial (bukan default-person.webp) jika user belum upload foto.
+    $hasOwnPhoto = userHasProfilePhoto($user['id'] ?? null, $user['username'] ?? null);
     ?>
     <div class="admin-account" id="adminAccount">
       <button type="button" class="admin-account-trigger" id="adminAccountBtn"
@@ -98,7 +105,7 @@ function render_login_portal(): void
               title="<?= htmlspecialchars($displayName, ENT_QUOTES, 'UTF-8') ?>">
         <span class="admin-avatar">
           <span class="admin-avatar-face">
-            <?php if ($foto): ?>
+            <?php if ($hasOwnPhoto): ?>
               <img src="<?= htmlspecialchars($foto, ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($displayName, ENT_QUOTES, 'UTF-8') ?>" loading="lazy" decoding="async">
             <?php else: ?>
               <span class="admin-avatar-initial"><?= htmlspecialchars($initial, ENT_QUOTES, 'UTF-8') ?></span>
@@ -115,7 +122,7 @@ function render_login_portal(): void
         <div class="admin-dropdown-header">
           <span class="admin-avatar admin-avatar-lg">
             <span class="admin-avatar-face">
-              <?php if ($foto): ?>
+              <?php if ($hasOwnPhoto): ?>
                 <img src="<?= htmlspecialchars($foto, ENT_QUOTES, 'UTF-8') ?>" alt="">
               <?php else: ?>
                 <span class="admin-avatar-initial"><?= htmlspecialchars($initial, ENT_QUOTES, 'UTF-8') ?></span>

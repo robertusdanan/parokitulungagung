@@ -78,7 +78,8 @@ if ($cachedData !== null) {
             }
         }
 
-        $photo = !empty($u['id']) ? adminFotoUrl($u['id']) : '';
+        $photo = resolveAdminFotoUrl($u['id'] ?? null, $u['username'] ?? null);
+        $hasOwnPhoto = userHasProfilePhoto($u['id'] ?? null, $u['username'] ?? null);
 
         $slug = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower(strip_tags($displayName))), '-');
 
@@ -87,6 +88,7 @@ if ($cachedData !== null) {
             'name'        => $displayName,
             'slug'        => $slug,
             'photo'       => $photo,
+            'has_photo'   => $hasOwnPhoto,
             'initial'     => strtoupper(substr($displayName, 0, 1)),
             'role'        => $u['role'] ?? 'admin',
             'jabatan'     => !empty($u['jabatan']) ? $u['jabatan'] : (($u['role'] ?? '') === 'superadmin' ? 'Redaksi Komsos' : 'Kontributor Paroki'),
@@ -495,7 +497,7 @@ body {
     ?>
     <article class="pen-card">
       <div class="pen-avatar-wrap">
-        <?php if (!empty($c['photo'])): ?>
+        <?php if (!empty($c['has_photo'])): ?>
           <img src="<?= htmlspecialchars($c['photo'], ENT_QUOTES, 'UTF-8') ?>"
                alt="<?= htmlspecialchars($c['name'], ENT_QUOTES, 'UTF-8') ?>"
                class="pen-avatar" width="88" height="88" loading="lazy"

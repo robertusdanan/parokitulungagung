@@ -98,6 +98,8 @@ function getSeoFromCache(string $src, array $cache): ?array {
 
 // ─────────────────────────────────────────────────────────
 // AUTHOR PHOTO — cache file 1 jam
+// Memakai resolveAdminFotoUrl() agar otomatis fallback ke
+// default-person.webp untuk user yang belum upload foto.
 // ─────────────────────────────────────────────────────────
 function getAuthorPhoto(string $penulis): string {
     if (!$penulis) return '';
@@ -110,7 +112,7 @@ function getAuthorPhoto(string $penulis): string {
     try {
         $url  = rtrim(SUPABASE_URL, '/') . '/rest/v1/users'
               . '?or=(nama.ilike.' . urlencode($penulis) . ',username.ilike.' . urlencode($penulis) . ')'
-              . '&select=id&limit=1';
+              . '&select=id,username&limit=1';
         $k    = defined('SUPABASE_ANON_KEY') ? SUPABASE_ANON_KEY : '';
         $hdrs = ['apikey: ' . $k, 'Authorization: Bearer ' . $k, 'Accept: application/json'];
         $ctx  = stream_context_create([
@@ -127,7 +129,9 @@ function getAuthorPhoto(string $penulis): string {
         if ($res) {
             $rows = json_decode($res, true);
             if (!empty($rows[0]['id'])) {
-                $foto = adminFotoUrl($rows[0]['id']);
+                $uid      = $rows[0]['id'];
+                $username = $rows[0]['username'] ?? null;
+                $foto     = resolveAdminFotoUrl($uid, $username);
             }
         }
     } catch (Throwable $e) {}

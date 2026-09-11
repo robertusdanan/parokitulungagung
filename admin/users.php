@@ -203,10 +203,11 @@ adminHeader('Manajemen User', 'users', $user);
           <td>
             <div style="display:flex;align-items:center;gap:8px">
               <?php
-              $profilFoto = !empty($u['id']) ? adminFotoUrl($u['id']) : '';
+              $profilFoto = resolveAdminFotoUrl($u['id'] ?? null, $u['username'] ?? null);
+              $hasOwnPhoto = userHasProfilePhoto($u['id'] ?? null, $u['username'] ?? null);
               ?>
-              <div class="user-avatar" style="width:28px;height:28px;font-size:12px;<?= $profilFoto ? 'background:transparent;padding:0;overflow:hidden' : '' ?>">
-                <?php if ($profilFoto): ?>
+              <div class="user-avatar" style="width:28px;height:28px;font-size:12px;<?= $hasOwnPhoto ? 'background:transparent;padding:0;overflow:hidden' : '' ?>">
+                <?php if ($hasOwnPhoto): ?>
                   <img src="<?= e($profilFoto) ?>" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block" alt="">
                 <?php else: ?>
                   <?= strtoupper(substr($u['username'] ?? 'U', 0, 1)) ?>
@@ -283,11 +284,12 @@ adminHeader('Manajemen User', 'users', $user);
     <?php endif; ?>
     <?php foreach ($userList as $u):
       $isSelf  = $u['id'] === $user['id'];
-      $mobFoto = !empty($u['id']) ? adminFotoUrl($u['id']) : '';
+      $mobFoto = resolveAdminFotoUrl($u['id'] ?? null, $u['username'] ?? null);
+      $hasOwnPhoto = userHasProfilePhoto($u['id'] ?? null, $u['username'] ?? null);
     ?>
     <div class="user-mob-card">
       <div class="user-mob-avatar">
-        <?php if ($mobFoto): ?>
+        <?php if ($hasOwnPhoto): ?>
         <img src="<?= e($mobFoto) ?>" alt="">
         <?php else: ?>
         <?= strtoupper(substr($u['username']??'U',0,1)) ?>

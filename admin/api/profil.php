@@ -72,6 +72,19 @@ if ($action === 'upload_foto') {
         apiJson(['error' => 'Folder /img/admin/profil/ tidak bisa ditulis. Set permission 755.'], 500);
     }
 
+    // Bangun slug dari username user saat ini. Nama file hasil upload
+    // SELALU menggunakan username, BUKAN ID lagi, sehingga mudah
+    // dikenali dan tetap valid walau user mengganti username nanti.
+    $uname = trim((string)($currentUser['username'] ?? ''));
+    if ($uname === '') {
+        apiJson(['error' => 'Username akun tidak valid.'], 400);
+    }
+    $fileSlug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $uname) ?? '');
+    $fileSlug = trim($fileSlug, '-');
+    if ($fileSlug === '') {
+        apiJson(['error' => 'Username tidak bisa digunakan sebagai nama file.'], 400);
+    }
+
     $src = null;
     if ($mimeType === 'image/jpeg') $src = @imagecreatefromjpeg($file['tmp_name']);
     elseif ($mimeType === 'image/png')  $src = @imagecreatefrompng($file['tmp_name']);
@@ -81,8 +94,9 @@ if ($action === 'upload_foto') {
     $r2CdnBase = defined('R2_CDN_URL') ? rtrim(R2_CDN_URL, '/') : 'https://img.parokitulungagung.org';
 
     if (!$src) {
+        // Fallback GD gagal: simpan apa adanya (kemungkinan kecil).
         $ext      = $mimeType === 'image/png' ? 'png' : 'jpg';
-        $filename = 'profil-' . $currentUser['id'] . '.' . $ext;
+        $filename = $fileSlug . '.' . $ext;
         $savePath = $uploadDir . $filename;
         if (!move_uploaded_file($file['tmp_name'], $savePath)) {
             apiJson(['error' => 'Gagal menyimpan foto.'], 500);
@@ -116,7 +130,7 @@ if ($action === 'upload_foto') {
     imagedestroy($src);
 
     $webpOk   = function_exists('imagewebp');
-    $filename = 'profil-' . $currentUser['id'] . ($webpOk ? '.webp' : '.jpg');
+    $filename = $fileSlug . ($webpOk ? '.webp' : '.jpg');
     $savePath = $uploadDir . $filename;
     $origKb   = round($file['size'] / 1024, 1);
 
@@ -130,6 +144,18 @@ if ($action === 'upload_foto') {
     try {
         $r2 = getR2WriteClient();
         $r2->putObjectFromFile($r2Key, $savePath, $webpOk ? 'image/webp' : 'image/jpeg');
+        // Hapus foto lama (format UID) jika ada, agar tidak menggandakan.
+        $legacyKey = 'assets/admin/profil-' . $currentUser['id'] . ($webpOk ? '.webp' : '.jpg');
+        if ($legacyKey !== $r2Key) {
+            try { $r2->deleteObject($legacyKey); } catch (Exception $e) { /* best-effort */ }
+        }
+        // Hapus cache hasil HEAD agar avatar ter-refresh di request berikut.
+        $cachePath1 = _adminPhotoCheckCachePath($r2CdnBase . '/' . $r2Key);
+        @unlink($cachePath1);
+        $cachePath2 = _adminPhotoCheckCachePath($r2CdnBase . '/' . $legacyKey);
+        @unlink($cachePath2);
+        // Cache key untuk default agar tidak ikut ke-flush; default tetap valid.
+        @unlink(_adminPhotoCheckCachePath($r2CdnBase . '/assets/default-person.webp'));
     } catch (Exception $e) {
         error_log('[PROFIL UPLOAD R2 ERROR] ' . $e->getMessage());
     }
@@ -281,15 +307,35 @@ if ($action === 'update') {
 // ── Hapus foto profil ─────────────────────────────────────────────────
 if ($action === 'hapus_foto') {
     $dir = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/img/admin/profil/';
+    $uname = trim((string)($currentUser['username'] ?? ''));
+    $fileSlug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $uname) ?? '');
+    $fileSlug = trim($fileSlug, '-');
+
+    // Hapus file lokal & R2: pola username (baru) + pola uid (lama).
+    $localKeys = [];
+    $r2Keys    = [];
     foreach (['webp', 'jpg', 'png'] as $ext) {
-        $f = $dir . 'profil-' . $currentUser['id'] . '.' . $ext;
-        if (file_exists($f)) @unlink($f);
-        try {
-            $r2 = getR2WriteClient();
-            $r2->deleteObject('assets/admin/profil-' . $currentUser['id'] . '.' . $ext);
-        } catch (Exception $e) {
-            // Abaikan jika tidak ada di R2
+        if ($fileSlug !== '') {
+            $localKeys[] = $dir . $fileSlug . '.' . $ext;
+            $r2Keys[]    = 'assets/admin/' . $fileSlug . '.' . $ext;
         }
+        $localKeys[] = $dir . 'profil-' . $currentUser['id'] . '.' . $ext;
+        $r2Keys[]    = 'assets/admin/profil-' . $currentUser['id'] . '.' . $ext;
+    }
+    foreach (array_unique($localKeys) as $f) {
+        if (file_exists($f)) @unlink($f);
+    }
+    try {
+        $r2 = getR2WriteClient();
+        foreach (array_unique($r2Keys) as $k) {
+            try { $r2->deleteObject($k); } catch (Exception $e) { /* best-effort */ }
+        }
+        // Hapus cache agar avatar segera tampil default-person.webp
+        $r2CdnBase = defined('R2_CDN_URL') ? rtrim(R2_CDN_URL, '/') : 'https://img.parokitulungagung.org';
+        @unlink(_adminPhotoCheckCachePath($r2CdnBase . '/assets/admin/' . $fileSlug . '.webp'));
+        @unlink(_adminPhotoCheckCachePath($r2CdnBase . '/assets/admin/profil-' . $currentUser['id'] . '.webp'));
+    } catch (Exception $e) {
+        // Abaikan jika R2 tidak tersedia
     }
     getLogger()->log($currentUser, 'DELETE', 'profil', 'Hapus foto profil');
     apiJson(['success' => true]);
