@@ -3,14 +3,19 @@
  * r2-video-webhook.php
  * ─────────────────────────────────────────────────────────────────────────
  * Webhook publik untuk menerima callback dari GitHub Actions setelah
- * kompresi video selesai (berada di root agar tidak terblokir oleh
+ * kompresi video batch selesai (berada di root agar tidak terblokir oleh
  * Cloudflare WAF / firewall admin).
  *
  * Header / Param:
  *   - Header: X-Webhook-Secret: <SECRET_VIDEO_WEBHOOK_SECRET>
  *   - ATAU GET param: ?token=<SECRET_VIDEO_WEBHOOK_SECRET>
- * Body JSON:
- *   { "album": "...", "target_key": "...", "status": "done"|"failed" }
+ * Body JSON (Batch):
+ *   {
+ *     "album": "...",
+ *     "status": "done"|"failed",
+ *     "processed_count": 5,
+ *     "target_keys": ["galerifoto/.../C0001.mp4", ...]
+ *   }
  */
 
 header('Content-Type: application/json; charset=utf-8');
@@ -42,9 +47,25 @@ if (!is_array($body)) {
     $body = $_POST;
 }
 
-$album     = trim((string)($body['album'] ?? $_GET['album'] ?? ''));
-$targetKey = trim((string)($body['target_key'] ?? ''));
-$status    = trim((string)($body['status'] ?? 'done'));
+$album          = trim((string)($body['album'] ?? $_GET['album'] ?? ''));
+$status         = trim((string)($body['status'] ?? 'done'));
+$processedCount = (int)($body['processed_count'] ?? 0);
+$targetKey      = trim((string)($body['target_key'] ?? ''));
+
+// Dukung format batch (array target_keys) maupun single (target_key)
+$targetKeys = [];
+if (isset($body['target_keys']) && is_array($body['target_keys'])) {
+    foreach ($body['target_keys'] as $k) {
+        $kTrim = trim((string)$k);
+        if ($kTrim !== '') $targetKeys[] = $kTrim;
+    }
+} elseif ($targetKey !== '') {
+    $targetKeys[] = $targetKey;
+}
+
+if ($processedCount === 0 && !empty($targetKeys)) {
+    $processedCount = count($targetKeys);
+}
 
 if ($album === '') {
     webhookResponse(['error' => 'Parameter album wajib diisi'], 400);
@@ -67,10 +88,13 @@ if (file_exists($adminCacheFile)) {
     }
 }
 
+error_log("[r2_video_webhook] Callback batch video selesai. album={$album}, count={$processedCount}, status={$status}");
+
 webhookResponse([
-    'success'    => true,
-    'message'    => 'Cache album berhasil diinvalidasi',
-    'album'      => $album,
-    'target_key' => $targetKey,
-    'status'     => $status
+    'success'         => true,
+    'message'         => 'Cache album berhasil diinvalidasi',
+    'album'           => $album,
+    'processed_count' => $processedCount,
+    'target_keys'     => $targetKeys,
+    'status'          => $status
 ]);
