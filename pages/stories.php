@@ -366,18 +366,6 @@ $extraCss = ['/css/content.css'];
 
   <div class="stories-section-wrap">
     
-    <div class="stories-stats-bar">
-      <div class="stories-stats-title">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-        </svg>
-        <span>Dokumentasi Foto &amp; Video Pilihan</span>
-      </div>
-      <div class="stories-stats-badge">
-        <?= (int)$totalStories ?> Momen
-      </div>
-    </div>
-
     <?php if ($totalStories > 0): ?>
     <div class="stories-feed-wrap" id="storiesFeedWrap">
       <?php foreach ($stories as $idx => $st):
