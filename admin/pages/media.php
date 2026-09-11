@@ -1514,6 +1514,10 @@ async function handleR2Drop(e) {
   }
 
   for (const albumName of albumNames) {
+    if (r2AlbumNames.some(n => n.trim().toLowerCase() === albumName.trim().toLowerCase())) {
+      const ok = confirm(`⚠️ Perhatian!\n\nAlbum / Folder "${albumName}" sudah ada di Cloudflare R2.\n\nMengunggah ke folder ini akan menambahkan atau menimpa file di dalamnya.\n\nApakah Anda yakin ingin melanjutkan?`);
+      if (!ok) continue;
+    }
     await runR2Upload(albumName, grouped[albumName]);
   }
   hideR2Progress();
@@ -1539,6 +1543,10 @@ async function handleR2FolderInputChange(e) {
     (grouped[albumName] = grouped[albumName] || []).push({ relpath: relpath, file: f });
   }
   for (const albumName of Object.keys(grouped)) {
+    if (r2AlbumNames.some(n => n.trim().toLowerCase() === albumName.trim().toLowerCase())) {
+      const ok = confirm(`⚠️ Perhatian!\n\nAlbum / Folder "${albumName}" sudah ada di Cloudflare R2.\n\nMengunggah ke folder ini akan menambahkan atau menimpa file di dalamnya.\n\nApakah Anda yakin ingin melanjutkan?`);
+      if (!ok) continue;
+    }
     await runR2Upload(albumName, grouped[albumName]);
   }
   hideR2Progress();
@@ -1643,7 +1651,7 @@ function uploadVideoDirectPresigned(fileEntry, folderName, onProgress) {
             const dt = (now - lastTime) / 1000;
             if (dt >= 0.4) {
               const bytesPerSec = (e.loaded - lastLoaded) / dt;
-              speedStr = (bytesPerSec / (1024 * 1024)).toFixed(1) + ' MB/s (Direct R2)';
+              speedStr = (bytesPerSec / (1024 * 1024)).toFixed(1) + ' MB/s';
               lastLoaded = e.loaded;
               lastTime = now;
             }
@@ -1656,16 +1664,16 @@ function uploadVideoDirectPresigned(fileEntry, folderName, onProgress) {
         if (xhr.status >= 200 && xhr.status < 300) {
           resolve({ success: true, queued: true, is_video: true, direct_r2: true });
         } else {
-          resolve({ success: false, error: 'HTTP ' + xhr.status + ' Direct R2' });
+          resolve({ success: false, error: 'HTTP ' + xhr.status + ' (Upload R2)' });
         }
       };
 
       xhr.onerror = function () {
-        resolve({ success: false, error: 'CORS/Network error Direct R2' });
+        resolve({ success: false, error: 'Koneksi jaringan terputus saat upload R2' });
       };
 
       xhr.ontimeout = function () {
-        resolve({ success: false, error: 'Timeout Direct R2' });
+        resolve({ success: false, error: 'Timeout saat upload R2' });
       };
 
       xhr.timeout = 1800000; // 30 menit

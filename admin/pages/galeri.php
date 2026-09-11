@@ -306,7 +306,7 @@ adminHeader('Galeri Foto', 'galeri', $user);
   <div class="modal">
     <div class="modal-header">
       <span class="modal-title" id="modalTitle">Tambah Album</span>
-      <button class="modal-close">&times;</button>
+      <button class="modal-close" type="button" onclick="cancelAlbumForm()">&times;</button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="fieldRow">
@@ -548,18 +548,19 @@ adminHeader('Galeri Foto', 'galeri', $user);
                    onchange="onAlbumFolderInputChange(event)">
 
             <!-- Progress bar -->
-            <div id="albumUploadProgress" class="album-upload-progress" style="display:none">
+            <div id="albumUploadProgress" class="album-upload-progress" style="display:none;margin-top:10px">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-                <span id="albumProgressLabel" style="font-size:12px;color:var(--text-secondary)">Mengupload...</span>
-                <span id="albumProgressCount" style="font-size:12px;color:var(--text-muted)">0 / 0</span>
+                <span id="albumProgressLabel" style="font-size:12px;font-weight:600;color:var(--text-secondary)">Mengupload...</span>
+                <span id="albumProgressCount" style="font-size:12px;font-weight:600;color:var(--text-muted)">0 / 0</span>
               </div>
               <div class="album-upload-progress-bar-bg">
                 <div class="album-upload-progress-bar" id="albumProgressBar"></div>
               </div>
+              <div id="albumProgressCurrentFile" style="font-size:11.5px;color:var(--text-muted);margin-top:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></div>
             </div>
 
-            <!-- Log per-file -->
-            <div class="album-upload-log" id="albumUploadLog"></div>
+            <!-- Log error jika ada file gagal -->
+            <div class="album-upload-log" id="albumUploadLog" style="display:none;margin-top:8px;max-height:120px;overflow-y:auto;padding:6px 10px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm)"></div>
 
             <!-- Ringkasan selesai -->
             <div id="albumUploadResult"
@@ -583,9 +584,13 @@ adminHeader('Galeri Foto', 'galeri', $user);
         </div>
       </div>
     </div>
+    <div id="unsavedAlbumNotice" style="display:none;margin:0 20px 12px;padding:10px 14px;background:rgba(234,179,8,0.12);border:1px solid rgba(234,179,8,0.4);border-radius:var(--radius-sm);font-size:12.5px;color:var(--text-primary);align-items:center;gap:10px">
+      <span style="font-size:16px">⚠️</span>
+      <span><b>File telah terunggah ke Cloudflare R2!</b> Jangan tutup modal atau beralih halaman sebelum menekan <b>"Simpan"</b> agar album ini tercatat di sistem website.</span>
+    </div>
     <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('formModal')">Batal</button>
-      <button class="btn btn-primary" id="btnSave" onclick="submitForm()">Simpan</button>
+      <button type="button" class="btn btn-secondary" id="btnBatalModal" onclick="cancelAlbumForm()">Batal</button>
+      <button type="button" class="btn btn-primary" id="btnSave" onclick="submitForm()">Simpan</button>
     </div>
   </div>
 </div>
@@ -1212,10 +1217,58 @@ function resetForm() {
 }
 
 // ── Open Modals ───────────────────────────────────────────────────────
+function cancelAlbumForm() {
+  if (albumUploadRunning) {
+    toast('Upload Berjalan', 'Proses upload sedang berlangsung. Tunggu hingga selesai!', 'warning');
+    return;
+  }
+  if (window.__albumUploadDoneUnsaved) {
+    const ok = confirm('⚠️ PERHATIAN!\n\nFile foto/video sudah berhasil diunggah ke Cloudflare R2, namun data album ini BELUM disimpan ke sistem.\n\nJika Anda keluar sekarang, album tidak akan muncul di website.\n\nApakah Anda yakin ingin membatalkan dan keluar?');
+    if (!ok) return;
+    window.__albumUploadDoneUnsaved = false;
+    if (typeof setUploadLock === 'function') setUploadLock(false);
+  }
+  const notice = document.getElementById('unsavedAlbumNotice');
+  if (notice) notice.style.display = 'none';
+  const dupWarn = document.getElementById('albumFolderDuplicateWarn');
+  if (dupWarn) dupWarn.style.display = 'none';
+  closeModal('formModal');
+}
+
+function showDuplicateFolderWarning(folderName) {
+  const nameInput = document.getElementById('albumFolderName');
+  if (nameInput) {
+    nameInput.focus();
+    nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    nameInput.style.borderColor = 'var(--danger)';
+    nameInput.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.25)';
+    nameInput.placeholder = 'Ketik nama album baru di sini...';
+  }
+  let warnBox = document.getElementById('albumFolderDuplicateWarn');
+  if (!warnBox && nameInput) {
+    warnBox = document.createElement('div');
+    warnBox.id = 'albumFolderDuplicateWarn';
+    nameInput.parentNode.appendChild(warnBox);
+  }
+  if (warnBox) {
+    warnBox.style.display = 'block';
+    warnBox.innerHTML = `
+      <div style="margin-top:6px;padding:9px 12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.35);border-radius:6px;font-size:12px;color:var(--danger);line-height:1.5">
+        ⚠️ <b>Folder "${escHtml(folderName)}" sudah ada di server Cloudflare R2!</b><br>
+        Agar file album lama tidak tertimpa, silakan isi <b>Nama Album baru</b> pada kolom di atas, lalu pilih/seret kembali foldernya.
+      </div>
+    `;
+  }
+  toast('Folder Sudah Ada', `Folder "${folderName}" sudah ada di server R2. Silakan ganti Nama Album.`, 'warning');
+}
+
 function openAddModal() {
   if (!can('create')) { toast('Akses Ditolak', 'Anda tidak punya izin tambah data', 'error'); return; }
   editRow = null;
   resetForm();
+
+  window.__albumUploadDoneUnsaved = false;
+  if (typeof setUploadLock === 'function') setUploadLock(false);
 
   // Tampilkan tombol + divider upload album (hanya di mode Tambah)
   const uploadBtn  = document.getElementById('btnToggleUploadAlbum');
@@ -1232,10 +1285,27 @@ function openAddModal() {
   if (uploadRes)  uploadRes.style.display = 'none';
   const uploadProg = document.getElementById('albumUploadProgress');
   if (uploadProg) uploadProg.style.display = 'none';
+  const currFileEl = document.getElementById('albumProgressCurrentFile');
+  if (currFileEl) currFileEl.textContent = '';
+  const unsavedNotice = document.getElementById('unsavedAlbumNotice');
+  if (unsavedNotice) unsavedNotice.style.display = 'none';
+  const dupWarn = document.getElementById('albumFolderDuplicateWarn');
+  if (dupWarn) dupWarn.style.display = 'none';
+
   if (uploadBtn)  { uploadBtn.style.background=''; uploadBtn.style.borderColor=''; uploadBtn.style.color=''; }
   albumUploadRunning = false;
   const folderNameEl = document.getElementById('albumFolderName');
-  if (folderNameEl) folderNameEl.value = '';
+  if (folderNameEl) {
+    folderNameEl.value = '';
+    folderNameEl.style.borderColor = '';
+    folderNameEl.style.boxShadow = '';
+  }
+
+  const btnSave = document.getElementById('btnSave');
+  if (btnSave) {
+    btnSave.disabled = false;
+    btnSave.textContent = 'Simpan';
+  }
 
   document.getElementById('modalTitle').textContent = 'Tambah Album';
   openModal('formModal');
@@ -1316,7 +1386,7 @@ function openEditModal(rowNum) {
 
 // ── Submit Form ───────────────────────────────────────────────────────
 async function submitForm() {
-  if (albumUploadRunning || window.__isUploadLocked) {
+  if (albumUploadRunning || (window.__isUploadLocked && !window.__albumUploadDoneUnsaved)) {
     toast('Upload Berjalan', 'Dilarang menyimpan atau menutup form saat proses upload masih berlangsung!', 'error');
     return;
   }
@@ -1352,6 +1422,10 @@ async function submitForm() {
 
   if (res.success) {
     toast('Berhasil', isEdit ? 'Data diperbarui' : 'Data ditambahkan', 'success');
+    window.__albumUploadDoneUnsaved = false;
+    if (typeof setUploadLock === 'function') setUploadLock(false);
+    const notice = document.getElementById('unsavedAlbumNotice');
+    if (notice) notice.style.display = 'none';
     closeModal('formModal');
     loadData();
   } else {
@@ -1455,6 +1529,22 @@ async function onAlbumDrop(e) {
     document.getElementById('albumUploadProgress').style.display = 'none';
     return;
   }
+
+  // Cek duplikasi nama folder di Cloudflare R2 jika Tambah Album baru
+  if (!editRow) {
+    if (!folderNamesLoaded) await loadFolderNames();
+    const nameOverride = document.getElementById('albumFolderName').value.trim();
+    for (const albumName of albumNames) {
+      const finalName = (albumNames.length === 1 && nameOverride) ? nameOverride : albumName;
+      const isDup = allFolderNames.some(n => n.trim().toLowerCase() === finalName.trim().toLowerCase());
+      if (isDup) {
+        document.getElementById('albumUploadProgress').style.display = 'none';
+        showDuplicateFolderWarning(finalName);
+        return;
+      }
+    }
+  }
+
   // Ambil override nama dari input (hanya berlaku kalau 1 folder)
   const nameOverride = document.getElementById('albumFolderName').value.trim();
   for (const albumName of albumNames) {
@@ -1482,6 +1572,21 @@ async function onAlbumFolderInputChange(e) {
   if (!albumNames.length) {
     toast('Info', 'Tidak ada file foto/video yang didukung dalam folder ini.', 'warning');
     return;
+  }
+
+  // Cek duplikasi nama folder di Cloudflare R2 jika Tambah Album baru
+  if (!editRow) {
+    if (!folderNamesLoaded) await loadFolderNames();
+    const nameOverride = document.getElementById('albumFolderName').value.trim();
+    for (const albumName of albumNames) {
+      const finalName = (albumNames.length === 1 && nameOverride) ? nameOverride : albumName;
+      const isDup = allFolderNames.some(n => n.trim().toLowerCase() === finalName.trim().toLowerCase());
+      if (isDup) {
+        document.getElementById('albumUploadProgress').style.display = 'none';
+        showDuplicateFolderWarning(finalName);
+        return;
+      }
+    }
   }
 
   document.getElementById('albumUploadProgress').style.display = 'block';
@@ -1546,7 +1651,7 @@ function uploadVideoDirectPresignedGaleri(fileEntry, folderName, onProgress) {
             const dt = (now - lastTime) / 1000;
             if (dt >= 0.4) {
               const bytesPerSec = (e.loaded - lastLoaded) / dt;
-              speedStr = (bytesPerSec / (1024 * 1024)).toFixed(1) + ' MB/s (Direct R2)';
+              speedStr = (bytesPerSec / (1024 * 1024)).toFixed(1) + ' MB/s';
               lastLoaded = e.loaded;
               lastTime = now;
             }
@@ -1559,16 +1664,16 @@ function uploadVideoDirectPresignedGaleri(fileEntry, folderName, onProgress) {
         if (xhr.status >= 200 && xhr.status < 300) {
           resolve({ success: true, queued: true, is_video: true, direct_r2: true });
         } else {
-          resolve({ success: false, error: 'HTTP ' + xhr.status + ' Direct R2' });
+          resolve({ success: false, error: 'HTTP ' + xhr.status + ' (Upload R2)' });
         }
       };
 
       xhr.onerror = function () {
-        resolve({ success: false, error: 'CORS/Network error Direct R2' });
+        resolve({ success: false, error: 'Koneksi jaringan terputus saat upload R2' });
       };
 
       xhr.ontimeout = function () {
-        resolve({ success: false, error: 'Timeout Direct R2' });
+        resolve({ success: false, error: 'Timeout saat upload R2' });
       };
 
       xhr.timeout = 1800000; // 30 menit
@@ -1675,7 +1780,7 @@ async function runAlbumUpload(folderName, fileEntries) {
   const res = document.getElementById('albumUploadResult');
 
   dz.classList.add('uploading');
-  log.style.display = 'block';
+  log.style.display = 'none';
   log.innerHTML = '';
   res.style.display = 'none';
 
@@ -1693,14 +1798,8 @@ async function runAlbumUpload(folderName, fileEntries) {
     document.getElementById('albumUploadProgress').style.display = 'block';
     document.getElementById('albumProgressCount').textContent = `0 / ${total}`;
     document.getElementById('albumProgressBar').style.width = '0%';
-
-    function addLog(msg, cls = '') {
-      const line = document.createElement('div');
-      line.className = 'album-upload-log-line' + (cls ? ' ' + cls : '');
-      line.textContent = msg;
-      log.appendChild(line);
-      log.scrollTop = log.scrollHeight;
-    }
+    const currFileEl = document.getElementById('albumProgressCurrentFile');
+    if (currFileEl) currFileEl.textContent = 'Menyiapkan file...';
 
     let queuedVideos = 0;
 
@@ -1717,48 +1816,40 @@ async function runAlbumUpload(folderName, fileEntries) {
       const fSize = fe.file ? fe.file.size : 0;
       const fSizeMb = (fSize / (1024 * 1024)).toFixed(1);
 
-      const logLine = document.createElement('div');
-      logLine.className = 'album-upload-log-line';
-      logLine.textContent = `⏳ Uploading: ${fName} (0 / ${fSizeMb} MB)...`;
-      log.appendChild(logLine);
-      log.scrollTop = log.scrollHeight;
+      if (currFileEl) currFileEl.textContent = `Mengunggah: ${fName} (0 / ${fSizeMb} MB)...`;
 
       const onProgress = function (loaded, fTotal, speed) {
         const lMb = (loaded / (1024 * 1024)).toFixed(1);
         const tMb = (fTotal / (1024 * 1024)).toFixed(1);
         const pct = fTotal > 0 ? Math.round((loaded / fTotal) * 100) : 0;
         const spd = speed ? ` • ${speed}` : '';
-        logLine.textContent = `⏳ Uploading: ${fName} (${lMb}/${tMb} MB · ${pct}%${spd})`;
+        if (currFileEl) currFileEl.textContent = `Mengunggah: ${fName} (${lMb}/${tMb} MB · ${pct}%${spd})`;
       };
 
       let d = await uploadOneAlbumFile(fe, folderName, onProgress);
       if (!d.success && d.error && (d.error.includes('jaringan') || d.error.includes('timeout'))) {
-        logLine.textContent = `↻ Retry: ${fName}...`;
+        if (currFileEl) currFileEl.textContent = `↻ Retry: ${fName}...`;
         d = await uploadOneAlbumFile(fe, folderName, onProgress);
       }
 
       if (d.success) {
         if (d.skipped) {
           skipped++;
-          logLine.className = 'album-upload-log-line skip';
-          logLine.textContent = `⊘ Dilewati: ${fName}`;
         } else if (d.queued) {
           queuedVideos++;
-          logLine.className = 'album-upload-log-line ok';
-          logLine.textContent = `⏳ ${fName}: diantre untuk batch kompresi GitHub`;
         } else {
           ok++;
           savedKb += Math.max(0, (d.orig_kb || 0) - (d.new_kb || 0));
-          const note   = d.saved_pct > 0 ? ` (hemat ${d.saved_pct}%)` : '';
-          const poster = d.is_video ? (d.poster ? ' · thumbnail ✓' : ' · thumbnail gagal dibuat') : '';
-          const warn   = (!d.compressed && d.note) ? ` — ${d.note}` : '';
-          logLine.className = 'album-upload-log-line ok';
-          logLine.textContent = `✓ ${fName} · ${d.new_kb}KB${note}${poster}${warn}`;
         }
       } else {
         fail++;
-        logLine.className = 'album-upload-log-line err';
-        logLine.textContent = `✗ ${fName}: ${d.error || 'gagal'}`;
+        log.style.display = 'block';
+        const errLine = document.createElement('div');
+        errLine.style.color = 'var(--danger)';
+        errLine.style.fontSize = '12px';
+        errLine.style.marginTop = '4px';
+        errLine.textContent = `✗ ${fName}: ${d.error || 'gagal'}`;
+        log.appendChild(errLine);
       }
       done++;
       document.getElementById('albumProgressCount').textContent = `${done} / ${total}`;
@@ -1783,11 +1874,9 @@ async function runAlbumUpload(folderName, fileEntries) {
       await Promise.all(Array.from({ length: Math.min(concurrency, smallQueue.length) }, smallWorker));
     }
 
-    // Semua file (foto + video) sudah selesai diupload/diantre. Kalau ada
-    // video yang diantre, kirim SATU batch dispatch ke GitHub Actions supaya
-    // semua video folder ini diproses dalam 1 run (bukan 1 run per video).
+    // Semua file selesai diupload. Jika ada video, dispatch 1 batch job ke GitHub Actions
     if (queuedVideos > 0) {
-      addLog(`⏳ Mengirim ${queuedVideos} video sebagai 1 batch job ke GitHub Actions...`, '');
+      document.getElementById('albumProgressLabel').textContent = `Memicu antrean video GitHub Actions...`;
       try {
         const rb = await fetch('/admin/api/r2_video_batch_dispatch.php', {
           method: 'POST',
@@ -1795,17 +1884,19 @@ async function runAlbumUpload(folderName, fileEntries) {
           body: 'folder=' + encodeURIComponent(folderName)
         });
         const db = await rb.json();
-        if (db.success && db.dispatched) {
+        if (db.success) {
           ok += queuedVideos;
-          addLog(`✓ ${db.count} video dikirim sebagai 1 job GitHub Actions (bukan ${db.count} run terpisah).`, 'ok');
-        } else if (db.success) {
-          ok += queuedVideos;
-          addLog(`⚠ Batch video: ${db.note || 'gagal dispatch, fallback dipakai.'}`, 'err');
         } else {
-          addLog(`✗ Gagal mengirim batch video: ${db.error}`, 'err');
+          fail += queuedVideos;
+          log.style.display = 'block';
+          const errLine = document.createElement('div');
+          errLine.style.color = 'var(--danger)';
+          errLine.style.fontSize = '12px';
+          errLine.textContent = `⚠ Antrean video: ${db.error || 'gagal dispatch'}`;
+          log.appendChild(errLine);
         }
       } catch (err) {
-        addLog('✗ Gagal menghubungi server untuk batch dispatch video.', 'err');
+        fail += queuedVideos;
       }
     }
 
@@ -1815,6 +1906,9 @@ async function runAlbumUpload(folderName, fileEntries) {
 
     // Otomatis isi fieldLink dengan nama folder yang baru diupload
     selectFolder(folderName); // isi field + tampilkan badge ✓ terpilih
+
+    if (currFileEl) currFileEl.textContent = '';
+    document.getElementById('albumProgressLabel').textContent = 'Upload Selesai';
 
     // Tampilkan ringkasan
     res.style.display = 'block';
@@ -1836,10 +1930,28 @@ async function runAlbumUpload(folderName, fileEntries) {
   } finally {
     dz.classList.remove('uploading');
     albumUploadRunning = false;
-    if (typeof setUploadLock === 'function') setUploadLock(false);
-    if (btnSave) {
-      btnSave.disabled = false;
-      btnSave.textContent = btnSave.getAttribute('data-orig-text') || 'Simpan';
+    const currFile = document.getElementById('albumProgressCurrentFile');
+    if (currFile) currFile.textContent = '';
+
+    if (ok > 0) {
+      window.__albumUploadDoneUnsaved = true;
+      if (typeof setUploadLock === 'function') {
+        setUploadLock(true, 'File foto/video sudah diunggah ke Cloudflare R2! Jangan tutup modal atau beralih halaman sebelum menekan "Simpan".');
+      }
+      const unsavedNotice = document.getElementById('unsavedAlbumNotice');
+      if (unsavedNotice) unsavedNotice.style.display = 'flex';
+      if (btnSave) {
+        btnSave.disabled = false;
+        btnSave.textContent = 'Simpan Album';
+        btnSave.style.boxShadow = '0 0 0 3px rgba(34, 197, 94, 0.35)';
+      }
+    } else {
+      if (typeof setUploadLock === 'function') setUploadLock(false);
+      if (btnSave) {
+        btnSave.disabled = false;
+        btnSave.textContent = btnSave.getAttribute('data-orig-text') || 'Simpan';
+        btnSave.style.boxShadow = '';
+      }
     }
     if (btnBatal) btnBatal.disabled = false;
     if (modalClose) {

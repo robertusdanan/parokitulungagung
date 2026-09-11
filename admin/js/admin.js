@@ -103,6 +103,10 @@ document.addEventListener('click', e => {
     if (e.target.classList.contains('modal-overlay')) {
       e.preventDefault();
       e.stopPropagation();
+      if (typeof cancelAlbumForm === 'function' && window.__albumUploadDoneUnsaved) {
+        cancelAlbumForm();
+        return;
+      }
       closeModal(e.target.id);
       return;
     }
@@ -110,6 +114,10 @@ document.addEventListener('click', e => {
     if (e.target.closest('.modal-close')) {
       e.preventDefault();
       e.stopPropagation();
+      if (typeof cancelAlbumForm === 'function' && window.__albumUploadDoneUnsaved) {
+        cancelAlbumForm();
+        return;
+      }
       if (typeof toast === 'function') {
         toast('Upload Berjalan', window.__uploadLockReason || 'Proses upload sedang berlangsung. Dilarang menutup modal!', 'error');
       }
@@ -121,9 +129,9 @@ document.addEventListener('click', e => {
       e.preventDefault();
       e.stopPropagation();
       if (typeof toast === 'function') {
-        toast('Upload Berjalan', 'Dilarang beralih halaman saat proses upload masih berlangsung!', 'error');
+        toast('Peringatan', window.__uploadLockReason || 'Dilarang beralih halaman saat proses upload masih berlangsung / belum disimpan!', 'error');
       } else {
-        alert('Dilarang beralih halaman saat proses upload masih berlangsung!');
+        alert(window.__uploadLockReason || 'Dilarang beralih halaman saat proses upload masih berlangsung / belum disimpan!');
       }
       return;
     }
