@@ -24,7 +24,7 @@ if (!defined('ROUTER_MODEL')) {
 }
 define('ROUTER_MAX_OUTPUT_TOKENS', 800);
 define('ROUTER_TEMPERATURE',       0.65);
-define('ROUTER_TIMEOUT',           8);
+define('ROUTER_TIMEOUT',           25);
 
 // ─── GEMINI API KEYS & MODELS ─────────────────────────────
 if (!defined('GEMINI_API_KEYS')) {

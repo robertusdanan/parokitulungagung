@@ -65,10 +65,14 @@ class RouterAI
             CURLOPT_HTTPHEADER     => [
                 'Authorization: Bearer ' . ROUTER_API_KEY,
                 'Content-Type: application/json',
+                'Accept: application/json',
             ],
             CURLOPT_TIMEOUT        => ROUTER_TIMEOUT,
-            CURLOPT_CONNECTTIMEOUT => 4,
+            CURLOPT_CONNECTTIMEOUT => 6,
             CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => 0,
+            CURLOPT_IPRESOLVE      => CURL_IPRESOLVE_V4,
+            CURLOPT_USERAGENT      => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) ParokiChatbot/1.0',
         ]);
 
         $rawBody  = curl_exec($ch);
@@ -77,9 +81,7 @@ class RouterAI
         curl_close($ch);
 
         if ($err || !$rawBody || $httpCode !== 200) {
-            if (DEBUG_MODE) {
-                error_log("[9Router] HTTP $httpCode, Curl Error: $err");
-            }
+            error_log("[9Router] HTTP $httpCode, Curl Error: $err | Endpoint: " . ROUTER_ENDPOINT);
             return null;
         }
 
@@ -104,20 +106,32 @@ class RouterAI
         $text = preg_replace('/<(thought|think|reasoning)[^>]*>.*?<\/\1>/si', '', $text);
 
         // 2. Deteksi kebocoran kode atau bahasa teknis / dev / caveman
-        if (preg_match('/```|<?php|function\s*\(|SELECT\s+.*FROM|sk-[a-zA-Z0-9]|Terima input|Kirim detail masalah/i', $text)) {
+        if (preg_match('/```|<\?php|function\s*\(|SELECT\s+.*FROM|sk-[a-zA-Z0-9]|Terima input|Kirim detail masalah/i', $text)) {
             return 'Berkah Dalem. 🙏 Silakan sampaikan pertanyaan Anda seputar jadwal misa, pelayanan sakramen, atau kegiatan Paroki SMDTBA Tulungagung. Kami siap membantu!';
         }
 
         // 3. Redaksi otomatis token/key jika ada
         $text = preg_replace('/(sk-[a-zA-Z0-9_-]{10,}|sb_[a-zA-Z0-9_-]{10,}|AIza[a-zA-Z0-9_-]{10,}|gsk_[a-zA-Z0-9_-]{10,})/', '[REDACTED_KEY]', $text);
 
-        // 4. Format Markdown ke HTML
+        // 4. Normalisasi spasi & newline ganda berlebihan
+        $text = str_replace(["\r\n", "\r"], "\n", $text);
+        $text = preg_replace("/\n{3,}/", "\n\n", $text);
+
+        // 5. Format Markdown ke HTML
         $text = preg_replace('/^#{1,4}\s*(.*?)$/m', '<b>$1</b>', $text);
         $text = preg_replace('/\*\*(.*?)\*\*/s', '<b>$1</b>', $text);
         $text = preg_replace('/(?<!\*)\*(?!\*)(.*?)(?<!\*)\*(?!\*)/s', '<i>$1</i>', $text);
         $text = preg_replace('/\[(.*?)\]\((.*?)\)/', '<a href="$2">$1</a>', $text);
+
+        // 6. Convert newline ke <br>
         $text = nl2br(trim($text));
-        return $text;
+
+        // 7. Bersihkan penumpukan tag <br> yang membuat spasi berlebihan
+        $text = preg_replace('/(<br\s*\/?>\s*){3,}/i', '<br><br>', $text);
+        $text = preg_replace('/<br\s*\/?>\s*(<\/?(?:ul|ol|li|blockquote|div|p)>)/i', '$1', $text);
+        $text = preg_replace('/(<\/(?:ul|ol|li|blockquote|div|p)>)\s*<br\s*\/?>/i', '$1', $text);
+
+        return trim($text);
     }
 
     private static function buildPayload(string $systemPrompt, array $history, string $userMessage): array

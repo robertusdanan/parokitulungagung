@@ -174,6 +174,12 @@ class GeminiAI
         $text = preg_replace('/^\(HTML.*?\):?\s*/i', '', $text);
         $text = preg_replace('/^Here is.*?:/i', '', $text);
 
+        // Normalisasi spasi & newline ganda berlebihan
+        $text = str_replace(["
+\n", "
+"], "\n", $text);
+        $text = preg_replace("/\n{3,}/", "\n\n", $text);
+
         // Ganti markdown header ### -> <b>...</b>
         $text = preg_replace('/^#{1,4}\s*(.*?)$/m', '<b>$1</b>', $text);
         // Ganti **bold** -> <b>bold</b>
@@ -185,7 +191,13 @@ class GeminiAI
         // Normalisasi link markdown [title](url) -> <a href="url">title</a> jika ada
         $text = preg_replace('/\[(.*?)\]\((.*?)\)/', '<a href="$2">$1</a>', $text);
         // Ubah newline jadi <br>
-        $text = nl2br($text);
+        $text = nl2br(trim($text));
+
+        // Bersihkan penumpukan tag <br> yang membuat spasi berlebihan
+        $text = preg_replace('/(<br\s*\/?>\s*){3,}/i', '<br><br>', $text);
+        $text = preg_replace('/<br\s*\/?>\s*(<\/?(?:ul|ol|li|blockquote|div|p)>)/i', '$1', $text);
+        $text = preg_replace('/(<\/(?:ul|ol|li|blockquote|div|p)>)\s*<br\s*\/?>/i', '$1', $text);
+
         return trim($text);
     }
 
