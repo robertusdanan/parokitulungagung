@@ -127,11 +127,12 @@ class RouterAI
         // 6. Convert newline ke <br>
         $text = nl2br(trim($text));
 
-        // 7. Bersihkan penumpukan tag <br> yang membuat spasi berlebihan
-        $text = preg_replace('/(<br\s*\/?>\s*){3,}/i', '<br><br>', $text);
-        $text = preg_replace('/<br\s*\/?>\s*(<\/?(?:ul|ol|li|blockquote|div|p)>)/i', '$1', $text);
-        $text = preg_replace('/(<\/(?:ul|ol|li|blockquote|div|p)>)\s*<br\s*\/?>/i', '$1', $text);
-
+        // Normalisasi tag <br> dan konversi spasi paragraf ke CSS gap (.cb-gap = 8px)
+        $text = preg_replace('/<br\s*\/?>/i', '<br>', $text);
+        $text = preg_replace('/<br>\s*(<\/?(?:ul|ol|li|blockquote|div|p)>)/i', '$1', $text);
+        $text = preg_replace('/(<\/(?:ul|ol|li|blockquote|div|p)>)\s*<br>/i', '$1', $text);
+        $text = str_replace(["\n", "\r"], '', $text);
+        $text = preg_replace('/(<br>\s*){2,}/i', '<span class="cb-gap"></span>', $text);
         return trim($text);
     }
 

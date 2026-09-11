@@ -190,6 +190,8 @@
   text-underline-offset: 2px;
 }
 .cb-msg.user .cb-bubble-text a { color: #1a1208; }
+/* Spasi antar paragraf (pengganti <br><br>) — rapi, tidak menggelembung */
+.cb-bubble-text .cb-gap { display: block; height: 8px; }
 
 /* Badge sumber AI */
 .cb-ai-badge {
