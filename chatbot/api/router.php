@@ -101,7 +101,7 @@ class RouterAI
         return self::formatToSafeHtml($text);
     }
 
-    private static function formatToSafeHtml(string $text): string
+            private static function formatToSafeHtml(string $text): string
     {
         // 1. Hapus tag reasoning / thought jika ada
         $text = preg_replace('/<(thought|think|reasoning)[^>]*>.*?<\/\1>/si', '', $text);
@@ -114,26 +114,34 @@ class RouterAI
         // 3. Redaksi otomatis token/key jika ada
         $text = preg_replace('/(sk-[a-zA-Z0-9_-]{10,}|sb_[a-zA-Z0-9_-]{10,}|AIza[a-zA-Z0-9_-]{10,}|gsk_[a-zA-Z0-9_-]{10,})/', '[REDACTED_KEY]', $text);
 
-        // 4. Normalisasi spasi & newline ganda berlebihan
-        $text = str_replace(["\r\n", "\r"], "\n", $text);
-        $text = preg_replace("/\n{3,}/", "\n\n", $text);
+        // 4. Strip common prompt leak artifacts
+        $text = preg_replace('/^```[a-z]*\s*/i', '', $text);
+        $text = preg_replace('/\s*```$/', '', $text);
+        $text = preg_replace('/^\(HTML.*?\):?\s*/i', '', $text);
+        $text = preg_replace('/^Here is.*?:/i', '', $text);
 
-        // 5. Format Markdown ke HTML
+        // 5. Normalisasi newline & batasi enter beruntun maksimal 2
+        $text = str_replace(["\r\n", "\r"], "\n", $text);
+        $text = preg_replace('/\n{3,}/', "\n\n", $text);
+
+        // 6. Format Markdown ke HTML
         $text = preg_replace('/^#{1,4}\s*(.*?)$/m', '<b>$1</b>', $text);
         $text = preg_replace('/\*\*(.*?)\*\*/s', '<b>$1</b>', $text);
+        $text = preg_replace('/^\s*[\*\-]\s+/m', '• ', $text);
         $text = preg_replace('/(?<!\*)\*(?!\*)(.*?)(?<!\*)\*(?!\*)/s', '<i>$1</i>', $text);
         $text = preg_replace('/\[(.*?)\]\((.*?)\)/', '<a href="$2">$1</a>', $text);
 
-        // 6. Convert newline ke <br>
-        $text = nl2br(trim($text));
+        // 7. Bentuk paragraf rapi & proporsional
+        $paragraphs = explode("\n\n", $text);
+        $cleanParas = [];
+        foreach ($paragraphs as $p) {
+            $p = trim($p);
+            if ($p === '') continue;
+            $lines = array_filter(array_map('trim', explode("\n", $p)), fn($l) => $l !== '');
+            $cleanParas[] = implode('<br>', $lines);
+        }
 
-        // Normalisasi tag <br> dan konversi spasi paragraf ke CSS gap (.cb-gap = 8px)
-        $text = preg_replace('/<br\s*\/?>/i', '<br>', $text);
-        $text = preg_replace('/<br>\s*(<\/?(?:ul|ol|li|blockquote|div|p)>)/i', '$1', $text);
-        $text = preg_replace('/(<\/(?:ul|ol|li|blockquote|div|p)>)\s*<br>/i', '$1', $text);
-        $text = str_replace(["\n", "\r"], '', $text);
-        $text = preg_replace('/(<br>\s*){2,}/i', '<span class="cb-gap"></span>', $text);
-        return trim($text);
+        return implode('<br><br>', $cleanParas);
     }
 
     private static function buildPayload(string $systemPrompt, array $history, string $userMessage): array

@@ -138,51 +138,47 @@ class GroqAI
         return self::formatToSafeHtml($text);
     }
 
-    private static function formatToSafeHtml(string $text): string
+            private static function formatToSafeHtml(string $text): string
     {
         // 1. Hapus tag reasoning / thought jika ada
         $text = preg_replace('/<(thought|think|reasoning)[^>]*>.*?<\/\1>/si', '', $text);
 
         // 2. Deteksi kebocoran kode atau bahasa teknis / dev / caveman
-        if (preg_match('/```|<?php|function\s*\(|SELECT\s+.*FROM|sk-[a-zA-Z0-9]|Terima input|Kirim detail masalah/i', $text)) {
+        if (preg_match('/```|<\?php|function\s*\(|SELECT\s+.*FROM|sk-[a-zA-Z0-9]|Terima input|Kirim detail masalah/i', $text)) {
             return 'Berkah Dalem. 🙏 Silakan sampaikan pertanyaan Anda seputar jadwal misa, pelayanan sakramen, atau kegiatan Paroki SMDTBA Tulungagung. Kami siap membantu!';
         }
 
         // 3. Redaksi otomatis token/key jika ada
         $text = preg_replace('/(sk-[a-zA-Z0-9_-]{10,}|sb_[a-zA-Z0-9_-]{10,}|AIza[a-zA-Z0-9_-]{10,}|gsk_[a-zA-Z0-9_-]{10,})/', '[REDACTED_KEY]', $text);
 
-        // Strip common prompt leak artifacts like "(HTML format):" or "```html"
+        // 4. Strip common prompt leak artifacts
         $text = preg_replace('/^```[a-z]*\s*/i', '', $text);
         $text = preg_replace('/\s*```$/', '', $text);
         $text = preg_replace('/^\(HTML.*?\):?\s*/i', '', $text);
         $text = preg_replace('/^Here is.*?:/i', '', $text);
 
-        // Normalisasi spasi & newline ganda berlebihan
-        $text = str_replace(["
-\n", "
-"], "\n", $text);
-        $text = preg_replace("/\n{3,}/", "\n\n", $text);
+        // 5. Normalisasi newline & batasi enter beruntun maksimal 2
+        $text = str_replace(["\r\n", "\r"], "\n", $text);
+        $text = preg_replace('/\n{3,}/', "\n\n", $text);
 
-        // Ganti markdown header ### -> <b>...</b>
+        // 6. Format Markdown ke HTML
         $text = preg_replace('/^#{1,4}\s*(.*?)$/m', '<b>$1</b>', $text);
-        // Ganti **bold** -> <b>bold</b>
         $text = preg_replace('/\*\*(.*?)\*\*/s', '<b>$1</b>', $text);
-        // Ganti * bullet point di awal baris menjadi •
         $text = preg_replace('/^\s*[\*\-]\s+/m', '• ', $text);
-        // Ganti *italic* -> <i>italic</i>
         $text = preg_replace('/(?<!\*)\*(?!\*)(.*?)(?<!\*)\*(?!\*)/s', '<i>$1</i>', $text);
-        // Normalisasi link markdown [title](url) -> <a href="url">title</a> jika ada
         $text = preg_replace('/\[(.*?)\]\((.*?)\)/', '<a href="$2">$1</a>', $text);
-        // Ubah newline jadi <br>
-        $text = nl2br(trim($text));
 
-        // Normalisasi tag <br> dan konversi spasi paragraf ke CSS gap (.cb-gap = 8px)
-        $text = preg_replace('/<br\s*\/?>/i', '<br>', $text);
-        $text = preg_replace('/<br>\s*(<\/?(?:ul|ol|li|blockquote|div|p)>)/i', '$1', $text);
-        $text = preg_replace('/(<\/(?:ul|ol|li|blockquote|div|p)>)\s*<br>/i', '$1', $text);
-        $text = str_replace(["\n", "\r"], '', $text);
-        $text = preg_replace('/(<br>\s*){2,}/i', '<span class="cb-gap"></span>', $text);
-        return trim($text);
+        // 7. Bentuk paragraf rapi & proporsional
+        $paragraphs = explode("\n\n", $text);
+        $cleanParas = [];
+        foreach ($paragraphs as $p) {
+            $p = trim($p);
+            if ($p === '') continue;
+            $lines = array_filter(array_map('trim', explode("\n", $p)), fn($l) => $l !== '');
+            $cleanParas[] = implode('<br>', $lines);
+        }
+
+        return implode('<br><br>', $cleanParas);
     }
 
     private static function buildPayload(string $systemPrompt, array $history, string $userMessage): array
