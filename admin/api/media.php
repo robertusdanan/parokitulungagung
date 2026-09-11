@@ -37,8 +37,9 @@ $FOLDERS = [
     'downloads'      => ['path' => '/downloads',      'label' => 'Dokumen Unduhan','quality' => 0, 'skip' => true,  'storage' => 'r2'],
     'artikel'        => ['path' => '/artikel',         'label' => 'Artikel',       'quality' => 75, 'skip' => false, 'storage' => 'r2'],
     'ogpreview'      => ['path' => '/ogpreview',       'label' => 'OG Preview',    'quality' => 85, 'skip' => true,  'storage' => 'r2'],
-    'gereja'         => ['path' => '/gereja',          'label' => 'Foto Gereja',   'quality' => 75, 'skip' => false, 'storage' => 'r2'],
-    'assets'         => ['path' => '/assets',          'label' => 'Aset Statis',   'quality' => 78, 'skip' => false, 'storage' => 'r2'],
+    'gereja'         => ['path' => 'assets/gereja',    'label' => 'Foto Gereja',   'quality' => 75, 'skip' => false, 'storage' => 'r2'],
+    'assets'         => ['path' => 'assets',           'label' => 'Assets',        'quality' => 78, 'skip' => false, 'storage' => 'r2', 'shallow' => true],
+    'root_img'       => ['path' => 'assets',           'label' => 'Assets',        'quality' => 78, 'skip' => false, 'storage' => 'r2', 'shallow' => true],
     'icon'           => ['path' => '/icon',            'label' => 'Icon',          'quality' => 0,  'skip' => true,  'storage' => 'r2'],
     'icon_kategorial'=> ['path' => '/icon/kategorial', 'label' => 'Icon Kategorial','quality' => 0, 'skip' => true,  'storage' => 'r2'],
     'person'         => ['path' => '/person',          'label' => 'Foto Person',   'quality' => 82, 'skip' => false, 'storage' => 'r2'],
@@ -81,7 +82,7 @@ function isThumbnail(string $filename): bool {
 }
 
 // ── List object di prefix R2 (untuk folder 'person' / 'icon' / dll) ─────
-function r2ListPrefix(string $prefix): array
+function r2ListPrefix(string $prefix, bool $shallow = false): array
 {
     $items = [];
     if (!defined('R2_ACCESS_KEY') || !defined('R2_SECRET_KEY')
@@ -90,9 +91,24 @@ function r2ListPrefix(string $prefix): array
     }
     try {
         $r2  = new R2Client(R2_ACCESS_KEY, R2_SECRET_KEY, R2_ENDPOINT, R2_BUCKET);
-        $objects = $r2->listObjects($prefix);
+        $cleanPrefix = trim($prefix, '/');
+        $objects = $r2->listObjects($cleanPrefix);
+        $prefixWithSlash = $cleanPrefix !== '' ? ($cleanPrefix . '/') : '';
+        $prefixLen = strlen($prefixWithSlash);
+
         foreach ($objects as $o) {
             $key = $o['key'] ?? '';
+            if (str_ends_with($key, '/')) continue;
+
+            if ($shallow && $prefixWithSlash !== '') {
+                if (str_starts_with($key, $prefixWithSlash)) {
+                    $remainder = substr($key, $prefixLen);
+                    if ($remainder === '' || str_contains($remainder, '/')) {
+                        continue;
+                    }
+                }
+            }
+
             $nm  = basename($key);
             if ($nm === '' || $nm[0] === '.') continue;
             $items[] = [
@@ -211,9 +227,10 @@ try {
         $cache = mLoadCache($CACHE_FILE);
 
         if (($cfg['storage'] ?? 'local') === 'r2') {
-            // ── R2-backed folder (person) ─────────────────────────────────
-            $prefix = ltrim($cfg['path'], '/');
-            $files  = r2ListPrefix($prefix);
+            // ── R2-backed folder ──────────────────────────────────────────
+            $prefix  = ltrim($cfg['path'], '/');
+            $shallow = !empty($cfg['shallow']);
+            $files   = r2ListPrefix($prefix, $shallow);
         } else {
             // ── Local-disk folder (umkm/artikel/gereja/icon/root_img) ─────
             $dir = $root . $cfg['path'];
@@ -350,7 +367,8 @@ try {
         foreach($FOLDERS as $k=>$cfg){
             $cnt=0; $kb=0; $cmp=0;
             if (($cfg['storage'] ?? 'local') === 'r2') {
-                $items = r2ListPrefix(ltrim($cfg['path'], '/'));
+                $shallow = !empty($cfg['shallow']);
+                $items = r2ListPrefix(ltrim($cfg['path'], '/'), $shallow);
                 $cnt = count($items);
                 foreach ($items as $it) { $kb += (float)($it['size_kb'] ?? 0); }
             } else {

@@ -1316,6 +1316,10 @@ function openEditModal(rowNum) {
 
 // ── Submit Form ───────────────────────────────────────────────────────
 async function submitForm() {
+  if (albumUploadRunning || window.__isUploadLocked) {
+    toast('Upload Berjalan', 'Dilarang menyimpan atau menutup form saat proses upload masih berlangsung!', 'error');
+    return;
+  }
   const btn    = document.getElementById('btnSave');
   const isEdit = !!editRow;
 
@@ -1649,6 +1653,23 @@ async function uploadOneAlbumFile(fileEntry, folderName, onProgress) {
 
 async function runAlbumUpload(folderName, fileEntries) {
   albumUploadRunning = true;
+  if (typeof setUploadLock === 'function') {
+    setUploadLock(true, `Sedang mengunggah album "${folderName}". Dilarang menutup modal, menyimpan data, atau berpindah halaman!`);
+  }
+  const btnSave = document.getElementById('btnSave');
+  const btnBatal = document.querySelector('#formModal .modal-footer .btn-secondary');
+  const modalClose = document.querySelector('#formModal .modal-close');
+  if (btnSave) {
+    btnSave.disabled = true;
+    if (!btnSave.hasAttribute('data-orig-text')) btnSave.setAttribute('data-orig-text', btnSave.textContent);
+    btnSave.textContent = 'Menunggu Upload Selesai...';
+  }
+  if (btnBatal) btnBatal.disabled = true;
+  if (modalClose) {
+    modalClose.style.pointerEvents = 'none';
+    modalClose.style.opacity = '0.2';
+  }
+
   const dz  = document.getElementById('albumDropzone');
   const log = document.getElementById('albumUploadLog');
   const res = document.getElementById('albumUploadResult');
@@ -1658,164 +1679,174 @@ async function runAlbumUpload(folderName, fileEntries) {
   log.innerHTML = '';
   res.style.display = 'none';
 
-  const filtered = fileEntries.filter(fe => R2_ALBUM_EXT_RE.test(fe.relpath));
-  if (!filtered.length) {
-    toast('Info', `Folder "${folderName}" tidak berisi file yang didukung.`, 'warning');
-    albumUploadRunning = false;
-    dz.classList.remove('uploading');
-    return;
-  }
+  try {
+    const filtered = fileEntries.filter(fe => R2_ALBUM_EXT_RE.test(fe.relpath));
+    if (!filtered.length) {
+      toast('Info', `Folder "${folderName}" tidak berisi file yang didukung.`, 'warning');
+      return;
+    }
 
-  const total = filtered.length;
-  let done = 0, ok = 0, fail = 0, skipped = 0, savedKb = 0;
+    const total = filtered.length;
+    let done = 0, ok = 0, fail = 0, skipped = 0, savedKb = 0;
 
-  document.getElementById('albumProgressLabel').textContent = `Mengupload "${folderName}"...`;
-  document.getElementById('albumUploadProgress').style.display = 'block';
-  document.getElementById('albumProgressCount').textContent = `0 / ${total}`;
-  document.getElementById('albumProgressBar').style.width = '0%';
+    document.getElementById('albumProgressLabel').textContent = `Mengupload "${folderName}"...`;
+    document.getElementById('albumUploadProgress').style.display = 'block';
+    document.getElementById('albumProgressCount').textContent = `0 / ${total}`;
+    document.getElementById('albumProgressBar').style.width = '0%';
 
-  function addLog(msg, cls = '') {
-    const line = document.createElement('div');
-    line.className = 'album-upload-log-line' + (cls ? ' ' + cls : '');
-    line.textContent = msg;
-    log.appendChild(line);
-    log.scrollTop = log.scrollHeight;
-  }
+    function addLog(msg, cls = '') {
+      const line = document.createElement('div');
+      line.className = 'album-upload-log-line' + (cls ? ' ' + cls : '');
+      line.textContent = msg;
+      log.appendChild(line);
+      log.scrollTop = log.scrollHeight;
+    }
 
-  let queuedVideos = 0;
+    let queuedVideos = 0;
 
-  const isVideoOrLarge = function (fe) {
-    const isVid = /\.(mp4|mov|avi|mkv|wmv|3gp|m4v)$/i.test(fe.relpath);
-    return isVid || (fe.file && fe.file.size > 6 * 1024 * 1024);
-  };
-
-  const largeQueue = filtered.filter(isVideoOrLarge);
-  const smallQueue = filtered.filter(fe => !isVideoOrLarge(fe));
-
-  async function processEntry(fe) {
-    const fName = fe.relpath;
-    const fSize = fe.file ? fe.file.size : 0;
-    const fSizeMb = (fSize / (1024 * 1024)).toFixed(1);
-
-    const logLine = document.createElement('div');
-    logLine.className = 'album-upload-log-line';
-    logLine.textContent = `⏳ Uploading: ${fName} (0 / ${fSizeMb} MB)...`;
-    log.appendChild(logLine);
-    log.scrollTop = log.scrollHeight;
-
-    const onProgress = function (loaded, fTotal, speed) {
-      const lMb = (loaded / (1024 * 1024)).toFixed(1);
-      const tMb = (fTotal / (1024 * 1024)).toFixed(1);
-      const pct = fTotal > 0 ? Math.round((loaded / fTotal) * 100) : 0;
-      const spd = speed ? ` • ${speed}` : '';
-      logLine.textContent = `⏳ Uploading: ${fName} (${lMb}/${tMb} MB · ${pct}%${spd})`;
+    const isVideoOrLarge = function (fe) {
+      const isVid = /\.(mp4|mov|avi|mkv|wmv|3gp|m4v)$/i.test(fe.relpath);
+      return isVid || (fe.file && fe.file.size > 6 * 1024 * 1024);
     };
 
-    let d = await uploadOneAlbumFile(fe, folderName, onProgress);
-    if (!d.success && d.error && (d.error.includes('jaringan') || d.error.includes('timeout'))) {
-      logLine.textContent = `↻ Retry: ${fName}...`;
-      d = await uploadOneAlbumFile(fe, folderName, onProgress);
-    }
+    const largeQueue = filtered.filter(isVideoOrLarge);
+    const smallQueue = filtered.filter(fe => !isVideoOrLarge(fe));
 
-    if (d.success) {
-      if (d.skipped) {
-        skipped++;
-        logLine.className = 'album-upload-log-line skip';
-        logLine.textContent = `⊘ Dilewati: ${fName}`;
-      } else if (d.queued) {
-        queuedVideos++;
-        logLine.className = 'album-upload-log-line ok';
-        logLine.textContent = `⏳ ${fName}: diantre untuk batch kompresi GitHub`;
-      } else {
-        ok++;
-        savedKb += Math.max(0, (d.orig_kb || 0) - (d.new_kb || 0));
-        const note   = d.saved_pct > 0 ? ` (hemat ${d.saved_pct}%)` : '';
-        const poster = d.is_video ? (d.poster ? ' · thumbnail ✓' : ' · thumbnail gagal dibuat') : '';
-        const warn   = (!d.compressed && d.note) ? ` — ${d.note}` : '';
-        logLine.className = 'album-upload-log-line ok';
-        logLine.textContent = `✓ ${fName} · ${d.new_kb}KB${note}${poster}${warn}`;
+    async function processEntry(fe) {
+      const fName = fe.relpath;
+      const fSize = fe.file ? fe.file.size : 0;
+      const fSizeMb = (fSize / (1024 * 1024)).toFixed(1);
+
+      const logLine = document.createElement('div');
+      logLine.className = 'album-upload-log-line';
+      logLine.textContent = `⏳ Uploading: ${fName} (0 / ${fSizeMb} MB)...`;
+      log.appendChild(logLine);
+      log.scrollTop = log.scrollHeight;
+
+      const onProgress = function (loaded, fTotal, speed) {
+        const lMb = (loaded / (1024 * 1024)).toFixed(1);
+        const tMb = (fTotal / (1024 * 1024)).toFixed(1);
+        const pct = fTotal > 0 ? Math.round((loaded / fTotal) * 100) : 0;
+        const spd = speed ? ` • ${speed}` : '';
+        logLine.textContent = `⏳ Uploading: ${fName} (${lMb}/${tMb} MB · ${pct}%${spd})`;
+      };
+
+      let d = await uploadOneAlbumFile(fe, folderName, onProgress);
+      if (!d.success && d.error && (d.error.includes('jaringan') || d.error.includes('timeout'))) {
+        logLine.textContent = `↻ Retry: ${fName}...`;
+        d = await uploadOneAlbumFile(fe, folderName, onProgress);
       }
-    } else {
-      fail++;
-      logLine.className = 'album-upload-log-line err';
-      logLine.textContent = `✗ ${fName}: ${d.error || 'gagal'}`;
+
+      if (d.success) {
+        if (d.skipped) {
+          skipped++;
+          logLine.className = 'album-upload-log-line skip';
+          logLine.textContent = `⊘ Dilewati: ${fName}`;
+        } else if (d.queued) {
+          queuedVideos++;
+          logLine.className = 'album-upload-log-line ok';
+          logLine.textContent = `⏳ ${fName}: diantre untuk batch kompresi GitHub`;
+        } else {
+          ok++;
+          savedKb += Math.max(0, (d.orig_kb || 0) - (d.new_kb || 0));
+          const note   = d.saved_pct > 0 ? ` (hemat ${d.saved_pct}%)` : '';
+          const poster = d.is_video ? (d.poster ? ' · thumbnail ✓' : ' · thumbnail gagal dibuat') : '';
+          const warn   = (!d.compressed && d.note) ? ` — ${d.note}` : '';
+          logLine.className = 'album-upload-log-line ok';
+          logLine.textContent = `✓ ${fName} · ${d.new_kb}KB${note}${poster}${warn}`;
+        }
+      } else {
+        fail++;
+        logLine.className = 'album-upload-log-line err';
+        logLine.textContent = `✗ ${fName}: ${d.error || 'gagal'}`;
+      }
+      done++;
+      document.getElementById('albumProgressCount').textContent = `${done} / ${total}`;
+      document.getElementById('albumProgressBar').style.width = Math.round((done / total) * 100) + '%';
     }
-    done++;
-    document.getElementById('albumProgressCount').textContent = `${done} / ${total}`;
-    document.getElementById('albumProgressBar').style.width = Math.round((done / total) * 100) + '%';
-  }
 
-  // 1) Video & file besar satu per satu
-  for (const fe of largeQueue) {
-    await processEntry(fe);
-  }
-
-  // 2) Foto kecil concurrency 2
-  let sIdx = 0;
-  async function smallWorker() {
-    while (sIdx < smallQueue.length) {
-      const fe = smallQueue[sIdx++];
+    // 1) Video & file besar satu per satu
+    for (const fe of largeQueue) {
       await processEntry(fe);
     }
-  }
-  if (smallQueue.length > 0) {
-    const concurrency = 2;
-    await Promise.all(Array.from({ length: Math.min(concurrency, smallQueue.length) }, smallWorker));
-  }
 
-  // Semua file (foto + video) sudah selesai diupload/diantre. Kalau ada
-  // video yang diantre, kirim SATU batch dispatch ke GitHub Actions supaya
-  // semua video folder ini diproses dalam 1 run (bukan 1 run per video).
-  if (queuedVideos > 0) {
-    addLog(`⏳ Mengirim ${queuedVideos} video sebagai 1 batch job ke GitHub Actions...`, '');
-    try {
-      const rb = await fetch('/admin/api/r2_video_batch_dispatch.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'folder=' + encodeURIComponent(folderName)
-      });
-      const db = await rb.json();
-      if (db.success && db.dispatched) {
-        ok += queuedVideos;
-        addLog(`✓ ${db.count} video dikirim sebagai 1 job GitHub Actions (bukan ${db.count} run terpisah).`, 'ok');
-      } else if (db.success) {
-        ok += queuedVideos;
-        addLog(`⚠ Batch video: ${db.note || 'gagal dispatch, fallback dipakai.'}`, 'err');
-      } else {
-        addLog(`✗ Gagal mengirim batch video: ${db.error}`, 'err');
+    // 2) Foto kecil concurrency 2
+    let sIdx = 0;
+    async function smallWorker() {
+      while (sIdx < smallQueue.length) {
+        const fe = smallQueue[sIdx++];
+        await processEntry(fe);
       }
-    } catch (err) {
-      addLog('✗ Gagal menghubungi server untuk batch dispatch video.', 'err');
+    }
+    if (smallQueue.length > 0) {
+      const concurrency = 2;
+      await Promise.all(Array.from({ length: Math.min(concurrency, smallQueue.length) }, smallWorker));
+    }
+
+    // Semua file (foto + video) sudah selesai diupload/diantre. Kalau ada
+    // video yang diantre, kirim SATU batch dispatch ke GitHub Actions supaya
+    // semua video folder ini diproses dalam 1 run (bukan 1 run per video).
+    if (queuedVideos > 0) {
+      addLog(`⏳ Mengirim ${queuedVideos} video sebagai 1 batch job ke GitHub Actions...`, '');
+      try {
+        const rb = await fetch('/admin/api/r2_video_batch_dispatch.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: 'folder=' + encodeURIComponent(folderName)
+        });
+        const db = await rb.json();
+        if (db.success && db.dispatched) {
+          ok += queuedVideos;
+          addLog(`✓ ${db.count} video dikirim sebagai 1 job GitHub Actions (bukan ${db.count} run terpisah).`, 'ok');
+        } else if (db.success) {
+          ok += queuedVideos;
+          addLog(`⚠ Batch video: ${db.note || 'gagal dispatch, fallback dipakai.'}`, 'err');
+        } else {
+          addLog(`✗ Gagal mengirim batch video: ${db.error}`, 'err');
+        }
+      } catch (err) {
+        addLog('✗ Gagal menghubungi server untuk batch dispatch video.', 'err');
+      }
+    }
+
+    // Selesai — update cache folder names supaya autocomplete langsung nemu folder baru
+    folderNamesLoaded = false;
+    loadFolderNames();
+
+    // Otomatis isi fieldLink dengan nama folder yang baru diupload
+    selectFolder(folderName); // isi field + tampilkan badge ✓ terpilih
+
+    // Tampilkan ringkasan
+    res.style.display = 'block';
+    res.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <strong style="color:var(--text-primary)">✅ Upload "${escHtml(folderName)}" selesai</strong>
+        <button type="button" onclick="document.getElementById('albumUploadResult').style.display='none'" style="background:var(--bg-card2);border:1px solid var(--border);color:var(--text-muted);width:24px;height:24px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:13px;line-height:1;transition:all .15s" onmouseover="this.style.color='var(--text-primary)';this.style.borderColor='var(--accent)'" onmouseout="this.style.color='var(--text-muted)';this.style.borderColor='var(--border)'" title="Tutup">✕</button>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:6px;font-size:12px">
+        <span style="color:var(--success)">✓ ${ok} berhasil</span>
+        <span style="color:var(--text-muted)">⊘ ${skipped} dilewati</span>
+        <span style="color:var(--danger)">✗ ${fail} gagal</span>
+        <span style="color:var(--accent)">↓ ${savedKb.toFixed(0)} KB hemat</span>
+      </div>`;
+
+    toast(fail ? 'Selesai (ada yang gagal)' : 'Upload Selesai',
+      `"${folderName}": ${ok} berhasil, ${skipped} dilewati, ${fail} gagal`,
+      fail ? 'error' : 'success');
+  } finally {
+    dz.classList.remove('uploading');
+    albumUploadRunning = false;
+    if (typeof setUploadLock === 'function') setUploadLock(false);
+    if (btnSave) {
+      btnSave.disabled = false;
+      btnSave.textContent = btnSave.getAttribute('data-orig-text') || 'Simpan';
+    }
+    if (btnBatal) btnBatal.disabled = false;
+    if (modalClose) {
+      modalClose.style.pointerEvents = '';
+      modalClose.style.opacity = '';
     }
   }
-
-  // Selesai — update cache folder names supaya autocomplete langsung nemu folder baru
-  folderNamesLoaded = false;
-  loadFolderNames();
-
-  // Otomatis isi fieldLink dengan nama folder yang baru diupload
-  selectFolder(folderName); // isi field + tampilkan badge ✓ terpilih
-
-  // Tampilkan ringkasan
-  res.style.display = 'block';
-  res.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-      <strong style="color:var(--text-primary)">✅ Upload "${escHtml(folderName)}" selesai</strong>
-      <button type="button" onclick="document.getElementById('albumUploadResult').style.display='none'" style="background:var(--bg-card2);border:1px solid var(--border);color:var(--text-muted);width:24px;height:24px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:13px;line-height:1;transition:all .15s" onmouseover="this.style.color='var(--text-primary)';this.style.borderColor='var(--accent)'" onmouseout="this.style.color='var(--text-muted)';this.style.borderColor='var(--border)'" title="Tutup">✕</button>
-    </div>
-    <div style="display:flex;gap:16px;margin-top:6px;font-size:12px">
-      <span style="color:var(--success)">✓ ${ok} berhasil</span>
-      <span style="color:var(--text-muted)">⊘ ${skipped} dilewati</span>
-      <span style="color:var(--danger)">✗ ${fail} gagal</span>
-      <span style="color:var(--accent)">↓ ${savedKb.toFixed(0)} KB hemat</span>
-    </div>`;
-
-  toast(fail ? 'Selesai (ada yang gagal)' : 'Upload Selesai',
-    `"${folderName}": ${ok} berhasil, ${skipped} dilewati, ${fail} gagal`,
-    fail ? 'error' : 'success');
-
-  dz.classList.remove('uploading');
-  albumUploadRunning = false;
 }
 
 /* ── Mobile card-table labels (auto-injected) ──────────────────────── */

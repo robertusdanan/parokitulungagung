@@ -38,9 +38,11 @@ try {
 
     $cdnBase = rtrim(R2_CDN_URL, '/');
     $files   = [];
-    $limit   = 100;
+    $rawBody = json_decode(file_get_contents('php://input'), true);
+    $limitParam = isset($rawBody['limit']) ? (int)$rawBody['limit'] : (isset($_GET['limit']) ? (int)$_GET['limit'] : 0);
+    $sliceList = ($limitParam > 0) ? array_slice($objects, 0, $limitParam) : $objects;
 
-    foreach (array_slice($objects, 0, $limit) as $obj) {
+    foreach ($sliceList as $obj) {
         $key      = $obj['key'];
         $filename = basename($key);
         $files[]  = [
@@ -54,7 +56,7 @@ try {
     echo json_encode([
         'success' => true,
         'files'   => $files,
-        'count'   => count($files),
+        'count'   => count($objects),
     ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
 } catch (Throwable $e) {

@@ -409,7 +409,7 @@ $canDelete = userCan($user, 'delete');
         'gereja'   => ['icon'=>'⛪', 'label'=>'Foto Gereja'],
         'icon'     => ['icon'=>'🔷', 'label'=>'Icon'],
         'person'   => ['icon'=>'👤', 'label'=>'Foto Person'],
-        'root_img' => ['icon'=>'📁', 'label'=>'Root /img'],
+        'assets'   => ['icon'=>'📁', 'label'=>'Assets'],
       ];
       foreach ($folders as $key => $f): ?>
       <div class="media-folder-item" data-folder="<?= $key ?>">
@@ -788,6 +788,10 @@ async function loadStats() {
 
 // ── Select folder ─────────────────────────────────────────────────────────
 async function selectFolder(folder) {
+  if (window.__isUploadLocked) {
+    toast('Upload Berjalan', 'Dilarang beralih folder saat proses upload masih berlangsung!', 'error');
+    return;
+  }
   currentFolder = folder;
   currentTab    = 'files';
   document.querySelectorAll('.media-folder-item').forEach(el =>
@@ -1101,7 +1105,7 @@ async function loadFiles() {
 
     updateStats(allFiles, { skip: true });
     const metaEl = document.getElementById('meta-r2galeri');
-    if (metaEl) metaEl.textContent = allFiles.length + ' file';
+    if (metaEl) metaEl.textContent = (res.count ?? allFiles.length) + ' file';
     applyFilter();
     return;
   }
@@ -1200,17 +1204,28 @@ function handleDrop(e) {
 function handleFileSelect(input) { if (input.files.length) uploadFiles(Array.from(input.files)); input.value=''; }
 
 async function uploadFiles(files) {
+  if (window.__isUploadLocked) {
+    toast('Upload Berjalan', 'Masih ada proses upload yang berlangsung!', 'warning');
+    return;
+  }
+  if (typeof setUploadLock === 'function') {
+    setUploadLock(true, 'Sedang mengupload file media. Dilarang menutup atau beralih halaman!');
+  }
   showProgress('Mengupload ' + files.length + ' file...');
   let ok = 0, fail = 0;
-  for (const file of files) {
-    const fd = new FormData(); fd.append('file', file); fd.append('folder', currentFolder);
-    try {
-      const res = await fetch('/admin/api/upload_media.php', { method:'POST', body:fd });
-      const d   = await res.json();
-      if (d.success) ok++; else fail++;
-    } catch(e) { fail++; }
+  try {
+    for (const file of files) {
+      const fd = new FormData(); fd.append('file', file); fd.append('folder', currentFolder);
+      try {
+        const res = await fetch('/admin/api/upload_media.php', { method:'POST', body:fd });
+        const d   = await res.json();
+        if (d.success) ok++; else fail++;
+      } catch(e) { fail++; }
+    }
+  } finally {
+    hideProgress();
+    if (typeof setUploadLock === 'function') setUploadLock(false);
   }
-  hideProgress();
   if (ok > 0)   toast('Berhasil', `${ok} file berhasil diupload`, 'success');
   if (fail > 0) toast('Sebagian Gagal', `${fail} file gagal diupload`, 'error');
   await loadFiles(); loadStats();
@@ -1258,6 +1273,10 @@ async function bulkCompress() {
 }
 
 function openPreview(idx) {
+  if (window.__isUploadLocked) {
+    toast('Upload Berjalan', 'Dilarang membuka detail saat upload masih berlangsung!', 'warning');
+    return;
+  }
   const file = window._mediaFiles ? window._mediaFiles[idx] : null;
   if (!file) return;
   currentFile = file;
@@ -1291,6 +1310,10 @@ function compressFromPreview() { closeModal('previewModal'); if (currentFile) co
 function deleteFromPreview()   { closeModal('previewModal'); if (currentFile) deleteFile(currentFile.name); }
 
 function openRename(name) {
+  if (window.__isUploadLocked) {
+    toast('Upload Berjalan', 'Dilarang mengubah file saat upload masih berlangsung!', 'warning');
+    return;
+  }
   document.getElementById('renameOldName').value = name;
   document.getElementById('renameNewName').value = name;
   openModal('renameModal');
@@ -1307,6 +1330,10 @@ async function submitRename() {
 }
 
 async function deleteFile(name) {
+  if (window.__isUploadLocked) {
+    toast('Upload Berjalan', 'Dilarang menghapus file saat upload masih berlangsung!', 'warning');
+    return;
+  }
   if (currentFolder === 'r2galeri') {
     const file = allFiles.find(f => f.name === name);
     if (!file) return;
@@ -1381,7 +1408,7 @@ async function loadR2GaleriMeta() {
   const res = await apiPost('/admin/api/list_galeri_media.php', {});
   if (!res.success) return;
   const metaEl = document.getElementById('meta-r2galeri');
-  if (metaEl) metaEl.textContent = (res.files || []).length + ' file';
+  if (metaEl) metaEl.textContent = (res.count ?? (res.files || []).length) + ' file';
 }
 
 function initR2DragDrop() {
@@ -1448,6 +1475,10 @@ async function handleR2Drop(e) {
   e.preventDefault();
   document.getElementById('r2Dropzone').classList.remove('active');
   if (!CAN_CREATE) return;
+  if (window.__isUploadLocked) {
+    toast('Upload Berjalan', 'Tunggu proses upload saat ini selesai!', 'warning');
+    return;
+  }
 
   const items = e.dataTransfer.items;
   if (!items || !items.length) return;
@@ -1494,6 +1525,10 @@ async function handleR2FolderInputChange(e) {
   const fileList = Array.from(e.target.files || []);
   e.target.value = '';
   if (!fileList.length) return;
+  if (window.__isUploadLocked) {
+    toast('Upload Berjalan', 'Tunggu proses upload saat ini selesai!', 'warning');
+    return;
+  }
 
   const grouped = {};
   for (const f of fileList) {
@@ -1519,6 +1554,10 @@ async function handleR2AlbumAddDrop(e) {
   e.preventDefault();
   document.getElementById('r2AlbumAddDropzone')?.classList.remove('active');
   if (!CAN_CREATE || !r2CurrentAlbum) return;
+  if (window.__isUploadLocked) {
+    toast('Upload Berjalan', 'Tunggu proses upload saat ini selesai!', 'warning');
+    return;
+  }
 
   const items = e.dataTransfer.items;
   if (!items || !items.length) return;
@@ -1565,6 +1604,10 @@ async function handleR2AlbumAddInputChange(e) {
   const fileList = Array.from(e.target.files || []);
   e.target.value = '';
   if (!fileList.length || !r2CurrentAlbum) return;
+  if (window.__isUploadLocked) {
+    toast('Upload Berjalan', 'Tunggu proses upload saat ini selesai!', 'warning');
+    return;
+  }
 
   const fileEntries = fileList.map(function (f) { return { relpath: f.name, file: f }; });
   await runR2Upload(r2CurrentAlbum, fileEntries);
@@ -1715,6 +1758,10 @@ async function runR2Upload(folderName, fileEntries) {
     return;
   }
 
+  if (typeof setUploadLock === 'function') {
+    setUploadLock(true, `Sedang mengunggah folder/file ke "${folderName}". Dilarang menutup halaman, beralih menu, atau mengubah data!`);
+  }
+
   const skipExisting = document.getElementById('r2SkipExisting')?.checked ?? true;
   const total = filtered.length;
   let done = 0, ok = 0, fail = 0, skipped = 0, savedKb = 0;
@@ -1722,6 +1769,7 @@ async function runR2Upload(folderName, fileEntries) {
   let queuedVideos = 0;
   showR2Progress(`Mengupload album "${folderName}"...`, 0, total);
 
+  try {
   // Pisahkan file video / file besar (>6MB) untuk diupload sekuensial (1 per 1)
   // agar bandwidth penuh dan tidak memicu timeout upload paralel
   const isVideoOrLarge = function (fe) {
@@ -1835,6 +1883,11 @@ async function runR2Upload(folderName, fileEntries) {
       </div>${githubBadge}`;
   }
   toast(fail ? 'Selesai (ada yang gagal)' : 'Selesai', `Album "${folderName}": ${ok} berhasil, ${skipped} dilewati, ${fail} gagal${dispatchedVideos ? `, ${dispatchedVideos} video diproses via GitHub` : ''}`, fail ? 'error' : 'success');
+  } finally {
+    if (typeof setUploadLock === 'function') {
+      setUploadLock(false);
+    }
+  }
 }
 
 function showR2Progress(label, done, total) {
@@ -2049,6 +2102,10 @@ function renderR2AlbumsPagerControls(pages) {
 }
 
 async function openR2Album(name) {
+  if (window.__isUploadLocked) {
+    toast('Upload Berjalan', 'Tunggu proses upload selesai sebelum membuka album!', 'warning');
+    return;
+  }
   r2CurrentAlbum = name;
   document.getElementById('r2AlbumsView').style.display = 'none';
   document.getElementById('r2AlbumDetailView').style.display = 'flex';
@@ -2094,6 +2151,10 @@ async function openR2Album(name) {
 }
 
 function backToR2Albums() {
+  if (window.__isUploadLocked) {
+    toast('Upload Berjalan', 'Dilarang berpindah tampilan saat proses upload masih berlangsung!', 'warning');
+    return;
+  }
   collapseR2AddDropzone();
   document.getElementById('r2AlbumDetailView').style.display = 'none';
   document.getElementById('r2AlbumsView').style.display = 'flex';
@@ -2101,6 +2162,10 @@ function backToR2Albums() {
 }
 
 async function deleteR2File(key) {
+  if (window.__isUploadLocked) {
+    toast('Upload Berjalan', 'Dilarang menghapus file saat proses upload masih berlangsung!', 'warning');
+    return;
+  }
   confirmDialog('Hapus File?', `File di R2:<br><code>${escHtml(key)}</code><br>akan dihapus permanen.`, async function () {
     const res = await apiPost('/admin/api/r2_manager.php', { action: 'delete_file', key: key });
     if (res.success) {
@@ -2112,6 +2177,10 @@ async function deleteR2File(key) {
 
 async function deleteR2Album() {
   if (!r2CurrentAlbum) return;
+  if (window.__isUploadLocked) {
+    toast('Upload Berjalan', 'Dilarang menghapus album saat proses upload masih berlangsung!', 'warning');
+    return;
+  }
   confirmDialog('Hapus Seluruh Album?',
     `Album "<strong>${escHtml(r2CurrentAlbum)}</strong>" beserta SEMUA file di dalamnya akan dihapus permanen dari R2. Tindakan ini tidak bisa dibatalkan.`,
     async function () {

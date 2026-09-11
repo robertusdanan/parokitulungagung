@@ -562,3 +562,14 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 @media (max-width: 768px) {
   .pagination-toolbar { justify-content: center; text-align: center; }
 }
+
+/* ── Upload Locked State ────────────────────────────────────────────── */
+body.upload-locked .modal-close {
+  opacity: 0.25 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+body.upload-locked a,
+body.upload-locked .sidebar-nav a {
+  cursor: not-allowed !important;
+}

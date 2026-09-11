@@ -52,24 +52,100 @@ function confirmDialog(title, msg, onConfirm, danger = true) {
   okBtn.onclick = () => { close(); onConfirm(); };
 }
 
+// ── Global Upload Lock Management ─────────────────────────────────────
+window.__isUploadLocked = false;
+window.__uploadLockReason = '';
+
+function _onBeforeUnloadPrevent(e) {
+  if (window.__isUploadLocked) {
+    e.preventDefault();
+    e.returnValue = window.__uploadLockReason || 'Upload sedang berjalan! Jangan menutup atau memuat ulang halaman.';
+    return e.returnValue;
+  }
+}
+
+function setUploadLock(locked, reason) {
+  window.__isUploadLocked = Boolean(locked);
+  window.__uploadLockReason = reason || 'Proses upload sedang berjalan. Dilarang menutup, menyimpan, atau berpindah menu!';
+
+  if (window.__isUploadLocked) {
+    window.addEventListener('beforeunload', _onBeforeUnloadPrevent);
+    document.body.classList.add('upload-locked');
+  } else {
+    window.removeEventListener('beforeunload', _onBeforeUnloadPrevent);
+    document.body.classList.remove('upload-locked');
+  }
+}
+
 // ── Modal Management ─────────────────────────────────────────────────
 function openModal(id) {
   const el = document.getElementById(id);
   if (el) { el.classList.add('open'); document.body.style.overflow = 'hidden'; }
 }
 function closeModal(id) {
+  if (window.__isUploadLocked) {
+    if (typeof toast === 'function') {
+      toast('Upload Berjalan', window.__uploadLockReason || 'Proses upload sedang berlangsung. Dilarang menutup modal!', 'error');
+    } else {
+      alert(window.__uploadLockReason || 'Proses upload sedang berlangsung. Dilarang menutup modal!');
+    }
+    return false;
+  }
   const el = document.getElementById(id);
   if (el) { el.classList.remove('open'); document.body.style.overflow = ''; }
+  return true;
 }
 
-// Close modal on overlay click
+// Prevent closing modal or navigating away during active upload
 document.addEventListener('click', e => {
-  if (e.target.classList.contains('modal-overlay')) closeModal(e.target.id);
-  if (e.target.classList.contains('modal-close')) {
-    const overlay = e.target.closest('.modal-overlay');
-    if (overlay) closeModal(overlay.id);
+  if (window.__isUploadLocked) {
+    // Cegah klik overlay modal
+    if (e.target.classList.contains('modal-overlay')) {
+      e.preventDefault();
+      e.stopPropagation();
+      closeModal(e.target.id);
+      return;
+    }
+    // Cegah tombol close modal
+    if (e.target.closest('.modal-close')) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (typeof toast === 'function') {
+        toast('Upload Berjalan', window.__uploadLockReason || 'Proses upload sedang berlangsung. Dilarang menutup modal!', 'error');
+      }
+      return;
+    }
+    // Cegah klik link navigasi (sidebar / link eksternal / ganti halaman)
+    const link = e.target.closest('a');
+    if (link && link.href && !link.href.startsWith('javascript:') && !link.getAttribute('href')?.startsWith('#')) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (typeof toast === 'function') {
+        toast('Upload Berjalan', 'Dilarang beralih halaman saat proses upload masih berlangsung!', 'error');
+      } else {
+        alert('Dilarang beralih halaman saat proses upload masih berlangsung!');
+      }
+      return;
+    }
+  } else {
+    if (e.target.classList.contains('modal-overlay')) closeModal(e.target.id);
+    if (e.target.classList.contains('modal-close')) {
+      const overlay = e.target.closest('.modal-overlay');
+      if (overlay) closeModal(overlay.id);
+    }
   }
-});
+}, true);
+
+// Cegah tombol Escape keyboard saat upload berjalan
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && window.__isUploadLocked) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (typeof toast === 'function') {
+      toast('Upload Berjalan', window.__uploadLockReason || 'Proses upload sedang berlangsung. Dilarang menutup!', 'error');
+    }
+  }
+}, true);
 
 // ── Sidebar Toggle (Mobile) ──────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
