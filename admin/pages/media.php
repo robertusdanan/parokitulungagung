@@ -578,13 +578,13 @@ $canDelete = userCan($user, 'delete');
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="40" height="40" style="color:var(--text-muted);margin:0 auto">
                   <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
                 </svg>
-                <p><strong>Seret folder foto/video ke sini</strong> — akan otomatis dikompres &amp; diupload ke R2</p>
-                <small>Nama folder yang di-drop akan dipakai APA ADANYA sebagai nama album di R2. Foto → WebP (kualitas 60, maks 1600px). Video → H.264 (kalau ffmpeg tersedia di server).</small>
+                <p><strong>Seret folder foto/video ke sini</strong> — foto &amp; video akan diproses dan diunggah otomatis</p>
+                <small>Nama folder akan otomatis digunakan sebagai nama album. Foto dikonversi ke WebP, video dikompresi agar hemat kuota.</small>
                 <div style="margin-top:10px">
                   <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('r2FolderInput').click()">Atau klik untuk pilih folder</button>
                   <label style="display:inline-flex;align-items:center;gap:6px;margin-left:12px;font-size:12px;color:var(--text-secondary);cursor:pointer">
                     <input type="checkbox" id="r2SkipExisting" checked style="accent-color:var(--accent)">
-                    Lewati file yang sudah ada di R2
+                    Lewati file yang sudah pernah diunggah
                   </label>
                 </div>
                 <input type="file" id="r2FolderInput" webkitdirectory directory multiple style="display:none">
@@ -595,7 +595,7 @@ $canDelete = userCan($user, 'delete');
         <?php endif; ?>
 
         <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px 6px">
-          <span style="font-size:12.5px;font-weight:600;color:var(--text-secondary)">Album di Bucket R2</span>
+          <span style="font-size:12.5px;font-weight:600;color:var(--text-secondary)">Daftar Album Foto</span>
           <button class="btn btn-secondary btn-sm" onclick="loadR2Albums(true)">↻ Refresh</button>
         </div>
         <div style="padding:4px 16px 10px">
@@ -610,7 +610,7 @@ $canDelete = userCan($user, 'delete');
           <div id="r2AlbumsGrid" class="r2-album-grid" style="display:none"></div>
           <div id="r2AlbumsEmpty" class="media-empty" style="display:none">
             <div class="media-empty-icon">☁️</div>
-            <p>Belum ada album di bucket R2. Seret folder foto ke atas untuk mulai upload.</p>
+            <p>Belum ada album foto tersimpan. Seret folder foto ke atas untuk mulai upload.</p>
           </div>
         </div>
       </div>
@@ -641,7 +641,7 @@ $canDelete = userCan($user, 'delete');
                   <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
                 </svg>
                 <p style="margin:6px 0 2px"><strong>Seret foto/video ke sini</strong> untuk ditambahkan ke album ini</p>
-                <small>Aturan sama seperti upload album baru: Foto → WebP (kualitas 60, maks 1600px), Video → dikompres via GitHub Actions/ffmpeg.</small>
+                <small>Foto otomatis dioptimasi (WebP), video dikompresi secara otomatis di cloud.</small>
                 <div style="margin-top:8px">
                   <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('r2AlbumAddInput').click()">Atau klik untuk pilih file</button>
                 </div>
@@ -1508,14 +1508,14 @@ async function handleR2Drop(e) {
   if (!albumNames.length) {
     hideR2Progress();
     toast('Info', hasLooseFile
-      ? 'Seret FOLDER (bukan file satuan) ke area ini — nama foldernya akan dipakai sebagai nama album di R2.'
+      ? 'Seret FOLDER (bukan file satuan) ke area ini — nama foldernya akan dipakai sebagai nama album.'
       : 'Folder yang diseret kosong / tidak berisi file yang didukung.', 'warning');
     return;
   }
 
   for (const albumName of albumNames) {
     if (r2AlbumNames.some(n => n.trim().toLowerCase() === albumName.trim().toLowerCase())) {
-      const ok = confirm(`⚠️ Perhatian!\n\nAlbum / Folder "${albumName}" sudah ada di Cloudflare R2.\n\nMengunggah ke folder ini akan menambahkan atau menimpa file di dalamnya.\n\nApakah Anda yakin ingin melanjutkan?`);
+      const ok = confirm(`⚠️ Perhatian!\n\nAlbum / Folder "${albumName}" sudah ada di Galeri Foto.\n\nMengunggah ke folder ini akan menambahkan atau menimpa file di dalamnya.\n\nApakah Anda yakin ingin melanjutkan?`);
       if (!ok) continue;
     }
     await runR2Upload(albumName, grouped[albumName]);
@@ -1544,7 +1544,7 @@ async function handleR2FolderInputChange(e) {
   }
   for (const albumName of Object.keys(grouped)) {
     if (r2AlbumNames.some(n => n.trim().toLowerCase() === albumName.trim().toLowerCase())) {
-      const ok = confirm(`⚠️ Perhatian!\n\nAlbum / Folder "${albumName}" sudah ada di Cloudflare R2.\n\nMengunggah ke folder ini akan menambahkan atau menimpa file di dalamnya.\n\nApakah Anda yakin ingin melanjutkan?`);
+      const ok = confirm(`⚠️ Perhatian!\n\nAlbum / Folder "${albumName}" sudah ada di Galeri Foto.\n\nMengunggah ke folder ini akan menambahkan atau menimpa file di dalamnya.\n\nApakah Anda yakin ingin melanjutkan?`);
       if (!ok) continue;
     }
     await runR2Upload(albumName, grouped[albumName]);
@@ -1848,7 +1848,7 @@ async function runR2Upload(folderName, fileEntries) {
 
   // Semua file selesai diupload. Jika ada video, dispatch 1 batch job ke GitHub Actions
   if (queuedVideos > 0) {
-    showR2Progress(`Memicu kompresi GitHub Actions untuk ${queuedVideos} video...`, total, total);
+    showR2Progress(`Menyiapkan kompresi ${queuedVideos} video...`, total, total);
     try {
       const rb = await fetch('/admin/api/r2_video_batch_dispatch.php', {
         method: 'POST',
@@ -1873,8 +1873,8 @@ async function runR2Upload(folderName, fileEntries) {
     box.style.display = 'block';
     const githubBadge = dispatchedVideos > 0 ? `
       <div style="margin-top:12px;padding:10px 14px;border-radius:8px;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.25);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
-        <span style="font-size:12.5px;color:var(--text-primary);display:inline-flex;align-items:center;gap:6px">🐙 <b>${dispatchedVideos} video</b> berhasil dikirim ke antrean kompresi GitHub Actions</span>
-        ${githubUrl ? `<a href="${githubUrl}" target="_blank" rel="noopener" style="font-size:12px;font-weight:600;color:var(--accent);text-decoration:none;padding:4px 10px;border-radius:6px;background:rgba(99,102,241,0.15);white-space:nowrap;transition:all .15s">Lihat Antrean GitHub →</a>` : ''}
+        <span style="font-size:12.5px;color:var(--text-primary);display:inline-flex;align-items:center;gap:6px">🎬 <b>${dispatchedVideos} video</b> sedang diproses kompresi otomatis di cloud</span>
+        ${githubUrl ? `<a href="${githubUrl}" target="_blank" rel="noopener" style="font-size:12px;font-weight:600;color:var(--accent);text-decoration:none;padding:4px 10px;border-radius:6px;background:rgba(99,102,241,0.15);white-space:nowrap;transition:all .15s">Lihat Antrean Video →</a>` : ''}
       </div>` : '';
     box.innerHTML = `
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
@@ -1890,7 +1890,7 @@ async function runR2Upload(folderName, fileEntries) {
         <div class="compress-stat-box"><div class="compress-stat-num" style="color:var(--accent)">${savedKb.toFixed(0)}</div><div class="compress-stat-label">KB Hemat</div></div>
       </div>${githubBadge}`;
   }
-  toast(fail ? 'Selesai (ada yang gagal)' : 'Selesai', `Album "${folderName}": ${ok} berhasil, ${skipped} dilewati, ${fail} gagal${dispatchedVideos ? `, ${dispatchedVideos} video diproses via GitHub` : ''}`, fail ? 'error' : 'success');
+  toast(fail ? 'Selesai (ada yang gagal)' : 'Selesai', `Album "${folderName}": ${ok} berhasil, ${skipped} dilewati, ${fail} gagal${dispatchedVideos ? `, ${dispatchedVideos} video sedang dikompresi` : ''}`, fail ? 'error' : 'success');
   } finally {
     if (typeof setUploadLock === 'function') {
       setUploadLock(false);

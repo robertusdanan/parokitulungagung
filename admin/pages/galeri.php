@@ -287,7 +287,7 @@ adminHeader('Galeri Foto', 'galeri', $user);
         <thead>
           <tr>
             <th>#</th><th>Tanggal</th><th>Bulan</th><th>Judul</th>
-            <th>Thumbnail</th><th>Kreditasi Foto</th><th>Folder R2</th><th>Keterangan</th>
+            <th>Thumbnail</th><th>Kreditasi Foto</th><th>Folder Album</th><th>Keterangan</th>
             <th id="thAksi" style="width:90px">Aksi</th>
           </tr>
         </thead>
@@ -408,7 +408,7 @@ adminHeader('Galeri Foto', 'galeri', $user);
               </div>
               <div class="media-picker-grid" id="mediaGrid" style="display:none"></div>
               <div id="mediaEmpty" class="media-empty" style="display:none">
-                Belum ada thumbnail yang diupload ke R2
+                Belum ada foto thumbnail tersimpan
               </div>
             </div>
             <!-- Badge file terpilih -->
@@ -586,7 +586,7 @@ adminHeader('Galeri Foto', 'galeri', $user);
     </div>
     <div id="unsavedAlbumNotice" style="display:none;margin:0 20px 12px;padding:10px 14px;background:rgba(234,179,8,0.12);border:1px solid rgba(234,179,8,0.4);border-radius:var(--radius-sm);font-size:12.5px;color:var(--text-primary);align-items:center;gap:10px">
       <span style="font-size:16px">⚠️</span>
-      <span><b>File telah terunggah ke Cloudflare R2!</b> Jangan tutup modal atau beralih halaman sebelum menekan <b>"Simpan"</b> agar album ini tercatat di sistem website.</span>
+      <span><b>File album telah selesai diunggah!</b> Jangan tutup form atau beralih halaman sebelum menekan tombol <b>"Simpan"</b> di bawah agar album ini tersimpan ke website.</span>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" id="btnBatalModal" onclick="cancelAlbumForm()">Batal</button>
@@ -842,7 +842,7 @@ function renderTable(data) {
       ${showAksiCol ? `
       <td>
         <div class="actions">
-          ${can('edit') && row['Link'] ? `<button class="btn btn-icon btn-sm" onclick="refreshGaleriCache(${row._id}, this)" title="Refresh cache foto (kalau foto ditambah/dihapus langsung di R2)">
+          ${can('edit') && row['Link'] ? `<button class="btn btn-icon btn-sm" onclick="refreshGaleriCache(${row._id}, this)" title="Perbarui cache foto album ini">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
           </button>` : ''}
           ${can('edit') ? `<button class="btn btn-icon btn-sm" onclick="openEditModal(${row._id})" title="Edit">
@@ -1223,7 +1223,7 @@ function cancelAlbumForm() {
     return;
   }
   if (window.__albumUploadDoneUnsaved) {
-    const ok = confirm('⚠️ PERHATIAN!\n\nFile foto/video sudah berhasil diunggah ke Cloudflare R2, namun data album ini BELUM disimpan ke sistem.\n\nJika Anda keluar sekarang, album tidak akan muncul di website.\n\nApakah Anda yakin ingin membatalkan dan keluar?');
+    const ok = confirm('⚠️ PERHATIAN!\n\nFile foto/video telah selesai diunggah, namun data album ini BELUM disimpan.\n\nJika Anda keluar sekarang, album tidak akan tersimpan di website.\n\nApakah Anda yakin ingin membatalkan dan keluar?');
     if (!ok) return;
     window.__albumUploadDoneUnsaved = false;
     if (typeof setUploadLock === 'function') setUploadLock(false);
@@ -1254,12 +1254,12 @@ function showDuplicateFolderWarning(folderName) {
     warnBox.style.display = 'block';
     warnBox.innerHTML = `
       <div style="margin-top:6px;padding:9px 12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.35);border-radius:6px;font-size:12px;color:var(--danger);line-height:1.5">
-        ⚠️ <b>Folder "${escHtml(folderName)}" sudah ada di server Cloudflare R2!</b><br>
-        Agar file album lama tidak tertimpa, silakan isi <b>Nama Album baru</b> pada kolom di atas, lalu pilih/seret kembali foldernya.
+        ⚠️ <b>Folder album "${escHtml(folderName)}" sudah ada di Galeri Foto!</b><br>
+        Agar album yang sudah ada tidak tertimpa, silakan ketik <b>Nama Album baru</b> pada kolom di atas, lalu pilih/seret kembali foldernya.
       </div>
     `;
   }
-  toast('Folder Sudah Ada', `Folder "${folderName}" sudah ada di server R2. Silakan ganti Nama Album.`, 'warning');
+  toast('Folder Sudah Ada', `Folder "${folderName}" sudah ada di Galeri. Silakan beri Nama Album yang berbeda.`, 'warning');
 }
 
 function openAddModal() {
@@ -1521,7 +1521,7 @@ async function onAlbumDrop(e) {
       const files = await readDirRecursive(entry, '');
       if (files.length) grouped[entry.name] = (grouped[entry.name] || []).concat(files);
     } else {
-      toast('Info', 'Seret FOLDER (bukan file satuan). Nama folder = nama album di R2.', 'warning');
+      toast('Info', 'Seret FOLDER (bukan file satuan). Nama folder akan menjadi nama album.', 'warning');
     }
   }
   const albumNames = Object.keys(grouped);
@@ -1664,16 +1664,16 @@ function uploadVideoDirectPresignedGaleri(fileEntry, folderName, onProgress) {
         if (xhr.status >= 200 && xhr.status < 300) {
           resolve({ success: true, queued: true, is_video: true, direct_r2: true });
         } else {
-          resolve({ success: false, error: 'HTTP ' + xhr.status + ' (Upload R2)' });
+          resolve({ success: false, error: 'HTTP ' + xhr.status + ' (Upload)' });
         }
       };
 
       xhr.onerror = function () {
-        resolve({ success: false, error: 'Koneksi jaringan terputus saat upload R2' });
+        resolve({ success: false, error: 'Koneksi jaringan terputus saat upload' });
       };
 
       xhr.ontimeout = function () {
-        resolve({ success: false, error: 'Timeout saat upload R2' });
+        resolve({ success: false, error: 'Timeout saat upload' });
       };
 
       xhr.timeout = 1800000; // 30 menit
@@ -1936,7 +1936,7 @@ async function runAlbumUpload(folderName, fileEntries) {
     if (ok > 0) {
       window.__albumUploadDoneUnsaved = true;
       if (typeof setUploadLock === 'function') {
-        setUploadLock(true, 'File foto/video sudah diunggah ke Cloudflare R2! Jangan tutup modal atau beralih halaman sebelum menekan "Simpan".');
+        setUploadLock(true, 'File album telah selesai diunggah! Jangan tutup form atau beralih halaman sebelum menekan "Simpan".');
       }
       const unsavedNotice = document.getElementById('unsavedAlbumNotice');
       if (unsavedNotice) unsavedNotice.style.display = 'flex';
