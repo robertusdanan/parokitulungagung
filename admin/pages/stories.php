@@ -152,6 +152,59 @@ adminHeader('Stories', 'stories', $user);
   object-fit: cover;
   display: block;
 }
+
+/* ── Indikator "Sedang Diproses di Cloud" (admin grid) ── */
+.story-thumb-wrap.is-processing {
+  background: linear-gradient(160deg, #110e16 0%, #1a1424 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.story-thumb-processing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: #f0d98a;
+  padding: 12px;
+  text-align: center;
+}
+.story-thumb-spinner {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid rgba(240, 217, 138, 0.18);
+  border-top-color: #f0d98a;
+  border-right-color: #f0d98a;
+  animation: storyAdminSpin 1.1s cubic-bezier(0.4, 0.1, 0.3, 1) infinite;
+}
+.story-thumb-processing-text {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(240, 217, 138, 0.85);
+  line-height: 1.3;
+}
+.story-processing-badge {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(218, 175, 90, 0.92);
+  color: #1a1424;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 3px 9px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  z-index: 3;
+}
+@keyframes storyAdminSpin {
+  to { transform: rotate(360deg); }
+}
 .story-badge {
   position: absolute;
   top: 8px;
@@ -436,18 +489,23 @@ function renderStoriesGrid() {
     card.className = 'story-card';
 
     const isVideo = item.type === 'video';
+    const isProcessing = isVideo && (item.video_status === 'processing' || !item.poster_url);
     const thumbSrc = isVideo ? (item.poster_url || item.url) : item.url;
 
-    const thumbHtml = isVideo && !item.poster_url
-      ? `<video src="${escHtml(item.url)}" muted playsinline style="width:100%;height:100%;object-fit:cover"></video>`
+    const thumbHtml = isProcessing
+      ? `<div class="story-thumb-processing">
+           <div class="story-thumb-spinner"></div>
+           <div class="story-thumb-processing-text">Sedang Diproses di Cloud</div>
+         </div>`
       : `<img src="${escHtml(thumbSrc)}" alt="${escHtml(item.file_name)}" loading="lazy" onerror="this.src='https://img.parokitulungagung.org/icon/icon_kronik.png'">`;
 
     card.innerHTML = `
-      <div class="story-thumb-wrap">
+      <div class="story-thumb-wrap${isProcessing ? ' is-processing' : ''}">
         ${thumbHtml}
         <div class="story-badge">
           ${isVideo ? '🎬 Video' : '📷 Foto'}
         </div>
+        ${isProcessing ? `<div class="story-processing-badge">⏳ Processing</div>` : ''}
         <div class="story-order-badge">${index + 1}</div>
       </div>
       <div class="story-body">

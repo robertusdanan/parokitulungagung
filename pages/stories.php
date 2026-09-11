@@ -167,6 +167,50 @@ $extraCss = ['/css/content.css'];
     z-index: 2;
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   }
+
+  /* ── Overlay Pemrosesan Video (Status "Sedang Diproses") ── */
+  .story-processing-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(160deg, #110e16 0%, #1a1424 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: #f0d98a;
+    padding: 10px;
+  }
+  .story-processing-spinner {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid rgba(201, 162, 58, 0.18);
+    border-top-color: #f0d98a;
+    border-right-color: #f0d98a;
+    animation: storySpin 1.1s cubic-bezier(0.4, 0.1, 0.3, 1) infinite;
+  }
+  .story-processing-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-align: center;
+    color: rgba(240, 217, 138, 0.85);
+    font-family: var(--font-cinzel, 'DM Sans', sans-serif);
+    line-height: 1.3;
+  }
+  .story-card.is-processing {
+    cursor: default;
+  }
+  .story-card.is-processing:hover {
+    transform: none;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+  }
+  @keyframes storySpin {
+    to { transform: rotate(360deg); }
+  }
   .story-video-pill svg {
     fill: currentColor;
   }
@@ -370,11 +414,12 @@ $extraCss = ['/css/content.css'];
     <div class="stories-feed-wrap" id="storiesFeedWrap">
       <?php foreach ($stories as $idx => $st):
         $isVideo = ($st['type'] ?? '') === 'video';
+        $isProcessing = $isVideo && (($st['video_status'] ?? '') === 'processing' || empty($st['poster_url']));
         $thumb = $isVideo ? (!empty($st['poster_url']) ? $st['poster_url'] : '') : ($st['url'] ?? '');
         $title = !empty($st['file_name']) ? $st['file_name'] : 'Momen Paroki';
       ?>
-      <div class="story-card" onclick="openStoryLightbox(<?= (int)$idx ?>)" role="button" tabindex="0" aria-label="<?= htmlspecialchars($title, ENT_QUOTES) ?>">
-        <?php if (!empty($thumb)): ?>
+      <div class="story-card<?= $isProcessing ? ' is-processing' : '' ?>" onclick="openStoryLightbox(<?= (int)$idx ?>)" role="button" tabindex="0" aria-label="<?= htmlspecialchars($title, ENT_QUOTES) ?>">
+        <?php if (!empty($thumb) && !$isProcessing): ?>
         <img src="<?= htmlspecialchars($thumb, ENT_QUOTES) ?>"
              alt="<?= htmlspecialchars($title, ENT_QUOTES) ?>"
              class="story-cover-img"
@@ -382,7 +427,14 @@ $extraCss = ['/css/content.css'];
              onerror="this.parentElement.classList.add('is-fallback')">
         <?php endif; ?>
 
-        <?php if ($isVideo): ?>
+        <?php if ($isProcessing): ?>
+        <div class="story-processing-layer">
+          <div class="story-processing-spinner"></div>
+          <div class="story-processing-label">Sedang Diproses</div>
+        </div>
+        <?php endif; ?>
+
+        <?php if ($isVideo && !$isProcessing): ?>
         <div class="story-video-pill">
           <svg width="9" height="9" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           <span>Video</span>
