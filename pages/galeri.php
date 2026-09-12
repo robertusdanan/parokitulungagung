@@ -385,10 +385,7 @@ $galeriDataJS = [];
     </button>
   </div>
 
-  <?php
-  $globalMonthIndex = 0;
-  foreach ($tahunArr as $idx => $tahun):
-  ?>
+  <?php foreach ($tahunArr as $idx => $tahun): ?>
   <div class="galeri-tab-panel<?= $idx === 0 ? ' active' : '' ?>"
        id="galeri-panel-<?= e($tahun) ?>"
        role="tabpanel">
@@ -399,11 +396,11 @@ $galeriDataJS = [];
         (($ia = array_search($a, $bulanIndo)) === false ? 99 : $ia) -
         (($ib = array_search($b, $bulanIndo)) === false ? 99 : $ib)
     );
-    $bulanData  = array_reverse($bulanData, true);
-    $firstMonth = true;
+    $bulanData   = array_reverse($bulanData, true);
+    $monthInYear = 0;
     foreach ($bulanData as $bulan => $items):
-      $globalMonthIndex++;
-      $isOpen = ($globalMonthIndex <= 6);
+      $monthInYear++;
+      $isOpen = ($monthInYear <= 6);
     ?>
     <div class="galeri-month-section">
       <div class="galeri-month-header<?= $isOpen ? ' open' : '' ?>"
@@ -451,6 +448,7 @@ $galeriDataJS = [];
               'seo_cap' => $imgCap,
               'seo_tit' => $titleFinal,
             ];
+            $isFirstMonthOfActiveYear = ($idx === 0 && $monthInYear === 1);
           ?>
           <div class="galeri-card"
                style="animation-delay:<?= $idx2 * 35 ?>ms"
@@ -461,8 +459,8 @@ $galeriDataJS = [];
             <img src="<?= e($imgSrc) ?>"
                  alt="<?= e($altFinal) ?>"
                  title="<?= e($titleFinal) ?>"
-                 loading="<?= ($idx2 < 4 && $firstMonth) ? 'eager' : 'lazy' ?>"
-                 fetchpriority="<?= ($idx2 === 0 && $firstMonth) ? 'high' : 'auto' ?>"
+                 loading="<?= ($idx2 < 4 && $isFirstMonthOfActiveYear) ? 'eager' : 'lazy' ?>"
+                 fetchpriority="<?= ($idx2 === 0 && $isFirstMonthOfActiveYear) ? 'high' : 'auto' ?>"
                  decoding="async"
                  width="400" height="300"
                  onerror="this.parentElement.style.opacity='.5'">
@@ -476,7 +474,7 @@ $galeriDataJS = [];
         </div>
       </div>
     </div>
-    <?php $firstMonth = false; endforeach; ?>
+    <?php endforeach; ?>
   </div>
   <?php endforeach; ?>
 
