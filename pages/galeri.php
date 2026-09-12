@@ -385,7 +385,10 @@ $galeriDataJS = [];
     </button>
   </div>
 
-  <?php foreach ($tahunArr as $idx => $tahun): ?>
+  <?php
+  $globalMonthIndex = 0;
+  foreach ($tahunArr as $idx => $tahun):
+  ?>
   <div class="galeri-tab-panel<?= $idx === 0 ? ' active' : '' ?>"
        id="galeri-panel-<?= e($tahun) ?>"
        role="tabpanel">
@@ -399,11 +402,13 @@ $galeriDataJS = [];
     $bulanData  = array_reverse($bulanData, true);
     $firstMonth = true;
     foreach ($bulanData as $bulan => $items):
+      $globalMonthIndex++;
+      $isOpen = ($globalMonthIndex <= 6);
     ?>
     <div class="galeri-month-section">
-      <div class="galeri-month-header"
+      <div class="galeri-month-header<?= $isOpen ? ' open' : '' ?>"
            role="button" tabindex="0"
-           aria-expanded="false">
+           aria-expanded="<?= $isOpen ? 'true' : 'false' ?>">
         <div class="galeri-month-left">
           <span class="galeri-month-dot"></span>
           <span class="galeri-month-name"><?= e($bulan . ' ' . $tahun) ?></span>
@@ -414,7 +419,7 @@ $galeriDataJS = [];
           <polyline points="6 9 12 15 18 9"/>
         </svg>
       </div>
-      <div class="galeri-month-body">
+      <div class="galeri-month-body<?= $isOpen ? ' open' : '' ?>">
         <div class="galeri-grid">
           <?php foreach ($items as $idx2 => $item):
             $gambar   = $item['Gambar'] ?? '';
