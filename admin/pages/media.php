@@ -27,6 +27,11 @@ $canDelete = userCan($user, 'delete');
   overflow-y:auto;
   display:flex; flex-direction:column;
 }
+#folderList {
+  display:flex;
+  flex-direction:column;
+  width:100%;
+}
 .media-sidebar-header {
   padding:16px 16px 12px;
   font-size:11px; font-weight:700; letter-spacing:.1em;
@@ -327,15 +332,7 @@ $canDelete = userCan($user, 'delete');
 .r2-stat-loading { opacity:.55; animation:r2Pulse 1.3s ease-in-out infinite; }
 @keyframes r2Pulse { 0%,100%{opacity:.35} 50%{opacity:.75} }
 
-@media (max-width:768px) {
-  .media-layout { flex-direction:column; height:auto; }
-  .media-sidebar { width:100%; max-height:200px; border-radius:var(--radius) var(--radius) 0 0; }
-  .media-main { border-left:1px solid var(--border); border-radius:0 0 var(--radius) var(--radius); }
-  .media-grid { grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); }
-  .og-grid { grid-template-columns:1fr; }
-}
-
-/* ── Mobile overrides (auto-injected) ──────────────────────── */
+/* ── Responsive & Modal overrides ──────────────────────── */
 @media (max-width: 768px) {
   .media-layout {
     flex-direction: column;
@@ -344,41 +341,87 @@ $canDelete = userCan($user, 'delete');
   }
   .media-sidebar {
     width: 100%;
-    max-height: 56px;
+    height: auto;
+    max-height: 60px;
     flex-direction: row;
+    align-items: center;
     overflow-x: auto;
     overflow-y: hidden;
     border-radius: var(--radius) var(--radius) 0 0;
     border: 1px solid var(--border);
     border-bottom: none;
     scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    background: var(--bg-card);
+    padding: 6px 8px;
   }
   .media-sidebar::-webkit-scrollbar { display: none; }
-  .media-sidebar-header { display: none; }
-  .media-folder-item {
-    flex-direction: column;
+  .media-sidebar > .media-sidebar-header { display: none; }
+
+  #folderList {
+    display: flex;
+    flex-direction: row;
     align-items: center;
-    gap: 2px;
-    padding: 8px 14px;
-    min-width: 80px;
-    font-size: 10.5px;
-    border-left: none;
-    border-bottom: 3px solid transparent;
+    gap: 6px;
+    width: auto;
+    min-width: max-content;
+  }
+  #folderList .media-sidebar-header {
+    display: inline-flex;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+    padding: 0 4px;
     white-space: nowrap;
+    border: none !important;
+    margin: 0 !important;
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .media-folder-item {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    height: 36px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    border-left: 1px solid var(--border) !important;
+    border-bottom: 1px solid var(--border) !important;
+    white-space: nowrap;
+    background: var(--bg-card2);
+    color: var(--text-secondary);
+    transition: all 0.18s ease;
+    flex-shrink: 0;
+  }
+  .media-folder-item:hover {
+    background: var(--bg-card);
+    border-color: var(--accent) !important;
+    color: var(--text-primary);
   }
   .media-folder-item.active {
-    border-left: none;
-    border-bottom-color: var(--accent);
+    background: var(--accent-dim);
+    border-color: var(--accent) !important;
+    color: var(--accent);
+    font-weight: 600;
   }
-  .media-folder-icon { font-size: 18px; }
+  .media-folder-icon { font-size: 14px; }
   .media-folder-meta { display: none; }
+
   .media-main {
     border-left: 1px solid var(--border);
     border-top: none;
     border-radius: 0 0 var(--radius) var(--radius);
     min-height: 400px;
   }
-  .media-topbar { flex-wrap: wrap; }
+  .media-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+  .og-grid { grid-template-columns: 1fr; }
+  .media-topbar { flex-wrap: wrap; gap: 8px; }
   .media-search-wrap { max-width: none; flex: 1 1 100%; }
 }
 
@@ -772,7 +815,9 @@ document.addEventListener('DOMContentLoaded', function() {
     el.addEventListener('click', function() { selectFolder(this.dataset.folder); });
   });
   loadStats();
-  selectFolder('umkm');
+  const params = new URLSearchParams(window.location.search);
+  const initialFolder = params.get('folder') || 'umkm';
+  selectFolder(initialFolder);
 });
 
 // ── Load stats semua folder ───────────────────────────────────────────────
