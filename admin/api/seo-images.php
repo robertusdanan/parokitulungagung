@@ -147,8 +147,13 @@ function fetchSectionImages(string $section): array
                 $judul = $row['Judul'] ?? $bn;
                 $ket   = $row['Keterangan'] ?? '';
 
+                $thumbUrl = function_exists('r2CdnUrl') && defined('R2_GALERI_THUMB_PREFIX')
+                    ? r2CdnUrl(R2_GALERI_THUMB_PREFIX . $bn)
+                    : (defined('R2_CDN_URL') ? rtrim(R2_CDN_URL, '/') . '/_thumbnails/galeri/' . $bn : $imgUrl);
+
                 $result[] = [
                     'image_url' => $imgUrl,
+                    'thumb_url' => $thumbUrl,
                     'filename'  => $bn,
                     'name'      => $judul,
                     'meta'      => $ket,
@@ -403,6 +408,7 @@ try {
                 $url = $img['image_url'];
                 $result[] = [
                     'image_url' => $url,
+                    'thumb_url' => $img['thumb_url'] ?? $url,
                     'filename'  => $img['filename'],
                     'name'      => $img['name']   ?? '',
                     'meta'      => $img['meta']   ?? '',

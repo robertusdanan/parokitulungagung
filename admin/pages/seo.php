@@ -227,6 +227,12 @@ adminHeader('SEO Generator', 'seo', $user);
   display: flex; align-items: center; justify-content: center;
   color: var(--text-muted); font-size: 18px; flex-shrink: 0;
 }
+.seo-thumb-placeholder.circle {
+  width: 40px; height: 40px; border-radius: 50%;
+}
+.seo-thumb-wrap {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
 .seo-name-cell { max-width: 260px; }
 .seo-name-primary {
   font-weight: 500; font-size: 13px; color: var(--text-primary);
@@ -691,12 +697,18 @@ function renderImageRow(item, idx) {
   const imgKey   = encodeURIComponent(item.image_url).replace(/'/g, '%27');
 
   let thumbHtml;
-  if (item.image_url) {
-    const cls = isCircle ? 'seo-thumb-circle' : 'seo-thumb';
-    thumbHtml = `<img src="${esc(item.image_url)}" class="${cls}" loading="lazy"
-                      onerror="this.outerHTML='<div class=\\"seo-thumb-placeholder\\">📷</div>'">`;
+  const thumbSrc = item.thumb_url || item.image_url;
+  const cls      = isCircle ? 'seo-thumb-circle' : 'seo-thumb';
+  const phCls    = isCircle ? 'seo-thumb-placeholder circle' : 'seo-thumb-placeholder';
+
+  if (thumbSrc) {
+    thumbHtml = `<div class="seo-thumb-wrap">
+      <img src="${esc(thumbSrc)}" class="${cls}" loading="lazy"
+           onerror="this.style.display='none';const p=this.nextElementSibling;if(p)p.style.display='flex'">
+      <div class="${phCls}" style="display:none">📷</div>
+    </div>`;
   } else {
-    thumbHtml = `<div class="seo-thumb-placeholder">📷</div>`;
+    thumbHtml = `<div class="${phCls}">📷</div>`;
   }
 
   const statusHtml = item.seo_done

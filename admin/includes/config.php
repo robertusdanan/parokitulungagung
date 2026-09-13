@@ -108,6 +108,7 @@ if (!defined('R2_JADWAL_PETUGAS_PREFIX')) define('R2_JADWAL_PETUGAS_PREFIX', 'ja
 if (!defined('R2_UMKM_PREFIX'))           define('R2_UMKM_PREFIX',           'umkm/');
 if (!defined('R2_ASSETS_PREFIX'))         define('R2_ASSETS_PREFIX',         'assets/');
 if (!defined('R2_STORIES_PREFIX'))        define('R2_STORIES_PREFIX',        'stories/');
+if (!defined('R2_GALERI_THUMB_PREFIX'))   define('R2_GALERI_THUMB_PREFIX',   '_thumbnails/galeri/');
 
 // ── Prefix staging video sementara sebelum dikompresi GitHub Actions ──
 // Key di dalamnya berbentuk deterministik:
