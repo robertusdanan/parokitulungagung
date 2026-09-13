@@ -18,18 +18,6 @@ adminHeader('Romo Paroki', 'romo_paroki', $user);
   <?php endif; ?>
 </div>
 
-<div class="card" style="margin-bottom:16px;padding:14px 16px;background:var(--bg-card2);border:1px dashed var(--border)">
-  <p style="margin:0;font-size:12.5px;color:var(--text-secondary);line-height:1.6">
-    <strong>Cara kerja:</strong> setiap baris di sini mewakili satu <em>masa jabatan</em> seorang Romo di Paroki Tulungagung.
-    Yang tampil otomatis di homepage hanya Romo dengan <strong>Tanggal Selesai kosong</strong> (masih menjabat) atau
-    tanggal hari ini masih berada di antara Tanggal Mulai &ndash; Tanggal Selesai, dan status <strong>Aktif</strong> menyala.
-    Urutan tampil di homepage mengikuti kolom <strong>Urutan</strong> (angka kecil tampil lebih dulu).<br>
-    Jika seorang Romo pernah menjabat lebih dari satu periode/jabatan di paroki ini (mis. dulu Romo Rekan, sekarang Romo Paroki),
-    tambahkan baris baru dan gunakan <strong>Slug</strong> yang sama persis dengan baris sebelumnya agar riwayat jabatannya
-    tergabung dalam satu halaman profil.
-  </p>
-</div>
-
 <div class="card">
   <div class="toolbar">
     <div class="toolbar-left" style="flex-wrap:wrap;gap:8px">
@@ -73,10 +61,8 @@ adminHeader('Romo Paroki', 'romo_paroki', $user);
           <label>Nama Romo <span class="required">*</span></label>
           <input type="text" class="form-control" id="fieldNama" placeholder="RD Thomas Aquino Djoko Noegroho" oninput="onNamaInput()">
         </div>
-        <div class="form-group full">
-          <label>Slug Profil <span class="required">*</span></label>
-          <input type="text" class="form-control" id="fieldSlug" placeholder="rd-thomas-aquino-djoko-noegroho">
-          <span style="font-size:11px;color:var(--text-muted)">URL halaman: /romo/&lt;slug&gt; &mdash; gunakan slug yang <strong>sama</strong> untuk Romo yang sama walau beda periode/jabatan.</span>
+        <div class="form-group full" style="display:none">
+          <input type="hidden" id="fieldSlug">
         </div>
         <div class="form-group full">
           <label>Jabatan <span class="required">*</span></label>
@@ -159,10 +145,8 @@ function slugify(s) {
     .replace(/^-|-$/g,'');
 }
 function onNamaInput() {
-  if (slugTouched) return;
   document.getElementById('fieldSlug').value = slugify(document.getElementById('fieldNama').value);
 }
-document.getElementById('fieldSlug').addEventListener('input', function(){ slugTouched = true; });
 
 async function loadData() {
   document.getElementById('loadingState').style.display='block';
@@ -267,11 +251,11 @@ async function submitForm(){
   if(isEdit&&!can('edit')){toast('Akses Ditolak','Tidak ada izin edit','error');return;}
   if(!isEdit&&!can('create')){toast('Akses Ditolak','Tidak ada izin tambah','error');return;}
   const nama=document.getElementById('fieldNama').value.trim();
-  const slug=slugify(document.getElementById('fieldSlug').value.trim());
+  let slug=slugify(document.getElementById('fieldSlug').value.trim() || nama);
   const jabatan=document.getElementById('fieldJabatan').value.trim();
   const mulai=document.getElementById('fieldMulai').value;
   const selesai=document.getElementById('fieldSelesai').value;
-  if(!nama||!slug||!jabatan||!mulai){toast('Error','Nama, Slug, Jabatan, dan Tanggal Mulai wajib diisi','error');return;}
+  if(!nama||!jabatan||!mulai){toast('Error','Nama, Jabatan, dan Tanggal Mulai wajib diisi','error');return;}
   if(selesai && selesai<mulai){toast('Error','Tanggal Selesai tidak boleh sebelum Tanggal Mulai','error');return;}
   const data={
     'nama':nama,'slug':slug,'jabatan':jabatan,
