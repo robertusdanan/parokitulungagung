@@ -253,9 +253,20 @@ window.ArtikelImagePicker = (function () {
 
 /* Responsive */
 @media(max-width:680px){
+  .aip-overlay{padding:8px}
+  .aip-modal{max-width:100%;max-height:94vh;border-radius:12px}
+  .aip-header{padding:14px 18px 12px}
+  .aip-tabs{padding:0 14px}
+  .aip-tab{padding:8px 12px;font-size:12px}
+  .aip-toolbar{padding:10px 14px 8px;gap:8px;flex-wrap:wrap}
+  .aip-grid-wrap{padding:0 14px 12px}
+  .aip-grid{grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:8px}
+  .aip-item img{height:75px}
+  .aip-footer{padding:12px 14px}
   .aip-upload-right{display:none}
-  .aip-upload-left{width:100%;border-right:none}
-  .aip-modal{max-width:100%}
+  .aip-upload-left{width:100%;border-right:none;padding:12px 14px}
+  .aip-dropzone{padding:18px 12px}
+  .aip-dropzone-icon{font-size:24px;margin-bottom:4px}
 }
 
 #aipUploadRight {

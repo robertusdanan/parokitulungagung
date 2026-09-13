@@ -59,39 +59,165 @@ adminHeader($pageTitle, 'artikel', $user);
 .editor-breadcrumb span   { color:var(--text-secondary); }
 
 /* ── Layout ─────────────────────────────────────────────────────── */
-.editor-cols { display:grid; grid-template-columns:1fr 300px; gap:20px; align-items:start; width:100%; min-width:0; }
-.editor-main { display:flex; flex-direction:column; gap:16px; min-width:0; overflow:hidden; }
-.ql-wrap, .ql-container, .ql-editor { max-width:100%; box-sizing:border-box; }
-.ql-editor { word-break:break-word; overflow-wrap:break-word; white-space:pre-wrap; }
+.editor-cols { display:grid; grid-template-columns:1fr 320px; gap:22px; align-items:start; width:100%; min-width:0; }
+.editor-main { display:flex; flex-direction:column; gap:18px; min-width:0; }
 
 .editor-judul {
   width:100%; background:var(--bg-input); border:1px solid var(--border);
   border-radius:var(--radius-sm); color:var(--text-primary);
   font-family:'Playfair Display',serif; font-size:20px; font-weight:600;
   padding:12px 16px; outline:none; transition:border-color .15s,box-shadow .15s; line-height:1.4;
+  box-sizing:border-box;
 }
 .editor-judul:focus { border-color:var(--border-focus); box-shadow:0 0 0 3px rgba(201,168,76,.08); }
 .editor-judul::placeholder { color:var(--text-muted); font-weight:400; font-size:18px; }
 
-/* ── Quill ───────────────────────────────────────────────────────── */
-.ql-wrap { border:1px solid var(--border); border-radius:var(--radius-sm); overflow:hidden; background:var(--bg-input); }
-.ql-toolbar.ql-snow { background:var(--bg-card2); border:none; border-bottom:1px solid var(--border); padding:8px 10px; flex-wrap:wrap; }
-.ql-container.ql-snow { border:none; }
-.ql-editor { min-height:420px; color:var(--text-primary); font-family:'DM Sans',sans-serif; font-size:14.5px; line-height:1.8; padding:18px; }
-.ql-editor p { margin-bottom:10px; }
-.ql-editor h2,.ql-editor h3 { font-family:'Playfair Display',serif; color:var(--text-primary); margin:18px 0 8px; }
-.ql-editor img { max-width:100%; border-radius:6px; margin:8px 0; }
-.ql-editor blockquote { border-left:3px solid var(--accent); padding:6px 16px; color:var(--text-secondary); margin:12px 0; background:rgba(201,168,76,.04); border-radius:0 4px 4px 0; }
-.ql-snow .ql-stroke { stroke:var(--text-secondary); }
-.ql-snow .ql-fill   { fill:var(--text-secondary); }
-.ql-snow .ql-picker  { color:var(--text-secondary); }
+/* ── Editor Section Header & Quick Media Button ─────────────────── */
+.editor-section-header {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; flex-wrap:wrap; margin-bottom:8px;
+}
+.editor-section-title {
+  font-size:13px; font-weight:600; color:var(--text-primary);
+  display:flex; align-items:center; gap:8px;
+}
+.editor-section-tip {
+  font-size:11.5px; font-weight:400; color:var(--text-muted);
+}
+.btn-quick-photo {
+  display:inline-flex; align-items:center; gap:6px;
+  background:var(--accent-dim); border:1px solid rgba(201,168,76,.4);
+  color:var(--accent); border-radius:8px; font-size:12px; font-weight:600;
+  padding:6px 13px; cursor:pointer; transition:all .18s ease;
+  font-family:'DM Sans',sans-serif; box-shadow:0 2px 8px rgba(201,168,76,.08);
+}
+.btn-quick-photo:hover {
+  background:rgba(201,168,76,.22); border-color:var(--accent);
+  transform:translateY(-1px); box-shadow:0 4px 14px rgba(201,168,76,.18);
+}
+.btn-quick-photo svg { flex-shrink:0; stroke:var(--accent); }
+
+/* ── Quill Editor & Clean Toolbar ─────────────────────────────────── */
+.ql-wrap {
+  border:1px solid var(--border); border-radius:var(--radius-sm);
+  background:var(--bg-input); position:relative;
+  transition:border-color .18s,box-shadow .18s;
+}
+.ql-wrap:focus-within {
+  border-color:var(--border-focus);
+  box-shadow:0 0 0 3px rgba(201,168,76,.08);
+}
+.ql-toolbar.ql-snow {
+  position:sticky; top:0; z-index:40;
+  background:var(--bg-card);
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  border:none; border-bottom:1px solid var(--border);
+  border-radius:var(--radius-sm) var(--radius-sm) 0 0;
+  padding:8px 12px; display:flex; flex-wrap:wrap; align-items:center; gap:6px 8px;
+}
+.ql-container.ql-snow {
+  border:none; font-family:'DM Sans',sans-serif;
+  border-radius:0 0 var(--radius-sm) var(--radius-sm);
+}
+.ql-editor {
+  min-height:420px; color:var(--text-primary); font-family:'DM Sans',sans-serif;
+  font-size:14.5px; line-height:1.85; padding:20px 22px;
+  word-break:break-word; overflow-wrap:break-word;
+}
+.ql-editor.ql-blank::before {
+  color:var(--text-muted); font-style:normal; left:22px; right:22px;
+}
+.ql-editor p { margin-bottom:12px; }
+.ql-editor h2,.ql-editor h3 { font-family:'Playfair Display',serif; color:var(--text-primary); margin:24px 0 10px; }
+.ql-editor img { max-width:100%; border-radius:8px; margin:12px 0; box-shadow:0 4px 16px rgba(0,0,0,.15); }
+.ql-editor blockquote { border-left:3px solid var(--accent); padding:8px 18px; color:var(--text-secondary); margin:16px 0; background:rgba(201,168,76,.04); border-radius:0 6px 6px 0; }
+
+/* Separator format buttons */
+.ql-toolbar.ql-snow .ql-formats {
+  display:inline-flex; align-items:center; gap:3px;
+  margin-right:6px; padding-right:8px; border-right:1px solid rgba(255,255,255,.08);
+}
+.ql-toolbar.ql-snow .ql-formats:last-child {
+  border-right:none; margin-right:0; padding-right:0;
+}
+
+/* Toolbar Buttons */
+.ql-snow.ql-toolbar button {
+  width:32px; height:32px; padding:0; border-radius:6px;
+  display:inline-flex; align-items:center; justify-content:center;
+  background:transparent; border:1px solid transparent;
+  color:var(--text-secondary); transition:all .15s ease; cursor:pointer;
+}
+.ql-snow.ql-toolbar button:hover {
+  background:rgba(201,168,76,.12); border-color:rgba(201,168,76,.25);
+}
+.ql-snow.ql-toolbar button.ql-active {
+  background:var(--accent-dim); border-color:var(--accent);
+}
+.ql-snow .ql-stroke { stroke:var(--text-secondary); transition:stroke .15s; }
+.ql-snow .ql-fill   { fill:var(--text-secondary); transition:fill .15s; }
 .ql-snow.ql-toolbar button:hover .ql-stroke,
 .ql-snow.ql-toolbar button.ql-active .ql-stroke { stroke:var(--accent); }
 .ql-snow.ql-toolbar button:hover .ql-fill,
 .ql-snow.ql-toolbar button.ql-active .ql-fill   { fill:var(--accent); }
-.ql-snow .ql-picker-options { background:var(--bg-card2); border:1px solid var(--border); }
-.ql-toolbar .ql-insertImage { font-size:16px; line-height:1; padding:2px 5px; border-radius:4px; background:var(--accent-dim) !important; border:1px solid rgba(201,168,76,.3) !important; }
-.ql-toolbar .ql-insertImage:hover { background:rgba(201,168,76,.25) !important; }
+
+/* Header / Style Dropdown Picker (Fix Clipping & Dark Styling) */
+.ql-snow .ql-picker {
+  color:var(--text-primary); font-family:'DM Sans',sans-serif;
+  font-size:13px; font-weight:500; height:32px; position:relative;
+}
+.ql-snow .ql-picker-label {
+  display:inline-flex; align-items:center; justify-content:space-between;
+  gap:8px; padding:4px 10px; background:var(--bg-card2);
+  border:1px solid var(--border); border-radius:6px;
+  height:32px; box-sizing:border-box; transition:all .15s ease;
+  cursor:pointer; color:var(--text-primary); font-size:13px; font-weight:500;
+}
+.ql-snow .ql-picker-label:hover,
+.ql-snow .ql-picker.ql-expanded .ql-picker-label {
+  border-color:var(--accent); color:var(--accent); background:rgba(201,168,76,.08);
+}
+.ql-snow .ql-picker-label svg {
+  width:14px; height:14px; stroke:var(--text-secondary);
+  position:static; margin-top:0; transition:stroke .15s, transform .15s;
+}
+.ql-snow .ql-picker.ql-expanded .ql-picker-label svg {
+  stroke:var(--accent); transform:rotate(180deg);
+}
+.ql-snow .ql-picker-options {
+  position:absolute; top:calc(100% + 5px); left:0; z-index:1000;
+  background:var(--bg-card); border:1px solid var(--border);
+  border-radius:8px; box-shadow:0 14px 35px rgba(0,0,0,.65), 0 0 0 1px rgba(201,168,76,.15);
+  padding:6px; min-width:140px; display:none;
+}
+.ql-snow .ql-picker.ql-expanded .ql-picker-options {
+  display:block; animation:qlPickerDrop .15s cubic-bezier(.4,0,.2,1);
+}
+@keyframes qlPickerDrop {
+  from { opacity:0; transform:translateY(-4px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.ql-snow .ql-picker-item {
+  padding:7px 12px; border-radius:6px; color:var(--text-secondary);
+  font-size:13px; cursor:pointer; transition:all .15s ease; font-family:'DM Sans',sans-serif;
+}
+.ql-snow .ql-picker-item:hover,
+.ql-snow .ql-picker-item.ql-selected {
+  background:var(--accent-dim); color:var(--accent); font-weight:500;
+}
+
+/* Tombol insert image di toolbar */
+.ql-toolbar .ql-insertImage {
+  font-size:12px; font-weight:600;
+  display:inline-flex !important; align-items:center !important; justify-content:center !important;
+  gap:5px !important; padding:0 10px !important; width:auto !important; height:32px !important;
+  border-radius:6px !important; background:var(--accent-dim) !important;
+  border:1px solid rgba(201,168,76,.35) !important; color:var(--accent) !important; cursor:pointer;
+}
+.ql-toolbar .ql-insertImage:hover {
+  background:rgba(201,168,76,.25) !important; border-color:var(--accent) !important;
+}
+.ql-toolbar .ql-insertImage svg { width:15px; height:15px; stroke:var(--accent); }
 
 /* ── Sidebar ─────────────────────────────────────────────────────── */
 .editor-sidebar { display:flex; flex-direction:column; gap:16px; }
@@ -116,7 +242,6 @@ adminHeader($pageTitle, 'artikel', $user);
 @keyframes chipIn { from{opacity:0;transform:scale(.85)} to{opacity:1;transform:scale(1)} }
 .tag-chip-remove { background:none; border:none; cursor:pointer; color:var(--accent); opacity:.65; padding:0; line-height:1; font-size:14px; font-weight:400; display:flex; align-items:center; transition:opacity .15s; }
 .tag-chip-remove:hover { opacity:1; }
-
 /* ── Preview modal styles ───────────────────────────────────────────*/
 .preview-article { font-family:'DM Sans',sans-serif; color:#e8e0d0; max-width:800px; margin:0 auto; }
 .preview-category-badge { display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#c9a84c;border:1px solid rgba(201,168,76,.4);border-radius:20px;padding:3px 12px;margin-bottom:16px; }
@@ -380,64 +505,84 @@ adminHeader($pageTitle, 'artikel', $user);
 }
 
 /* ── Responsive ──────────────────────────────────────────────────── */
-/* Toolbar scroll horizontal agar tidak terpotong di layar sempit */
-.ql-wrap { overflow:hidden; }
-.ql-toolbar.ql-snow {
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  white-space: nowrap;
-  flex-wrap: nowrap !important;
-}
-.ql-toolbar.ql-snow::-webkit-scrollbar { display:none; }
-.ql-toolbar.ql-snow .ql-formats {
-  display: inline-flex !important;
-  align-items: center;
-  flex-shrink: 0;
+@media (max-width: 860px) {
+  .editor-cols { grid-template-columns:1fr; gap:16px; }
+  .editor-sidebar { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:4px; }
+  .editor-sidebar > .sidebar-card-save-desktop { display:none !important; }
+  .editor-judul { font-size:18px; padding:11px 14px; }
+  .ql-editor { min-height:320px; font-size:14.5px; padding:16px; }
+  .fab-save-bar { display:flex !important; }
+  .editor-sidebar { padding-bottom:90px; }
 }
 
-@media (max-width: 860px) {
-  .editor-cols { grid-template-columns:1fr; gap:0; }
-  .editor-sidebar { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:16px; }
-  .editor-sidebar > .sidebar-card:first-child { grid-column:1/-1; }
-  .editor-judul { font-size:18px; }
-  .ql-editor { min-height:280px; }
-}
 @media (max-width: 600px) {
   .editor-breadcrumb .bc-mid { display:none; }
-  .editor-breadcrumb { margin-bottom:14px; }
-  .editor-judul { font-size:16px; padding:10px 13px; }
-  .editor-judul::placeholder { font-size:15px; }
-  .ql-editor { min-height:220px; font-size:14px; padding:14px; }
-  .ql-toolbar.ql-snow { padding:6px 8px; gap:0; }
-  .ql-toolbar.ql-snow .ql-formats { margin-right:4px; }
-  .ql-toolbar.ql-snow button { width:26px; height:26px; padding:2px; }
-  .ql-snow .ql-picker-label { padding:0 4px; }
-  .editor-sidebar { grid-template-columns:1fr; margin-top:14px; padding-bottom:80px; }
+  .editor-breadcrumb { margin-bottom:12px; }
+  .editor-judul { font-size:16px; padding:10px 12px; }
+  .editor-section-header { flex-direction:column; align-items:flex-start; gap:8px; }
+  .btn-quick-photo { width:100%; justify-content:center; padding:8px 12px; font-size:12.5px; }
+  .ql-toolbar.ql-snow {
+    padding:6px 8px; gap:4px;
+  }
+  .ql-toolbar.ql-snow .ql-formats {
+    margin-right:3px; padding-right:4px; gap:2px;
+  }
+  .ql-snow.ql-toolbar button { width:30px; height:30px; }
+  .ql-snow .ql-picker { height:30px; font-size:12px; }
+  .ql-snow .ql-picker-label { height:30px; padding:3px 6px; font-size:12px; }
+  .ql-editor { min-height:260px; font-size:14px; padding:14px; }
+  .editor-sidebar { grid-template-columns:1fr; gap:12px; padding-bottom:96px; }
+  .sidebar-card { padding:14px; }
   .sidebar-card.accordion .sidebar-card-body { display:none; }
   .sidebar-card.accordion.open .sidebar-card-body { display:block; }
-  .sidebar-card.accordion .sidebar-card-title { cursor:pointer; margin-bottom:0; padding-bottom:0; user-select:none; justify-content:space-between; }
-  .sidebar-card.accordion .sidebar-card-title::after { content:''; display:block; width:8px; height:8px; border-right:2px solid var(--text-muted); border-bottom:2px solid var(--text-muted); transform:rotate(45deg); transition:transform .2s; flex-shrink:0; margin-top:-2px; }
-  .sidebar-card.accordion.open .sidebar-card-title::after { transform:rotate(-135deg); margin-top:2px; }
-  .sidebar-card.accordion.open .sidebar-card-title { margin-bottom:14px; }
-  .sidebar-card-save-desktop { display:none !important; }
-  .fab-save-bar { display:flex !important; }
+  .sidebar-card.accordion .sidebar-card-title {
+    cursor:pointer; margin-bottom:0; padding-bottom:0; user-select:none; justify-content:space-between;
+  }
+  .sidebar-card.accordion .sidebar-card-title::after {
+    content:''; display:block; width:8px; height:8px;
+    border-right:2px solid var(--text-muted); border-bottom:2px solid var(--text-muted);
+    transform:rotate(45deg); transition:transform .2s ease; flex-shrink:0; margin-top:-2px;
+  }
+  .sidebar-card.accordion.open .sidebar-card-title::after {
+    transform:rotate(-135deg); margin-top:2px;
+  }
+  .sidebar-card.accordion.open .sidebar-card-title { margin-bottom:12px; }
   .thumb-area { min-height:120px; }
   .thumb-area img { max-height:140px; }
-  .galeri-grid { grid-template-columns:repeat(2,1fr); max-height:200px; }
   #tagsContainer { min-height:42px; }
   .save-dialog { padding:30px 24px; }
 }
-.fab-save-bar { display:none; }
-.thumb-orient-badge{display:none;align-items:center;gap:5px;font-size:10.5px;font-weight:500;
-  padding:2px 9px;border-radius:12px;margin-top:5px;width:fit-content;transition:all .2s}
-.thumb-orient-badge.landscape{background:rgba(82,148,224,.1);color:#5294e0;border:1px solid rgba(82,148,224,.25)}
-.thumb-orient-badge.portrait{background:rgba(113,201,76,.1);color:#5abb3c;border:1px solid rgba(113,201,76,.25)}
-.thumb-orient-badge.square{background:rgba(201,168,76,.1);color:var(--accent);border:1px solid rgba(201,168,76,.25)}
-.thumb-dim-tip{font-size:11px;color:var(--text-muted);margin-top:3px;line-height:1.5;display:none}
-</style>
 
+/* ── Mobile Floating Action Bar ──────────────────────────────────── */
+.fab-save-bar {
+  position:fixed; bottom:0; left:0; right:0; z-index:4000;
+  background:rgba(14,12,10,0.96);
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  border-top:1px solid rgba(201,168,76,0.25);
+  box-shadow:0 -8px 28px rgba(0,0,0,0.6);
+  padding:10px 16px;
+  display:none; align-items:center; justify-content:space-between; gap:8px;
+}
+.fab-save-bar .fab-btn-group {
+  display:flex; align-items:center; gap:8px; flex:1; justify-content:flex-end;
+}
+.fab-save-bar .btn {
+  padding:8px 13px; font-size:12.5px; font-weight:600;
+  display:inline-flex; align-items:center; gap:5px; border-radius:8px;
+}
+.fab-save-bar .btn-photo {
+  background:rgba(201,168,76,.12); border:1px solid rgba(201,168,76,.35); color:var(--accent);
+}
+
+.thumb-orient-badge {
+  display:none; align-items:center; gap:5px; font-size:10.5px; font-weight:500;
+  padding:2px 9px; border-radius:12px; margin-top:5px; width:fit-content; transition:all .2s;
+}
+.thumb-orient-badge.landscape { background:rgba(82,148,224,.1); color:#5294e0; border:1px solid rgba(82,148,224,.25); }
+.thumb-orient-badge.portrait  { background:rgba(113,201,76,.1);  color:#5abb3c; border:1px solid rgba(113,201,76,.25); }
+.thumb-orient-badge.square    { background:rgba(201,168,76,.1); color:var(--accent); border:1px solid rgba(201,168,76,.25); }
+.thumb-dim-tip { font-size:11px; color:var(--text-muted); margin-top:3px; line-height:1.5; display:none; }
+</style>
 <!-- ── Save Loading Overlay ───────────────────────────────────────── -->
 <div class="save-overlay" id="saveOverlay">
   <div class="save-dialog">
@@ -562,10 +707,19 @@ adminHeader($pageTitle, 'artikel', $user);
            placeholder="Tulis judul artikel di sini…">
 
     <div>
-      <label style="font-size:12px;font-weight:500;color:var(--text-muted);display:block;margin-bottom:6px">
-        Isi Artikel
-        <span style="font-weight:400;color:var(--text-muted)"> — Klik 🖼 di toolbar untuk sisipkan gambar</span>
-      </label>
+      <div class="editor-section-header">
+        <div class="editor-section-title">
+          <span>Isi Artikel</span>
+          <span class="editor-section-tip">— Format teks &amp; tata letak konten</span>
+        </div>
+        <button type="button" class="btn-quick-photo" onclick="openContentImagePicker()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+          </svg>
+          <span>+ Sisipkan Foto / Upload Gambar</span>
+        </button>
+      </div>
       <div class="ql-wrap">
         <div id="quillEditor"></div>
       </div>
@@ -759,20 +913,25 @@ adminHeader($pageTitle, 'artikel', $user);
 
 <!-- FAB Save Bar (mobile) -->
 <div class="fab-save-bar" id="fabSaveBar">
-  <div class="fab-status" id="fabStatus">Draft belum disimpan</div>
-  <a href="/admin/pages/artikel.php?menu=<?= e($activeMenu) ?>"
-     class="btn btn-secondary" style="text-decoration:none">Batal</a>
-  <button class="btn btn-secondary" onclick="openPreview()" style="display:flex;align-items:center;gap:6px">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-    Preview
-  </button>
-  <button class="btn btn-primary" onclick="submitArtikel()">
+  <button type="button" class="btn btn-photo" onclick="openContentImagePicker()" title="Sisipkan Foto">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-      <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
-      <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+      <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
     </svg>
-    Simpan
+    <span>+Foto</span>
   </button>
+  <div class="fab-btn-group">
+    <button type="button" class="btn btn-secondary" onclick="openPreview()" style="display:flex;align-items:center;gap:5px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      <span>Preview</span>
+    </button>
+    <button type="button" class="btn btn-primary" onclick="submitArtikel()" style="display:flex;align-items:center;gap:5px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+        <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+        <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+      </svg>
+      <span>Simpan</span>
+    </button>
+  </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js"></script>
@@ -874,7 +1033,7 @@ document.addEventListener('DOMContentLoaded', function () {
   _checkDraftRecovery();
   _loadTagSuggestions();
   const icons = Quill.import('ui/icons');
-  icons['insertImage'] = '🖼';
+  icons['insertImage'] = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span style="font-size:11.5px;font-family:\'DM Sans\',sans-serif;font-weight:600;margin-left:2px">Foto</span>';
 
   quill = new Quill('#quillEditor', {
     theme: 'snow',
@@ -891,33 +1050,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ],
         handlers: {
           insertImage: function () {
-            ArtikelImagePicker.open({
-              type: 'content',
-onSelect: function (url, filename, alt) {
-const range = quill.getSelection(true);
-const p     = ArtikelImagePicker._lastPreset || {};
-
-quill.insertEmbed(range.index, 'image', url);
-quill.setSelection(range.index + 1);
-//
-if (alt || p.orient) {
-setTimeout(function () {
-const [leaf] = quill.getLeaf(range.index);
-if (leaf && leaf.domNode && leaf.domNode.tagName === 'IMG') {
-const el = leaf.domNode;
-if (alt) el.setAttribute('alt', alt);
-if (p.orient) el.setAttribute('data-orient', p.orient);
-           // Portrait: batasi lebar agar tidak terlalu dominan di konten
-if (p.orient === 'portrait') {
-el.style.maxWidth = '45%';
-el.style.margin   = '8px auto';
-el.style.display  = 'block';
-}
-}
-}, 50);
-}
-}
-            });
+            openContentImagePicker();
           }
         }
       }
@@ -1172,6 +1305,41 @@ function _setTagsFromString(str) {
 // ════════════════════════════════════════════════════════════════════
 // THUMBNAIL
 // ════════════════════════════════════════════════════════════════════
+
+// ── Buka Picker Gambar untuk Isi Konten ─────────────────────────────
+function openContentImagePicker() {
+  const judul = (document.getElementById('fieldJudul')?.value || '').trim();
+  ArtikelImagePicker.open({
+    type: 'content',
+    judul: judul,
+    onSelect: function (url, filename, alt) {
+      if (!quill) return;
+      let range = quill.getSelection(true);
+      if (!range || range.index === undefined) {
+        range = { index: quill.getLength() - 1, length: 0 };
+      }
+      const p = ArtikelImagePicker._lastPreset || {};
+      quill.insertEmbed(range.index, 'image', url);
+      quill.setSelection(range.index + 1);
+
+      if (alt || p.orient) {
+        setTimeout(function () {
+          const [leaf] = quill.getLeaf(range.index);
+          if (leaf && leaf.domNode && leaf.domNode.tagName === 'IMG') {
+            const el = leaf.domNode;
+            if (alt) el.setAttribute('alt', alt);
+            if (p.orient) el.setAttribute('data-orient', p.orient);
+            if (p.orient === 'portrait') {
+              el.style.maxWidth = '48%';
+              el.style.margin = '10px auto';
+              el.style.display = 'block';
+            }
+          }
+        }, 50);
+      }
+    }
+  });
+}
 
 function openThumbPicker() {
   const judul = (document.getElementById('fieldJudul')?.value || '').trim();
