@@ -376,26 +376,56 @@ adminHeader('Stories', 'stories', $user);
   <p style="font-size:12.5px;color:var(--text-muted);max-width:360px;margin:0 auto">Unggah foto atau video di area atas untuk mulai menampilkan Stories di website.</p>
 </div>
 
-<!-- Modal Edit Story -->
-<div class="modal" id="editStoryModal" style="display:none">
-  <div class="modal-backdrop" onclick="closeEditModal()"></div>
-  <div class="modal-dialog" style="max-width:480px">
+<!-- Modal Edit Story (Elegan & Responsif) -->
+<div class="modal-overlay" id="editStoryModal">
+  <div class="modal" style="max-width:560px">
     <div class="modal-header">
-      <h3 style="font-size:15px;margin:0">Edit Media Stories</h3>
-      <button type="button" class="modal-close" onclick="closeEditModal()">✕</button>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:32px;height:32px;border-radius:8px;background:rgba(201,162,58,0.15);color:var(--accent);display:flex;align-items:center;justify-content:center">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+        </div>
+        <div>
+          <span class="modal-title" style="font-size:16px;font-weight:700">Edit Media Stories</span>
+          <div style="font-size:11.5px;color:var(--text-muted)">Ubah nama file atau keterangan media</div>
+        </div>
+      </div>
+      <button type="button" class="modal-close" onclick="closeEditModal()">&times;</button>
     </div>
-    <div class="modal-body" style="padding:16px 20px">
+    <div class="modal-body" style="padding:20px 24px">
       <input type="hidden" id="editStoryId">
-      <div style="margin-bottom:14px">
-        <label class="form-label" style="font-size:12.5px;font-weight:600">Nama File / Judul</label>
-        <input type="text" id="editStoryFileName" class="form-control" placeholder="Nama file / judul media">
+
+      <!-- Preview media thumbnail di dalam modal -->
+      <div style="display:flex;gap:16px;align-items:flex-start;padding:12px;background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;margin-bottom:18px">
+        <div style="width:96px;height:72px;border-radius:8px;overflow:hidden;background:#000;flex-shrink:0;position:relative">
+          <img id="editStoryPreviewImg" src="" alt="Preview" style="width:100%;height:100%;object-fit:cover;display:block">
+          <div id="editStoryBadgeType" style="position:absolute;bottom:4px;left:4px;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;background:rgba(0,0,0,0.7);color:#fff"></div>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div id="editStoryMetaTitle" style="font-size:13px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px"></div>
+          <div id="editStoryMetaDate" style="font-size:11.5px;color:var(--text-muted);margin-bottom:6px"></div>
+          <a id="editStoryMediaLink" href="#" target="_blank" rel="noopener" style="font-size:11.5px;color:var(--accent);display:inline-flex;align-items:center;gap:4px;text-decoration:none">
+            <span>Buka file asli</span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
       </div>
-      <div style="margin-bottom:14px">
-        <label class="form-label" style="font-size:12.5px;font-weight:600">Deskripsi</label>
-        <textarea id="editStoryDescription" class="form-control" rows="4" placeholder="Tulis deskripsi media di sini..."></textarea>
+
+      <div class="form-group" style="margin-bottom:16px">
+        <label class="form-label" style="font-size:12.5px;font-weight:600;margin-bottom:6px;display:block">Nama File / Judul</label>
+        <input type="text" id="editStoryFileName" class="form-control" placeholder="Contoh: Misa Natal 2026">
+        <small style="color:var(--text-muted);font-size:11px;margin-top:4px;display:block">Nama judul yang muncul di preview stories.</small>
+      </div>
+
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label" style="font-size:12.5px;font-weight:600;margin-bottom:6px;display:block">Deskripsi</label>
+        <textarea id="editStoryDescription" class="form-control" rows="3" placeholder="Tulis keterangan atau deskripsi media di sini..."></textarea>
+        <small style="color:var(--text-muted);font-size:11px;margin-top:4px;display:block">Keterangan opsional yang tampil di bagian bawah saat stories dibuka.</small>
       </div>
     </div>
-    <div class="modal-footer" style="padding:12px 20px;display:flex;justify-content:flex-end;gap:10px">
+    <div class="modal-footer" style="padding:14px 24px;display:flex;justify-content:flex-end;gap:10px;border-top:1px solid var(--border)">
       <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Batal</button>
       <button type="button" class="btn btn-primary" id="btnSaveEdit" onclick="saveStoryEdit()">Simpan Perubahan</button>
     </div>
@@ -628,11 +658,33 @@ function openEditModal(id) {
   document.getElementById('editStoryFileName').value = item.file_name || '';
   document.getElementById('editStoryDescription').value = item.description || '';
 
-  document.getElementById('editStoryModal').style.display = 'flex';
+  const isVideo = item.type === 'video';
+  const thumbSrc = isVideo ? (item.poster_url || item.url) : item.url;
+  const imgEl = document.getElementById('editStoryPreviewImg');
+  imgEl.src = thumbSrc || 'https://img.parokitulungagung.org/icon/icon_kronik.png';
+  imgEl.onerror = () => { imgEl.src = 'https://img.parokitulungagung.org/icon/icon_kronik.png'; };
+
+  const badgeEl = document.getElementById('editStoryBadgeType');
+  badgeEl.textContent = isVideo ? '🎬 Video' : '📷 Foto';
+
+  document.getElementById('editStoryMetaTitle').textContent = item.file_name || 'Tanpa Judul';
+  document.getElementById('editStoryMetaDate').textContent = item.created_at
+    ? 'Diupload: ' + new Date(item.created_at).toLocaleDateString('id-ID', {day:'numeric',month:'short',year:'numeric'})
+    : '';
+
+  const linkEl = document.getElementById('editStoryMediaLink');
+  if (item.url) {
+    linkEl.href = item.url;
+    linkEl.style.display = 'inline-flex';
+  } else {
+    linkEl.style.display = 'none';
+  }
+
+  openModal('editStoryModal');
 }
 
 function closeEditModal() {
-  document.getElementById('editStoryModal').style.display = 'none';
+  closeModal('editStoryModal');
 }
 
 async function saveStoryEdit() {
