@@ -56,6 +56,28 @@ adminHeader($pageTitle, 'artikel', $user);
   to   { transform: rotate(360deg); }
 }
 
+.btn-saved {
+  background: #15803d !important;
+  border-color: #22c55e !important;
+  color: #f0fdf4 !important;
+  box-shadow: 0 0 14px rgba(34, 197, 94, 0.4) !important;
+  transition: all 0.25s ease !important;
+}
+.btn-saved svg {
+  stroke: #f0fdf4 !important;
+}
+
+#toast-container {
+  z-index: 99999 !important;
+}
+@media (max-width: 860px) {
+  #toast-container {
+    bottom: 76px !important;
+    right: 12px !important;
+    left: 12px !important;
+  }
+}
+
 /* ── Back breadcrumb ─────────────────────────────────────────────── */
 .editor-breadcrumb {
   display:flex; align-items:center; gap:8px;
@@ -891,7 +913,7 @@ adminHeader($pageTitle, 'artikel', $user);
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
       <span>Preview</span>
     </button>
-    <button type="button" class="btn btn-primary" onclick="submitArtikel()" style="display:flex;align-items:center;gap:5px">
+    <button type="button" class="btn btn-primary" id="fabBtnSave" onclick="submitArtikel()" style="display:flex;align-items:center;gap:5px">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
         <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
         <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
@@ -1065,24 +1087,24 @@ async function submitArtikel() {
   };
   if (EDIT_ID) data.id = EDIT_ID;
 
-  // ── JIKA EDIT ARTIKEL YANG SUDAH ADA (Update data langsung, tanpa overlay AI/OG) ──
+  // ── JIKA EDIT ARTIKEL YANG SUDAH ADA (Update data langsung, tombol dinamis "Tersimpan") ──
   if (EDIT_ID) {
     const btnSave = document.getElementById('btnSave');
-    const fabSaveBtns = document.querySelectorAll('#fabSaveBar button');
+    const fabBtnSave = document.getElementById('fabBtnSave');
+    const allSaveBtns = [btnSave, fabBtnSave].filter(Boolean);
 
-    // Tampilkan status tombol loading
-    if (btnSave) {
-      btnSave.disabled = true;
-      btnSave.dataset.origHtml = btnSave.innerHTML;
-      btnSave.innerHTML = `
+    // Simpan template asli & ubah jadi indikator Menyimpan…
+    allSaveBtns.forEach(btn => {
+      if (!btn.dataset.origHtml) btn.dataset.origHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `
         <svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
           <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
           <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path>
         </svg>
-        Menyimpan…
+        <span>Menyimpan…</span>
       `;
-    }
-    fabSaveBtns.forEach(b => b.disabled = true);
+    });
 
     try {
       const res = await apiPost('/admin/api/artikel.php', { action: 'save', menu, data });
@@ -1101,20 +1123,34 @@ async function submitArtikel() {
         saveInfoEl.innerHTML = `<span style="color:var(--accent);font-weight:600">✓ Tersimpan</span> pukul ${timeStr}`;
       }
       _updateFabStatus();
+
+      // Ubah status tombol secara dinamis menjadi "✓ Tersimpan" (warna hijau aksen)
+      allSaveBtns.forEach(btn => {
+        btn.classList.add('btn-saved');
+        btn.innerHTML = `
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <span>Tersimpan</span>
+        `;
+      });
+
+      // Kembalikan ke tombol Simpan setelah 3 detik
+      setTimeout(() => {
+        allSaveBtns.forEach(btn => {
+          btn.classList.remove('btn-saved');
+          if (btn.dataset.origHtml) btn.innerHTML = btn.dataset.origHtml;
+        });
+      }, 3000);
+
     } catch (e) {
       toast('Gagal', e.message || 'Koneksi gagal. Periksa jaringan Anda.', 'error');
+      allSaveBtns.forEach(btn => {
+        btn.classList.remove('btn-saved');
+        if (btn.dataset.origHtml) btn.innerHTML = btn.dataset.origHtml;
+      });
     } finally {
-      if (btnSave) {
-        btnSave.disabled = false;
-        btnSave.innerHTML = btnSave.dataset.origHtml || `
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-            <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
-            <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
-          </svg>
-          Simpan Artikel
-        `;
-      }
-      fabSaveBtns.forEach(b => b.disabled = false);
+      allSaveBtns.forEach(btn => btn.disabled = false);
     }
     return;
   }
