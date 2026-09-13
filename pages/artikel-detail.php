@@ -1065,7 +1065,9 @@ if (!empty($art['id'])) {
                           continue;
                       }
                       $row = $doc->createElement('div');
-                      $row->setAttribute('class', 'image-row');
+                      $countRun = count($run);
+                      $row->setAttribute('class', 'image-row layout-' . $countRun);
+                      $row->setAttribute('data-count', (string)$countRun);
                       $root->insertBefore($row, $childList[$i]);
                       // ── Kumpulkan caption & bangun img-wraps ─────────────────────
                       $allCaptions = [];
@@ -1527,7 +1529,8 @@ if (!empty($art['id'])) {
           // Akhir grup — proses jika ada lebih dari 1 gambar
           if (groupItems.length > 1) {
             const row = document.createElement('div');
-            row.className = 'image-row';
+            row.className = 'image-row layout-' + groupItems.length;
+            row.setAttribute('data-count', String(groupItems.length));
     
             // Caption pertama yang tersedia untuk grup
             const groupCaption = (groupItems.find(item => item.caption) || {}).caption || '';
@@ -1602,11 +1605,98 @@ if (!empty($art['id'])) {
         });
       });
 
-    // ── Block 4 ──
-    document.querySelectorAll('.image-row img').forEach(img => {
-        const check = () => { if (img.naturalHeight > img.naturalWidth) img.classList.add('portrait'); };
-        if (img.complete) check(); else img.onload = check;
+    // ── Block 4: Dynamic Orientation & Layout Detection ──
+    function applyDynamicImageRowLayouts() {
+      document.querySelectorAll('.image-row').forEach(row => {
+        const wraps = Array.from(row.querySelectorAll('.img-wrap'));
+        if (!wraps.length) return;
+
+        const count = wraps.length;
+        row.setAttribute('data-count', String(count));
+
+        let checkedCount = 0;
+        let landscapeCount = 0;
+        let portraitCount = 0;
+        let totalAspectRatio = 0;
+        let validRatios = 0;
+
+        const evaluateRow = () => {
+          if (validRatios > 0) {
+            const avgAr = totalAspectRatio / validRatios;
+            // Bound ratio to sensible bounds (0.65 portrait to 1.85 landscape)
+            const safeAr = Math.max(0.65, Math.min(1.85, avgAr));
+            row.style.setProperty('--row-ar', safeAr.toFixed(3));
+          }
+
+          if (count === 2) {
+            if (landscapeCount === 2) {
+              row.setAttribute('data-layout', 'grid-2-landscape');
+            } else if (portraitCount === 2) {
+              row.setAttribute('data-layout', 'grid-2-portrait');
+            } else {
+              row.setAttribute('data-layout', 'grid-2-mixed');
+            }
+          } else if (count === 3) {
+            if (portraitCount === 3) {
+              row.setAttribute('data-layout', 'grid-3-portrait');
+            } else if (landscapeCount >= 2) {
+              row.setAttribute('data-layout', 'grid-3-landscape');
+            } else {
+              row.setAttribute('data-layout', 'grid-3-mixed');
+            }
+          } else if (count === 4) {
+            row.setAttribute('data-layout', 'grid-4');
+          } else if (count >= 5) {
+            row.setAttribute('data-layout', 'grid-n');
+          }
+        };
+
+        wraps.forEach(wrap => {
+          const img = wrap.querySelector('img');
+          if (!img) {
+            checkedCount++;
+            return;
+          }
+
+          const checkImg = () => {
+            const w = img.naturalWidth || img.width || 0;
+            const h = img.naturalHeight || img.height || 0;
+            if (w && h) {
+              const ar = w / h;
+              totalAspectRatio += ar;
+              validRatios++;
+              if (h > w * 1.05) {
+                img.classList.add('portrait');
+                img.classList.remove('landscape');
+                wrap.setAttribute('data-orientation', 'portrait');
+                portraitCount++;
+              } else {
+                img.classList.add('landscape');
+                img.classList.remove('portrait');
+                wrap.setAttribute('data-orientation', 'landscape');
+                landscapeCount++;
+              }
+            }
+            checkedCount++;
+            if (checkedCount === wraps.length) {
+              evaluateRow();
+            }
+          };
+
+          if (img.complete && img.naturalWidth) {
+            checkImg();
+          } else {
+            img.addEventListener('load', checkImg);
+            img.addEventListener('error', () => {
+              checkedCount++;
+              if (checkedCount === wraps.length) evaluateRow();
+            });
+          }
+        });
       });
+    }
+
+    applyDynamicImageRowLayouts();
 
   });
 })();

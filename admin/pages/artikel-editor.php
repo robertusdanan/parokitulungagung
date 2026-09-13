@@ -137,9 +137,27 @@ adminHeader($pageTitle, 'artikel', $user);
 .preview-notice { background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:14px 18px;margin-bottom:28px;display:flex;align-items:flex-start;gap:12px;font-size:13px;color:#a09585;line-height:1.6; }
 .preview-notice svg { flex-shrink:0;color:#c9a84c;margin-top:1px; }
 /* ── Image-row: gambar berdekatan → 1 baris (sama seperti artikel-detail) ── */
-.preview-body .image-row { display:flex;gap:10px;margin:14px 0;align-items:flex-start; }
-.preview-body .image-row .img-wrap { flex:1;min-width:0; }
-.preview-body .image-row .img-wrap img { width:100%;height:auto;border-radius:8px;margin:0;display:block; }
+/* Dynamic grid — identik dgn halaman publik */
+.preview-body .image-row { display:grid;gap:12px;margin:18px 0;align-items:stretch; }
+.preview-body .image-row[data-layout="grid-2-landscape"],
+.preview-body .image-row[data-layout="grid-2-mixed"]{grid-template-columns:repeat(2,1fr);gap:14px}
+.preview-body .image-row[data-layout="grid-2-portrait"]{grid-template-columns:repeat(2,1fr);gap:16px;max-width:min(520px,100%);margin-left:auto;margin-right:auto}
+.preview-body .image-row[data-layout="grid-3-portrait"]{grid-template-columns:repeat(3,1fr);gap:10px}
+.preview-body .image-row[data-layout="grid-3-landscape"],
+.preview-body .image-row[data-layout="grid-3-mixed"]{grid-template-columns:repeat(2,1fr);gap:12px}
+.preview-body .image-row[data-layout="grid-3-landscape"] .img-wrap:nth-child(3),
+.preview-body .image-row[data-layout="grid-3-mixed"] .img-wrap:nth-child(3){grid-column:1/-1;max-width:78%;justify-self:center;margin:0 auto}
+.preview-body .image-row[data-layout="grid-4"]{grid-template-columns:repeat(2,1fr);gap:12px}
+.preview-body .image-row[data-layout="grid-n"]{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.preview-body .image-row[data-count="2"]:not([data-layout]){grid-template-columns:repeat(2,1fr)}
+.preview-body .image-row[data-count="3"]:not([data-layout]){grid-template-columns:repeat(3,1fr)}
+.preview-body .image-row .img-wrap { position:relative;width:100%;min-width:0;aspect-ratio:var(--row-ar,4/3);border-radius:10px;overflow:hidden;background:#f8f6f0; }
+.preview-body .image-row .img-wrap img { width:100%;height:100%;object-fit:cover;border-radius:10px;margin:0;display:block; }
+@media (max-width:600px){
+  .preview-body .image-row[data-layout="grid-2-portrait"]{max-width:100%}
+  .preview-body .image-row[data-layout="grid-3-landscape"] .img-wrap:nth-child(3),
+  .preview-body .image-row[data-layout="grid-3-mixed"] .img-wrap:nth-child(3){max-width:100%}
+}
 .preview-body .image-row-caption { font-size:12.5px;color:#7a7060;text-align:center;margin-top:6px;font-style:italic; }
 .preview-body .img-caption-hidden { display:none; }
 @media (min-width:601px) { .fab-save-bar { display:none !important; } }
@@ -1375,6 +1393,52 @@ function _esc(s) {
 // IMAGE-ROW: kelompokkan gambar berurutan menjadi 1 baris
 // Mereplikasi logika groupImgFiguresToRow() dari artikel-detail.php
 // ──────────────────────────────────────────────────────────────────
+// ── Deteksi orientasi gambar → pilih layout grid dinamis (identik dgn halaman publik) ──
+function _applyPreviewImageRowLayouts(container) {
+  if (!container) return;
+  container.querySelectorAll('.image-row').forEach(function (row) {
+    const wraps = Array.from(row.querySelectorAll('.img-wrap'));
+    if (!wraps.length) return;
+    const count = wraps.length;
+    row.setAttribute('data-count', String(count));
+    let checked = 0, land = 0, port = 0, totalAr = 0, validAr = 0;
+    const evaluate = function () {
+      if (validAr > 0) {
+        const safeAr = Math.max(0.65, Math.min(1.85, totalAr / validAr));
+        row.style.setProperty('--row-ar', safeAr.toFixed(3));
+      }
+      if (count === 2) {
+        row.setAttribute('data-layout', land === 2 ? 'grid-2-landscape' : (port === 2 ? 'grid-2-portrait' : 'grid-2-mixed'));
+      } else if (count === 3) {
+        row.setAttribute('data-layout', port === 3 ? 'grid-3-portrait' : (land >= 2 ? 'grid-3-landscape' : 'grid-3-mixed'));
+      } else if (count === 4) {
+        row.setAttribute('data-layout', 'grid-4');
+      } else if (count >= 5) {
+        row.setAttribute('data-layout', 'grid-n');
+      }
+    };
+    wraps.forEach(function (wrap) {
+      const img = wrap.querySelector('img');
+      if (!img) { checked++; if (checked === wraps.length) evaluate(); return; }
+      const check = function () {
+        const w = img.naturalWidth || img.width || 0, h = img.naturalHeight || img.height || 0;
+        if (w && h) {
+          totalAr += (w / h);
+          validAr++;
+          if (h > w * 1.05) port++; else land++;
+        }
+        checked++;
+        if (checked === wraps.length) evaluate();
+      };
+      if (img.complete && img.naturalWidth) check();
+      else {
+        img.addEventListener('load', check);
+        img.addEventListener('error', function () { checked++; if (checked === wraps.length) evaluate(); });
+      }
+    });
+  });
+}
+
 function _groupImagesInPreview(container) {
   // 1. Bungkus setiap <img> dalam .preview-body menjadi .img-wrap (jika belum)
   //    agar mudah dideteksi sebagai "figure kandidat"
@@ -1438,7 +1502,8 @@ function _groupImagesInPreview(container) {
 
       // Buat .image-row
       const row = document.createElement('div');
-      row.className = 'image-row';
+      row.className = 'image-row layout-' + run.length;
+      row.setAttribute('data-count', String(run.length));
       body.insertBefore(row, children[i]);
 
       run.forEach(function(wrap) {
@@ -1513,6 +1578,7 @@ function openPreview() {
 
   // Kelompokkan gambar berurutan menjadi 1 baris (sama seperti di artikel-detail)
   _groupImagesInPreview(document.getElementById('previewContent'));
+  _applyPreviewImageRowLayouts(document.getElementById('previewContent'));
 
   document.getElementById('previewModal').style.display = 'block';
   document.body.style.overflow = 'hidden';
