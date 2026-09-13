@@ -36,7 +36,13 @@ if (!function_exists('getImgSeo')) {
         return [];
     }
 }
-$umkmSeoMap = array_merge(fetchImageSeoByPrefix('umkm/'), fetchImageSeoByPrefix('/public/umkm/'));
+$umkmR2Prefix = (defined('R2_CDN_URL') ? rtrim(R2_CDN_URL, '/') : '')
+    . '/' . trim(defined('R2_UMKM_PREFIX') ? R2_UMKM_PREFIX : 'umkm/', '/');
+$umkmSeoMap = array_merge(
+    fetchImageSeoByPrefix($umkmR2Prefix . '/'),
+    fetchImageSeoByPrefix('umkm/'),
+    fetchImageSeoByPrefix('/public/umkm/')
+);
 
 // ── Data UMKM dari Supabase (server-side) ─────────────────────────────
 $data  = [];
