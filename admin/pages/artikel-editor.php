@@ -72,31 +72,6 @@ adminHeader($pageTitle, 'artikel', $user);
 .editor-judul:focus { border-color:var(--border-focus); box-shadow:0 0 0 3px rgba(201,168,76,.08); }
 .editor-judul::placeholder { color:var(--text-muted); font-weight:400; font-size:18px; }
 
-/* ── Editor Section Header & Quick Media Button ─────────────────── */
-.editor-section-header {
-  display:flex; align-items:center; justify-content:space-between;
-  gap:12px; flex-wrap:wrap; margin-bottom:8px;
-}
-.editor-section-title {
-  font-size:13px; font-weight:600; color:var(--text-primary);
-  display:flex; align-items:center; gap:8px;
-}
-.editor-section-tip {
-  font-size:11.5px; font-weight:400; color:var(--text-muted);
-}
-.btn-quick-photo {
-  display:inline-flex; align-items:center; gap:6px;
-  background:var(--accent-dim); border:1px solid rgba(201,168,76,.4);
-  color:var(--accent); border-radius:8px; font-size:12px; font-weight:600;
-  padding:6px 13px; cursor:pointer; transition:all .18s ease;
-  font-family:'DM Sans',sans-serif; box-shadow:0 2px 8px rgba(201,168,76,.08);
-}
-.btn-quick-photo:hover {
-  background:rgba(201,168,76,.22); border-color:var(--accent);
-  transform:translateY(-1px); box-shadow:0 4px 14px rgba(201,168,76,.18);
-}
-.btn-quick-photo svg { flex-shrink:0; stroke:var(--accent); }
-
 /* ── Quill Editor & Clean Toolbar ─────────────────────────────────── */
 .ql-wrap {
   border:1px solid var(--border); border-radius:var(--radius-sm);
@@ -519,8 +494,6 @@ adminHeader($pageTitle, 'artikel', $user);
   .editor-breadcrumb .bc-mid { display:none; }
   .editor-breadcrumb { margin-bottom:12px; }
   .editor-judul { font-size:16px; padding:10px 12px; }
-  .editor-section-header { flex-direction:column; align-items:flex-start; gap:8px; }
-  .btn-quick-photo { width:100%; justify-content:center; padding:8px 12px; font-size:12.5px; }
   .ql-toolbar.ql-snow {
     padding:6px 8px; gap:4px;
   }
@@ -569,9 +542,6 @@ adminHeader($pageTitle, 'artikel', $user);
 .fab-save-bar .btn {
   padding:8px 13px; font-size:12.5px; font-weight:600;
   display:inline-flex; align-items:center; gap:5px; border-radius:8px;
-}
-.fab-save-bar .btn-photo {
-  background:rgba(201,168,76,.12); border:1px solid rgba(201,168,76,.35); color:var(--accent);
 }
 
 .thumb-orient-badge {
@@ -707,19 +677,10 @@ adminHeader($pageTitle, 'artikel', $user);
            placeholder="Tulis judul artikel di sini…">
 
     <div>
-      <div class="editor-section-header">
-        <div class="editor-section-title">
-          <span>Isi Artikel</span>
-          <span class="editor-section-tip">— Format teks &amp; tata letak konten</span>
-        </div>
-        <button type="button" class="btn-quick-photo" onclick="openContentImagePicker()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-            <rect x="3" y="3" width="18" height="18" rx="2"/>
-            <circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
-          </svg>
-          <span>+ Sisipkan Foto / Upload Gambar</span>
-        </button>
-      </div>
+      <label style="font-size:12.5px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:6px">
+        Isi Artikel
+        <span style="font-weight:400;color:var(--text-muted)"> — Format teks &amp; tata letak konten</span>
+      </label>
       <div class="ql-wrap">
         <div id="quillEditor"></div>
       </div>
@@ -913,12 +874,8 @@ adminHeader($pageTitle, 'artikel', $user);
 
 <!-- FAB Save Bar (mobile) -->
 <div class="fab-save-bar" id="fabSaveBar">
-  <button type="button" class="btn btn-photo" onclick="openContentImagePicker()" title="Sisipkan Foto">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-      <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
-    </svg>
-    <span>+Foto</span>
-  </button>
+  <a href="/admin/pages/artikel.php?menu=<?= e($activeMenu) ?>"
+     class="btn btn-secondary" style="text-decoration:none;font-weight:500">Batal</a>
   <div class="fab-btn-group">
     <button type="button" class="btn btn-secondary" onclick="openPreview()" style="display:flex;align-items:center;gap:5px">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
