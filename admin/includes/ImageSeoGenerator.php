@@ -280,46 +280,77 @@ class ImageSeoGenerator
         $contextBlock = implode("\n\n", $contextParts);
 
         return <<<PROMPT
-Kamu adalah SEO specialist untuk website Gereja Katolik Tulungagung, Jawa Timur, Keuskupan Surabaya.
+Kamu adalah SEO expert level senior yang spesialis membantu website lokal (gereja, komunitas, UMKM) ranking tinggi di Google Search.
 
-Tugas: Generate metadata SEO untuk SATU FOTO dari sebuah artikel paroki.
+## TUGAS
+Generate metadata SEO untuk SATU FOTO dari artikel paroki Gereja Katolik Tulungagung, Keuskupan Surabaya, Jawa Timur.
+Output harus mengoptimalkan: SEO on-page gambar, rich results (schema.org), dan Local SEO Indonesia.
 
-IDENTITAS FOTO:
-- URL foto: {$src}
-- Nama file (sudah dibersihkan): "{$filenameText}"
+## DATA FOTO
+- URL: {$src}
+- Nama file bersih: "{$filenameText}"
 
-KONTEKS ARTIKEL:
+## KONTEKS ARTIKEL
 - Judul artikel: "{$judul}"
-- Kategori: {$menuLabel}
+- Menu/kategori: {$menuLabel}
 - Tags: {$tagsStr}
 
 {$contextBlock}
 
-PRIORITAS SUMBER INFORMASI (urutan tertinggi ke terendah):
-1. Nama file foto — ini paling relevan, biasanya mencerminkan isi foto secara spesifik
-2. Teks di sekitar foto dalam artikel — paragraf/kalimat tepat di atas/bawah foto
-3. Isi artikel secara keseluruhan — untuk konteks tambahan
-4. Judul artikel — sebagai latar belakang umum
+## PRIORITAS SUMBER INFORMASI (urutan tertinggi → terendah)
+1. Nama file foto — paling spesifik, biasanya memuat isi foto
+2. Teks di sekitar foto — paragraf tepat di atas/bawah foto
+3. Isi artikel — konteks tambahan
+4. Judul artikel — latar belakang umum
 
-INSTRUKSI OUTPUT:
-1. alt_text: Deskripsi foto yang konkret dan spesifik. 9-14 kata. Harus mencerminkan ISI FOTO (dari nama file + konteks sekitar), bukan sekadar topik artikel. Wajib sebut "Gereja Katolik Tulungagung" atau "Gereja Katolik Tulungagung". WAJIB berbeda dari title.
-2. caption: 1-2 kalimat naratif yang manusiawi, berkesan, spesifik pada momen foto ini — bukan generik tentang artikel.
-3. title_attr: Judul tooltip singkat. 6-12 kata. Format: "[Deskripsi spesifik foto] — Gereja Katolik Tulungagung".
-4. schema_description: 30-55 kata untuk schema.org ImageObject. Jelaskan isi foto, konteks kegiatan, dan maknanya bagi komunitas paroki.
-5. keywords: 8-12 kata kunci SEO (array JSON). Prioritaskan kata kunci spesifik dari nama file dan konteks, bukan hanya generik.
+## ATURAN OUTPUT (Wajib dipatuhi, ikuti panjang kata dengan ketat)
 
-ATURAN KETAT:
-- Semua teks dalam Bahasa Indonesia
-- JANGAN pakai kata "gambar ini", "foto ini", "image", "terlihat dalam gambar"
-- alt_text harus SPESIFIK pada foto ini, bukan copy-paste judul artikel
-- Jika nama file mengandung nama orang/tempat/kegiatan, WAJIB masukkan ke alt_text
-- keywords HARUS array JSON valid: ["kata1", "kata2"]
+### 1. alt_text (10-15 kata, WAJIB)
+Deskripsi konkret isi foto. Mulai dengan kata kerja aktif atau noun spesifik.
+- WAJIB menyertakan: [nama kegiatan/orang/tempat spesifik dari konteks] + "Gereja Katolik Tulungagung" atau "Paroki SMDTBA Tulungagung"
+- Sertakan kata lokasi: "Tulungagung" minimal 1x
+- JANGAN pakai: "foto ini", "gambar ini", "terlihat", "dalam gambar"
+- WAJIB berbeda dari title_attr (jangan copy)
+- Contoh bagus: "Umat Katolik mengikuti Misa Kudus di Gereja SMDTBA Tulungagung bersama Romo Paroki"
 
-Balas HANYA dengan JSON valid, tanpa markdown, tanpa penjelasan:
+### 2. title_attr (8-14 kata)
+Tooltip singkat, format: "[Subjek + Aksi] di [Tempat] — Gereja Katolik Tulungagung"
+- Harus spesifik, tidak generik
+- Contoh: "Perayaan Ekaristi Hari Minggu di Gereja SMDTBA — Tulungagung"
+
+### 3. caption (1-2 kalimat, 15-35 kata)
+Naratif hangat, manusiawi, seperti caption jurnalis lokal.
+- Sertakan: siapa (subjek), apa (aktivitas), di mana (lokasi spesifik)
+- WAJIB menyebut "Tulungagung" minimal 1x
+- Nada: hangat, informatif, tidak berlebihan
+- Contoh: "Umat Paroki SMDTBA Tulungagung beribadah bersama dalam Misa Kudus Pagi Hari Minggu di halaman gereja."
+
+### 4. schema_description (40-60 kata)
+Deskripsi formal untuk schema.org ImageObject.
+- Struktur: [Deskripsi isi foto] + [Konteks kegiatan/kegiatan paroki] + [Makna/signifikansi bagi komunitas]
+- WAJIB menyebut: "Gereja Katolik Tulungagung", "Keuskupan Surabaya" (jika relevan), dan 1-2 kata kunci lokal
+- Hindari kata "foto", "gambar", "image" di awal kalimat
+
+### 5. keywords (8-12 kata, array JSON)
+Kombinasikan 3 tipe keyword:
+- 3-5 keyword spesifik dari isi foto (nama orang/kegiatan/tempat)
+- 3-4 keyword lokal (Tulungagung, Paroki SMDTBA, Keuskupan Surabaya, dll)
+- 1-2 long-tail keyword (contoh: "misa harian Gereja Katolik Tulungagung", "kegiatan paroki SMDTBA 2024")
+- Semua dalam Bahasa Indonesia, lowercase, tanpa titik koma
+
+## LARANGAN
+- Tidak boleh ada teks kosong
+- Tidak boleh "gambar ini", "foto ini", "terlihat", "diambil dari"
+- Tidak boleh copy judul artikel ke alt_text
+- Tidak boleh keyword duplikat
+- Bahasa Indonesia formal (bukan slang)
+
+## FORMAT RESPON
+Balas HANYA dengan JSON valid, tanpa markdown, tanpa penjelasan, tanpa backtick:
 {
   "alt_text": "...",
-  "caption": "...",
   "title_attr": "...",
+  "caption": "...",
   "schema_description": "...",
   "keywords": ["...", "..."]
 }
@@ -407,41 +438,55 @@ PROMPT;
         }
 
         return <<<PROMPT
-Kamu adalah SEO specialist untuk website Gereja Katolik Tulungagung, Jawa Timur, Keuskupan Surabaya.
+Kamu adalah SEO expert level senior yang spesialis membantu website lokal (gereja, komunitas, UMKM) ranking tinggi di Google Search.
 
-Tugas: Generate metadata SEO untuk SATU foto {$tugasLabel}.
+## TUGAS
+Generate metadata SEO untuk SATU foto {$tugasLabel} dari website Gereja Katolik Tulungagung, Keuskupan Surabaya, Jawa Timur.
+Output harus mengoptimalkan: SEO on-page gambar, rich results (schema.org), dan Local SEO Indonesia.
 
-IDENTITAS FOTO:
-- URL foto: {$src}
-- Nama file (sudah dibersihkan): "{$filenameText}"
+## DATA FOTO
+- URL: {$src}
+- Nama file bersih: "{$filenameText}"
 
-KONTEKS FOTO:
+## KONTEKS FOTO
 {$konteksSpesifik}
 Kategori halaman: {$kategori}
 
-PRIORITAS SUMBER INFORMASI (urutan tertinggi ke terendah):
-1. Data identitas (nama orang/usaha, jabatan, bidang, lingkungan) — paling spesifik
+## PRIORITAS SUMBER INFORMASI (urutan tertinggi → terendah)
+1. Data identitas (nama orang/usaha, jabatan, bidang, lingkungan/stasi) — paling spesifik
 2. Nama file foto — mencerminkan isi foto secara langsung
-3. Kategori halaman — sebagai konteks umum
+3. Kategori halaman — konteks umum
 
-INSTRUKSI OUTPUT:
-1. alt_text: Deskripsi foto yang konkret dan spesifik. 9-14 kata. WAJIB sebutkan nama orang/usaha jika ada. Wajib sebut "Gereja Katolik Tulungagung" atau "Gereja Katolik Tulungagung". WAJIB berbeda dari title_attr.
-2. caption: 1-2 kalimat naratif yang manusiawi dan berkesan — spesifik pada foto ini.
-3. title_attr: Judul tooltip singkat. 6-12 kata. Format: "[Nama/Deskripsi spesifik] — Gereja Katolik Tulungagung".
-4. schema_description: 30-55 kata untuk schema.org ImageObject. Jelaskan isi foto, identitas orang/usaha, dan maknanya bagi komunitas paroki.
-5. keywords: 8-12 kata kunci SEO (array JSON). Prioritaskan nama orang/usaha/tempat spesifik.
+## ATURAN OUTPUT (Wajib dipatuhi)
 
-ATURAN KETAT:
-- Semua teks dalam Bahasa Indonesia
-- JANGAN pakai kata "gambar ini", "foto ini", "image", "terlihat dalam gambar"
-- Jika ada nama orang, WAJIB masukkan nama lengkapnya ke alt_text dan title_attr
-- keywords HARUS array JSON valid: ["kata1", "kata2"]
+### 1. alt_text (10-15 kata, WAJIB)
+Deskripsi konkret isi foto. Mulai dengan nama subjek atau kata kerja aktif.
+- WAJIB menyertakan: [nama orang/usaha spesifik jika ada] + "Gereja Katolik Tulungagung" atau "Paroki SMDTBA Tulungagung"
+- Sertakan kata lokasi: "Tulungagung" minimal 1x
+- JANGAN pakai: "foto ini", "gambar ini", "terlihat", "dalam gambar"
+- WAJIB berbeda dari title_attr
 
-Balas HANYA dengan JSON valid, tanpa markdown, tanpa penjelasan:
+### 2. title_attr (8-14 kata)
+Tooltip singkat, format: "[Nama Subjek/Usaha] — [Jabatan/Kategori] Gereja Katolik Tulungagung"
+
+### 3. caption (1-2 kalimat, 15-35 kata)
+Naratif hangat, manusiawi, informatif.
+- Jelaskan peran, bidang karya, atau produk usaha ini bagi paroki
+- WAJIB menyebut "Tulungagung" minimal 1x
+
+### 4. schema_description (40-60 kata)
+Deskripsi formal untuk schema.org ImageObject / Person / LocalBusiness.
+- Struktur: [Identitas subjek/usaha] + [Peran/layanan di komunitas paroki] + [Lokasi: Tulungagung, Keuskupan Surabaya, Jawa Timur]
+
+### 5. keywords (8-12 kata, array JSON)
+Kombinasi keyword nama spesifik, peran/kategori, dan Local SEO Tulungagung.
+
+## FORMAT RESPON
+Balas HANYA dengan JSON valid, tanpa markdown, tanpa penjelasan, tanpa backtick:
 {
   "alt_text": "...",
-  "caption": "...",
   "title_attr": "...",
+  "caption": "...",
   "schema_description": "...",
   "keywords": ["...", "..."]
 }
@@ -744,13 +789,25 @@ PROMPT;
             $kw = json_decode($kw, true) ?: array_filter(array_map('trim', explode(',', $kw)));
         }
         if (!is_array($kw)) $kw = [];
+        // Normalisasi: lowercase, hapus duplikat (case-insensitive), max 12
+        $seenKw = [];
+        $kwNorm = [];
+        foreach (array_map(fn($k) => mb_strtolower(trim((string)$k)), $kw) as $k) {
+            if ($k === '' || isset($seenKw[$k])) continue;
+            $seenKw[$k] = true;
+            $kwNorm[] = $k;
+            if (count($kwNorm) >= 12) break;
+        }
+
+        $alt = self::limit(trim($data['alt_text'] ?? ''), 130);
+        $title = self::limit(trim($data['title_attr'] ?? ''), 110);
 
         return [
-            'alt'         => self::limit(trim($data['alt_text']          ?? ''), 130),
-            'caption'     => self::limit(trim($data['caption']            ?? ''), 260),
-            'title'       => self::limit(trim($data['title_attr']         ?? ''), 110),
+            'alt'         => $alt,
+            'caption'     => self::limit(trim($data['caption'] ?? ''), 260),
+            'title'       => $title !== $alt ? $title : ($alt ?: ''),
             'description' => self::limit(trim($data['schema_description'] ?? ''), 400),
-            'keywords'    => array_values(array_slice(array_filter($kw), 0, 12)),
+            'keywords'    => $kwNorm,
         ];
     }
 

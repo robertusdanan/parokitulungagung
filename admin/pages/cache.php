@@ -12,13 +12,17 @@ $user = requireSuperadmin();
 $groupIcons = [
     'supabase'  => '<path d="M4 7v10c0 1.66 3.58 3 8 3s8-1.34 8-3V7"/><ellipse cx="12" cy="7" rx="8" ry="3"/>',
     'runtime'   => '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
+    'articles'  => '<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>',
     'galeri'    => '<path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><circle cx="12" cy="13" r="3"/>',
+    'r2albums'  => '<path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>',
     'r2img'     => '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>',
     'analytics' => '<path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-4"/>',
     'imgseo'    => '<circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"/>',
     'sitemap'   => '<circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M12 7v6m0 0L5 17m7-4l7 4"/>',
     'media'     => '<rect x="3" y="3" width="18" height="14" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><polyline points="20 15 14 9 5 17"/>',
+    'stories'   => '<rect x="5" y="2" width="14" height="20" rx="3"/><line x1="12" y1="18" x2="12" y2="18.01"/>',
     'chatbot'   => '<path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>',
+    'tmp'       => '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
 ];
 
 adminHeader('Cache', 'cache', $user);
@@ -44,12 +48,15 @@ adminHeader('Cache', 'cache', $user);
   <div class="card" style="padding:30px;text-align:center;color:var(--text-muted)">Memuat status cache…</div>
 </div>
 
-<div class="card" style="font-size:12px;color:var(--text-muted);line-height:1.6">
-  <strong style="color:var(--text-secondary)">Catatan:</strong>
-  Cache dibuat otomatis kembali saat halaman terkait diakses — menghapusnya tidak menghapus data asli
-  (Supabase / R2 / gambar), hanya memaksa pengambilan data terbaru pada kunjungan berikutnya.
-  Cache Chatbot yang dihapus di sini hanya mencakup konteks jawaban; data rate-limit &amp; rotasi API key
-  tidak ikut terhapus.
+<div class="card" style="font-size:12.5px;color:var(--text-secondary);line-height:1.6;padding:18px">
+  <div style="font-weight:600;color:var(--text-primary);margin-bottom:6px;display:flex;align-items:center;gap:6px">
+    <span>💡</span> Panduan &amp; Tanya Jawab Cache
+  </div>
+  <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px">
+    <li><strong>Apa itu Cache?</strong> Cache adalah penyimpanan ingatan sementara agar website terbuka jauh lebih cepat tanpa perlu memuat ulang data dari database setiap kali diakses.</li>
+    <li><strong>Apakah aman menghapus cache?</strong> SANGAT AMAN. Menghapus cache TIDAK AKAN menghapus foto, berita, jadwal, atau data asli Anda. Sistem akan otomatis membuat salinan cache baru saat halaman dibuka.</li>
+    <li><strong>Kapan harus dibersihkan?</strong> Bersihkan cache jika Anda baru saja mengubah data di admin (misal jadwal misa atau berita) tetapi tampilan di website publik belum berubah.</li>
+  </ul>
 </div>
 
 <script>
