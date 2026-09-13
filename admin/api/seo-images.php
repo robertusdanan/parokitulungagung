@@ -118,44 +118,74 @@ function fetchSectionImages(string $section): array
     switch ($section) {
 
         case 'galeri':
-            // Coba dari filesystem dulu (paling lengkap)
-            $fsImages = listImagesFromFolder('/public/galeri');
-            // Merge dengan data Supabase untuk mendapat metadata judul/keterangan
+            // 1. Ambil data album/foto dari Supabase (sumber utama)
             $sbRows = imgSeoSbGet($baseUrl . '/rest/v1/' . TABLE_GALERI
                 . '?select=id,Judul,Keterangan,Gambar,Foto&order=id.desc') ?? [];
-            // Build lookup table dari supabase berdasarkan filename
-            $sbMeta = [];
+
+            $result = [];
+            $seen   = [];
+            $exts   = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'bmp', 'svg'];
+
             foreach ($sbRows as $row) {
-                foreach (['Gambar', 'Foto'] as $col) {
-                    $f = $row[$col] ?? '';
-                    if ($f) {
-                        $bn = basename($f);
-                        $sbMeta[$bn] = [
-                            'judul'       => $row['Judul']       ?? '',
-                            'keterangan'  => $row['Keterangan']  ?? '',
-                        ];
+                $imgFile = '';
+                foreach ([$row['Gambar'] ?? '', $row['Foto'] ?? ''] as $val) {
+                    $v = trim((string)$val);
+                    $ext = strtolower(pathinfo($v, PATHINFO_EXTENSION));
+                    if (in_array($ext, $exts)) {
+                        $imgFile = $v;
+                        break;
                     }
                 }
-            }
-            // Gabungkan
-            $result = [];
-            foreach ($fsImages as $img) {
-                $meta   = $sbMeta[$img['filename']] ?? [];
+                if (!$imgFile) continue;
+
+                $bn = basename(str_replace('\\', '/', $imgFile));
+                if (!$bn || $bn === '.' || $bn === '..') continue;
+                $imgUrl = '/public/galeri/' . $bn;
+                if (isset($seen[$imgUrl])) continue;
+                $seen[$imgUrl] = true;
+
+                $judul = $row['Judul'] ?? $bn;
+                $ket   = $row['Keterangan'] ?? '';
+
                 $result[] = [
-                    'image_url' => $img['image_url'],
-                    'filename'  => $img['filename'],
-                    'name'      => $meta['judul']       ?: $img['name'],
-                    'meta'      => $meta['keterangan']  ?? '',
+                    'image_url' => $imgUrl,
+                    'filename'  => $bn,
+                    'name'      => $judul,
+                    'meta'      => $ket,
                     'source'    => 'galeri',
                     '_artData'  => [
                         'source_type' => 'galeri',
-                        'judul'       => $meta['judul'] ?: $img['name'],
+                        'judul'       => $judul,
                         'kategori'    => 'Galeri Foto Gereja Katolik Tulungagung',
-                        'tags'        => $meta['keterangan'] ?? '',
-                        'extra'       => $meta,
+                        'tags'        => $ket,
+                        'extra'       => $row,
                     ],
                 ];
             }
+
+            // 2. Gabungkan dengan file lokal di /public/galeri jika ada file tambahan
+            $fsImages = listImagesFromFolder('/public/galeri');
+            foreach ($fsImages as $img) {
+                $url = $img['image_url'];
+                if (isset($seen[$url])) continue;
+                $seen[$url] = true;
+
+                $result[] = [
+                    'image_url' => $url,
+                    'filename'  => $img['filename'],
+                    'name'      => $img['name'],
+                    'meta'      => '',
+                    'source'    => 'galeri',
+                    '_artData'  => [
+                        'source_type' => 'galeri',
+                        'judul'       => $img['name'],
+                        'kategori'    => 'Galeri Foto Gereja Katolik Tulungagung',
+                        'tags'        => '',
+                        'extra'       => [],
+                    ],
+                ];
+            }
+
             return $result;
 
         case 'umkm':
