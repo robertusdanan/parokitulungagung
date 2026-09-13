@@ -46,6 +46,16 @@ adminHeader($pageTitle, 'artikel', $user);
 <link href="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.snow.min.css" rel="stylesheet">
 
 <style>
+.spin-icon {
+  animation: spinIcon 0.8s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+@keyframes spinIcon {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
 /* ── Back breadcrumb ─────────────────────────────────────────────── */
 .editor-breadcrumb {
   display:flex; align-items:center; gap:8px;
@@ -1055,12 +1065,66 @@ async function submitArtikel() {
   };
   if (EDIT_ID) data.id = EDIT_ID;
 
-  // ── Tampilkan overlay & mulai step ─────────────────────────────
+  // ── JIKA EDIT ARTIKEL YANG SUDAH ADA (Update data langsung, tanpa overlay AI/OG) ──
+  if (EDIT_ID) {
+    const btnSave = document.getElementById('btnSave');
+    const fabSaveBtns = document.querySelectorAll('#fabSaveBar button');
+
+    // Tampilkan status tombol loading
+    if (btnSave) {
+      btnSave.disabled = true;
+      btnSave.dataset.origHtml = btnSave.innerHTML;
+      btnSave.innerHTML = `
+        <svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+          <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
+          <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path>
+        </svg>
+        Menyimpan…
+      `;
+    }
+    fabSaveBtns.forEach(b => b.disabled = true);
+
+    try {
+      const res = await apiPost('/admin/api/artikel.php', { action: 'save', menu, data });
+      if (!res.success) {
+        throw new Error(res.error || 'Gagal memperbarui artikel.');
+      }
+
+      _clearAutosave();
+      toast('Sukses', 'Perubahan artikel berhasil diperbarui.', 'success');
+
+      // Update waktu tersimpan di sidebar
+      const now = new Date();
+      const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0') + ':' + now.getSeconds().toString().padStart(2, '0');
+      const saveInfoEl = document.getElementById('saveInfo');
+      if (saveInfoEl) {
+        saveInfoEl.innerHTML = `<span style="color:var(--accent);font-weight:600">✓ Tersimpan</span> pukul ${timeStr}`;
+      }
+      _updateFabStatus();
+    } catch (e) {
+      toast('Gagal', e.message || 'Koneksi gagal. Periksa jaringan Anda.', 'error');
+    } finally {
+      if (btnSave) {
+        btnSave.disabled = false;
+        btnSave.innerHTML = btnSave.dataset.origHtml || `
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+            <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+          </svg>
+          Simpan Artikel
+        `;
+      }
+      fabSaveBtns.forEach(b => b.disabled = false);
+    }
+    return;
+  }
+
+  // ── JIKA ARTIKEL BARU: Jalankan proses publish lengkap (Overlay 4 step) ────
   overlay.show();
 
   // Step 1: Validasi
   overlay.setStep(1, 'active');
-  await _delay(400);
+  await _delay(300);
   overlay.setStep(1, 'done');
 
   // Step 2: Simpan ke database
@@ -1085,24 +1149,22 @@ async function submitArtikel() {
   }
   overlay.setStep(2, 'done');
 
-  // Step 3: OG preview (sudah dilakukan server, tinggal tampilkan hasilnya)
+  // Step 3: OG preview
   overlay.setStep(3, 'active');
-  await _delay(500);
+  await _delay(300);
 
   const ogResult = res.data?._og || null;
   if (ogResult && ogResult.success) {
     overlay.setStep(3, 'done');
   } else if (data.thumbnail) {
-    // Ada thumbnail tapi OG gagal — bukan error fatal
     overlay.setStep(3, 'error');
   } else {
-    // Tidak ada thumbnail — step 3 dilewati
     overlay.setStep(3, 'done');
   }
 
-  // Step 4: SEO AI — hanya untuk artikel published yang punya gambar
+  // Step 4: SEO AI — hanya untuk artikel published baru yang punya gambar
   const isPublished = data.status === 'published';
-  const savedId     = res.data?.id || EDIT_ID || null;
+  const savedId     = res.data?.id || null;
   const savedMenu   = menu;
   const savedKonten = data.konten || '';
   const hasImages   = /<img\s/i.test(savedKonten);
@@ -1119,25 +1181,23 @@ async function submitArtikel() {
           artikel_menu:  savedMenu,
           artikel_judul: data.judul,
           artikel_tags:  data.tags || '',
-          force:         false,   // hanya generate gambar yang belum ada
+          force:         false,
         }),
       });
       const seoData = await seoRes.json();
       if (seoData.ok) {
         overlay.setStep(4, 'done');
       } else {
-        // SEO gagal — bukan error fatal
         overlay.setStep(4, 'error');
       }
     } catch (_e) {
       overlay.setStep(4, 'error');
     }
   } else {
-    // Draft / tidak ada gambar — lewati step 4
     overlay.setStep(4, 'done');
   }
 
-  await _delay(300);
+  await _delay(200);
   overlay.done(ogResult);
 }
 
