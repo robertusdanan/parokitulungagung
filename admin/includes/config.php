@@ -143,7 +143,7 @@ if (!defined('SESSION_NAME'))     define('SESSION_NAME',     'smdtba_admin');
 
 // ── Email (Gmail SMTP) ─────────────────────────────────────────────────
 if (!defined('MAIL_FROM'))      define('MAIL_FROM',      SECRET_MAIL_USERNAME);
-if (!defined('MAIL_FROM_NAME')) define('MAIL_FROM_NAME', 'DEV parokitulungagung.org');
+if (!defined('MAIL_FROM_NAME')) define('MAIL_FROM_NAME', 'Redaksi Paroki SMDTBA');
 if (!defined('MAIL_USERNAME'))  define('MAIL_USERNAME',  SECRET_MAIL_USERNAME);
 if (!defined('MAIL_PASSWORD'))  define('MAIL_PASSWORD',  SECRET_MAIL_PASSWORD);
 
