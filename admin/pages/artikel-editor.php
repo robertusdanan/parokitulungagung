@@ -705,6 +705,21 @@ adminHeader($pageTitle, 'artikel', $user);
   <!-- Kolom kiri: editor -->
   <div class="editor-main">
 
+    <!-- Banner Catatan Revisi (muncul jika artikel berstatus revisi) -->
+    <div id="revisionAlert" style="display:none;background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(217,119,6,.08));border:1px solid rgba(245,158,11,.35);border-left:4px solid #f59e0b;border-radius:10px;padding:14px 18px;margin-bottom:18px">
+      <div style="display:flex;align-items:flex-start;gap:10px">
+        <div style="color:#f59e0b;flex-shrink:0;margin-top:2px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600;color:#f5debb;margin-bottom:4px" id="revAlertTitle">Catatan Revisi dari Redaksi</div>
+          <div style="font-size:12.5px;color:#ede6dc;line-height:1.55;margin-bottom:8px;white-space:pre-wrap" id="revAlertContent">—</div>
+          <div style="font-size:11px;color:#a89f91;background:rgba(0,0,0,.25);padding:4px 10px;border-radius:6px;display:inline-block">
+            ℹ️ Simpan perbaikan artikel ini, statusnya akan otomatis kembali ke <strong>Draft</strong> untuk ditinjau ulang oleh Redaksi.
+          </div>
+        </div>
+      </div>
+    </div>
     <input type="text" id="fieldJudul" class="editor-judul"
            placeholder="Tulis judul artikel di sini…">
 
@@ -1304,6 +1319,17 @@ async function loadEditData() {
     document.getElementById('saveInfo').textContent  = 'Penulis: ' + (art.penulis || '—');
     if (art.konten && quill) quill.clipboard.dangerouslyPasteHTML(art.konten);
     if (art.thumbnail) setThumb(art.thumbnail, art.thumbnail.split('/').pop(), art.thumbnail_alt || '', '');
+
+    // Cek status revisi
+    const revAlert = document.getElementById('revisionAlert');
+    if (art.status === 'revisi' && revAlert) {
+      const revTitle = art.reviewer ? `Catatan Revisi dari Redaksi (${escHtml(art.reviewer)})` : 'Catatan Revisi dari Redaksi';
+      document.getElementById('revAlertTitle').textContent = revTitle;
+      document.getElementById('revAlertContent').textContent = art.catatan_revisi || 'Harap periksa kembali isi atau kelengkapan artikel.';
+      revAlert.style.display = 'block';
+    } else if (revAlert) {
+      revAlert.style.display = 'none';
+    }
   } catch (e) {
     document.getElementById('saveInfo').textContent = '';
     toast('Error', e.message, 'error');

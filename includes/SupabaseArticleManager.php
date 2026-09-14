@@ -265,13 +265,14 @@ public function getAll(string $menu, bool $publishedOnly = false, array $select 
         return $result;
     }
 
-        public function stats(string $menu): array
+    public function stats(string $menu): array
     {
         $all = $this->getAll($menu);
         return [
             'total'     => count($all),
             'published' => count(array_filter($all, fn($a) => ($a['status']??'') === 'published')),
-            'draft'     => count(array_filter($all, fn($a) => ($a['status']??'') !== 'published')),
+            'draft'     => count(array_filter($all, fn($a) => ($a['status']??'') === 'draft' || empty($a['status']))),
+            'revisi'    => count(array_filter($all, fn($a) => ($a['status']??'') === 'revisi')),
         ];
     }
 
@@ -317,6 +318,11 @@ public function getAll(string $menu, bool $publishedOnly = false, array $select 
 
         $data['updated_at'] = $now;
 
+        // ── Auto-transition: jika status revisi diedit ulang, kembalikan ke draft ──
+        if (($data['status'] ?? '') === 'revisi' || (isset($ex) && ($ex['status'] ?? '') === 'revisi' && ($data['status'] ?? '') !== 'published')) {
+            $data['status'] = 'draft';
+        }
+
         // ── Published at ──────────────────────────────────────────────
         if (($data['status']??'') === 'published') {
             $ex2 = $isNew ? null : $this->getById($menu, $data['id']);
@@ -339,6 +345,7 @@ public function getAll(string $menu, bool $publishedOnly = false, array $select 
             'id', 'menu', 'judul', 'ringkasan', 'konten',
             'thumbnail', 'tags',                          // ← tags disimpan
             'status', 'penulis', 'slug',
+            'catatan_revisi', 'reviewer',                // ← catatan perbaikan & editor reviewer
             'created_at', 'updated_at', 'published_at',
         ];
 
@@ -389,6 +396,24 @@ public function getAll(string $menu, bool $publishedOnly = false, array $select 
         return true;
     }
 
+    public function reject(string $menu, string $id, string $catatan, string $reviewer = ''): bool
+    {
+        $art = $this->getById($menu, $id); if (!$art) return false;
+        $now = date('Y-m-d H:i:s');
+        $upd = [
+            'status'         => 'revisi',
+            'catatan_revisi' => trim($catatan),
+            'reviewer'       => trim($reviewer),
+            'updated_at'     => $now,
+        ];
+        if ($this->db) $this->db->update($this->table, 'id', $id, $upd);
+        else           $this->httpSend($this->baseUrl() . '?id=eq.' . urlencode($id), $upd, 'PATCH');
+        if (function_exists('invalidateAllRelatedCaches')) {
+            invalidateAllRelatedCaches($menu, 'articles');
+        }
+        return true;
+    }
+
     public function delete(string $menu, string $id): bool
     {
         $art = $this->getById($menu, $id); if (!$art) return false;
@@ -424,4 +449,4 @@ public function getAll(string $menu, bool $publishedOnly = false, array $select 
     }
 }
 
-} // end class_exists guard
+} // end class_exists guard

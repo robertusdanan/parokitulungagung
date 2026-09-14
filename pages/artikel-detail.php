@@ -861,6 +861,7 @@ if (!empty($art['id'])) {
 
           </div><!-- /.art-author-card -->
 
+          <?php if (!empty($tampilkanIklan)): ?>
           <div class="art-sidebar-ad" style="margin-top:1.5rem;">
             <div style="font-size:11px;color:#9a836a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;text-align:center;">Iklan</div>
             <ins class="adsbygoogle"
@@ -875,6 +876,7 @@ if (!empty($art['id'])) {
               }
             </script>
           </div><!-- /.art-sidebar-ad -->
+          <?php endif; ?>
         </div>
       </aside><!-- /.art-sidebar-left -->
 
@@ -1235,18 +1237,20 @@ if (!empty($art['id'])) {
               }
           }
 
-          $iklanInArtikel = '<div class="in-article-ad" style="margin:2rem auto;max-width:100%;text-align:center;clear:both;">'
-              . '<div style="font-size:11px;color:#9a836a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Iklan</div>'
-              . '<ins class="adsbygoogle"'
-              . ' style="display:block; text-align:center;"'
-              . ' data-ad-layout="in-article"'
-              . ' data-ad-format="fluid"'
-              . ' data-ad-client="ca-pub-3946321979629144"'
-              . ' data-ad-slot="1148236145"></ins>'
-              . '<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>'
-              . '</div>';
+          if (!empty($tampilkanIklan)) {
+              $iklanInArtikel = '<div class="in-article-ad" style="margin:2rem auto;max-width:100%;text-align:center;clear:both;">'
+                  . '<div style="font-size:11px;color:#9a836a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Iklan</div>'
+                  . '<ins class="adsbygoogle"'
+                  . ' style="display:block; text-align:center;"'
+                  . ' data-ad-layout="in-article"'
+                  . ' data-ad-format="fluid"'
+                  . ' data-ad-client="ca-pub-3946321979629144"'
+                  . ' data-ad-slot="1148236145"></ins>'
+                  . '<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>'
+                  . '</div>';
 
-          $konten = sisipkan_iklan_in_article($konten, $iklanInArtikel, 3);
+              $konten = sisipkan_iklan_in_article($konten, $iklanInArtikel, 3);
+          }
 
           echo $konten;
           ?>
@@ -1449,6 +1453,7 @@ if (!empty($art['id'])) {
 
           </div><!-- /.art-sidebar-crosslink-list -->
 
+          <?php if (!empty($tampilkanIklan)): ?>
           <div class="art-sidebar-ad" style="margin-top:1.5rem;">
             <div style="font-size:11px;color:#9a836a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;text-align:center;">Iklan</div>
             <ins class="adsbygoogle"
@@ -1463,6 +1468,7 @@ if (!empty($art['id'])) {
               }
             </script>
           </div><!-- /.art-sidebar-ad -->
+          <?php endif; ?>
 
         </div><!-- /.art-sidebar-right-inner -->
       </aside><!-- /.art-sidebar-right -->

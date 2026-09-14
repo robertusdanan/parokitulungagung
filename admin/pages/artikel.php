@@ -66,6 +66,44 @@ adminHeader('Kelola Artikel', 'artikel', $user);
   background: rgba(60,179,113,.12); color: #3cb371;
   padding: 2px 10px; border-radius: 12px; font-size: 11.5px; white-space: nowrap;
 }
+.st-revisi {
+  background: rgba(245,158,11,.15); color: #f59e0b;
+  border: 1px solid rgba(245,158,11,.3);
+  padding: 2px 10px; border-radius: 12px; font-size: 11.5px; white-space: nowrap;
+  font-weight: 500; display: inline-flex; align-items: center; gap: 4px;
+}
+.btn-catatan-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(245,158,11,.12); color: #d97706;
+  border: 1px solid rgba(245,158,11,.35);
+  border-radius: 12px; padding: 2px 8px; font-size: 11px;
+  cursor: pointer; text-decoration: none; font-weight: 500;
+  transition: all .15s; margin-left: 4px;
+}
+.btn-catatan-chip:hover {
+  background: rgba(245,158,11,.22); color: #b45309;
+  border-color: #f59e0b;
+}
+.art-card-btn.revisi {
+  border-color: rgba(245,158,11,.4); color: #f59e0b;
+}
+
+/* Modal Catatan Revisi & Form Tolak */
+.modal-revisi-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.75);
+  backdrop-filter: blur(4px); z-index: 100000;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px; opacity: 0; visibility: hidden; transition: all .2s ease;
+}
+.modal-revisi-overlay.open { opacity: 1; visibility: visible; }
+.modal-revisi-card {
+  background: #1c1815; border: 1px solid rgba(201,168,76,.3);
+  box-shadow: 0 16px 40px rgba(0,0,0,.6); border-radius: 14px;
+  width: 100%; max-width: 480px; padding: 24px; color: #ede6dc;
+  animation: scaleIn .2s ease forwards;
+}
+@keyframes scaleIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
 .st-draft {
   background: rgba(224,154,82,.1); color: var(--warning);
   padding: 2px 10px; border-radius: 12px; font-size: 11.5px; white-space: nowrap;
@@ -291,6 +329,7 @@ adminHeader('Kelola Artikel', 'artikel', $user);
     <option value="">Semua</option>
     <option value="published">Published</option>
     <option value="draft">Draft</option>
+    <option value="revisi">Perlu Revisi</option>
   </select>
 </div>
 
@@ -311,6 +350,7 @@ adminHeader('Kelola Artikel', 'artikel', $user);
         <option value="">Semua Status</option>
         <option value="published">Published</option>
         <option value="draft">Draft</option>
+    <option value="revisi">Perlu Revisi</option>
       </select>
     </div>
     <div class="toolbar-right">
@@ -457,9 +497,21 @@ function renderTable(data) {
            </svg>
          </div>`;
 
-    const statusBadge = (art.status === 'published')
-      ? `<span class="st-published">✓ Published</span>`
-      : `<span class="st-draft">◷ Draft</span>`;
+    let statusBadge = '';
+    if (art.status === 'published') {
+      statusBadge = `<span class="st-published">✓ Published</span>`;
+    } else if (art.status === 'revisi') {
+      const notesJson = escHtml(JSON.stringify({ id: artId, judul: art.judul||'', catatan: art.catatan_revisi||'', reviewer: art.reviewer||'' }));
+      statusBadge = `<div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px">
+        <span class="st-revisi">⚠ Perlu Revisi</span>
+        <button type="button" class="btn-catatan-chip" onclick='openViewNotesModal(${notesJson})' title="Lihat catatan perbaikan">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Catatan
+        </button>
+      </div>`;
+    } else {
+      statusBadge = `<span class="st-draft">◷ Draft</span>`;
+    }
 
     const tgl = (art.tanggal || art.created_at || '').substring(0, 10);
 
@@ -473,25 +525,36 @@ function renderTable(data) {
            </svg>
          </a>` : '';
 
-    const btnPublish = (art._can_publish && CAN_PUBLISH)
-      ? (art.status === 'published'
-          ? `<button class="btn btn-icon btn-sm"
-                style="color:var(--warning);border-color:rgba(224,154,82,.3)"
-                onclick="togglePublish('${artId}','unpublish')" title="Unpublish">
-               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    width="14" height="14">
-                 <circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/>
-               </svg>
-             </button>`
-          : `<button class="btn btn-icon btn-sm"
-                style="color:var(--success);border-color:rgba(60,179,113,.3)"
-                onclick="togglePublish('${artId}','publish')" title="Publish">
-               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    width="14" height="14">
-                 <polyline points="20 6 9 17 4 12"/>
-               </svg>
-             </button>`)
-      : '';
+    let btnPublish = '';
+    let btnReject = '';
+    if (art._can_publish && CAN_PUBLISH) {
+      if (art.status === 'published') {
+        btnPublish = `<button class="btn btn-icon btn-sm"
+              style="color:var(--warning);border-color:rgba(224,154,82,.3)"
+              onclick="togglePublish('${artId}','unpublish')" title="Unpublish">
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+               <circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/>
+             </svg>
+           </button>`;
+      } else {
+        btnPublish = `<button class="btn btn-icon btn-sm"
+              style="color:var(--success);border-color:rgba(60,179,113,.3)"
+              onclick="togglePublish('${artId}','publish')" title="Publish Artikel">
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+               <polyline points="20 6 9 17 4 12"/>
+             </svg>
+           </button>`;
+        const rejectDataJson = escHtml(JSON.stringify({ id: artId, judul: art.judul||'', catatan: art.catatan_revisi||'' }));
+        btnReject = `<button class="btn btn-icon btn-sm"
+              style="color:#f59e0b;border-color:rgba(245,158,11,.35)"
+              onclick='openRejectModal(${rejectDataJson})' title="Minta Revisi / Beri Catatan">
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+               <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+               <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+             </svg>
+           </button>`;
+      }
+    }
 
     const btnDel = art._can_delete
       ? `<button class="btn btn-icon btn-sm"
@@ -513,7 +576,7 @@ function renderTable(data) {
       </td>
       <td>${statusBadge}</td>
       <td style="font-size:12px;color:var(--text-secondary);white-space:nowrap">${tgl||'—'}</td>
-      <td><div class="actions">${btnEdit}${btnPublish}${btnDel}</div></td>
+      <td><div class="actions">${btnEdit}${btnPublish}${btnReject}${btnDel}</div></td>
     </tr>`;
   }).join('');
 
@@ -546,9 +609,16 @@ function renderCards(data) {
            </svg>
          </div>`;
 
-    const statusBadge = (art.status === 'published')
-      ? `<span class="st-published">✓ Published</span>`
-      : `<span class="st-draft">◷ Draft</span>`;
+    let statusBadge = '';
+    if (art.status === 'published') {
+      statusBadge = `<span class="st-published">✓ Published</span>`;
+    } else if (art.status === 'revisi') {
+      const notesJson = escHtml(JSON.stringify({ id: artId, judul: art.judul||'', catatan: art.catatan_revisi||'', reviewer: art.reviewer||'' }));
+      statusBadge = `<span class="st-revisi">⚠ Perlu Revisi</span>
+        <button type="button" class="btn-catatan-chip" onclick='openViewNotesModal(${notesJson})'>💬 Catatan</button>`;
+    } else {
+      statusBadge = `<span class="st-draft">◷ Draft</span>`;
+    }
 
     // Tombol aksi — teks + ikon agar mudah disentuh
     const btnEdit = art._can_edit
@@ -562,25 +632,32 @@ function renderCards(data) {
            Edit
          </a>` : '';
 
-    const btnPublish = (art._can_publish && CAN_PUBLISH)
-      ? (art.status === 'published'
-          ? `<button class="art-card-btn unpub"
-                onclick="togglePublish('${artId}','unpublish')">
-               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    width="12" height="12">
-                 <circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/>
-               </svg>
-               Unpublish
-             </button>`
-          : `<button class="art-card-btn publish"
-                onclick="togglePublish('${artId}','publish')">
-               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    width="12" height="12">
-                 <polyline points="20 6 9 17 4 12"/>
-               </svg>
-               Publish
-             </button>`)
-      : '';
+    let btnPublish = '';
+    let btnReject = '';
+    if (art._can_publish && CAN_PUBLISH) {
+      if (art.status === 'published') {
+        btnPublish = `<button class="art-card-btn unpub" onclick="togglePublish('${artId}','unpublish')">
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+               <circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/>
+             </svg>
+             Unpublish
+           </button>`;
+      } else {
+        btnPublish = `<button class="art-card-btn publish" onclick="togglePublish('${artId}','publish')">
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+               <polyline points="20 6 9 17 4 12"/>
+             </svg>
+             Publish
+           </button>`;
+        const rejectDataJson = escHtml(JSON.stringify({ id: artId, judul: art.judul||'', catatan: art.catatan_revisi||'' }));
+        btnReject = `<button class="art-card-btn revisi" onclick='openRejectModal(${rejectDataJson})'>
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+               <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+             </svg>
+             Revisi
+           </button>`;
+      }
+    }
 
     const btnDel = art._can_delete
       ? `<button class="art-card-btn del"
@@ -603,7 +680,7 @@ function renderCards(data) {
           ${art.penulis ? `<span class="art-card-penulis">${escHtml(art.penulis)}</span>` : ''}
         </div>
         <div class="art-card-actions">
-          ${btnEdit}${btnPublish}${btnDel}
+          ${btnEdit}${btnPublish}${btnReject}${btnDel}
         </div>
       </div>
     </div>`;
@@ -656,5 +733,59 @@ document.addEventListener('DOMContentLoaded', function() {
       }).catch(() => {});
   });
 });
+
+// ── Modal Tolak / Minta Revisi Handler ────────────────────────────────
+function openRejectModal(data) {
+  document.getElementById('rejectArticleId').value = data.id || '';
+  document.getElementById('rejectArticleTitle').textContent = data.judul || 'Artikel';
+  document.getElementById('rejectNotesInput').value = data.catatan || '';
+  document.getElementById('modalRejectArticle').classList.add('open');
+  setTimeout(() => document.getElementById('rejectNotesInput').focus(), 100);
+}
+function closeRejectModal() {
+  document.getElementById('modalRejectArticle').classList.remove('open');
+}
+async function submitRejectArticle() {
+  const id = document.getElementById('rejectArticleId').value;
+  const catatan = document.getElementById('rejectNotesInput').value.trim();
+  if (!catatan) {
+    toast('Perhatian', 'Harap isi catatan / alasan revisi terlebih dahulu.', 'warning');
+    return;
+  }
+  const btn = document.getElementById('btnSubmitReject');
+  btn.disabled = true;
+  btn.textContent = 'Menyimpan…';
+  try {
+    const res = await apiPost('/admin/api/artikel.php', {
+      action: 'reject',
+      menu: ACTIVE_MENU,
+      id,
+      catatan
+    });
+    if (!res.success) throw new Error(res.error || 'Gagal mengirim catatan revisi');
+    toast('Berhasil', 'Artikel ditandai perlu revisi dengan catatan.', 'success');
+    closeRejectModal();
+    loadData();
+  } catch (e) {
+    toast('Gagal', e.message || 'Terjadi kesalahan sistem.', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Kirim Catatan Revisi';
+  }
+}
+
+// ── Modal Lihat Catatan Revisi Handler ────────────────────────────────
+function openViewNotesModal(data) {
+  document.getElementById('viewNotesArticleTitle').textContent = data.judul || 'Artikel';
+  document.getElementById('viewNotesContent').textContent = data.catatan || '(Tidak ada catatan terlampir)';
+  const reviewerText = data.reviewer ? `Dari Redaksi (${escHtml(data.reviewer)}):` : 'Dari Redaksi:';
+  document.getElementById('viewNotesReviewerInfo').textContent = reviewerText;
+  document.getElementById('viewNotesEditLink').href = `/admin/pages/artikel-editor.php?menu=${ACTIVE_MENU}&id=${data.id}`;
+  document.getElementById('modalViewNotes').classList.add('open');
+}
+function closeViewNotesModal() {
+  document.getElementById('modalViewNotes').classList.remove('open');
+}
+
 </script>
 <?php adminFooter(); ?>

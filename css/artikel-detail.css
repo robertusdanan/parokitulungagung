@@ -70,3 +70,6 @@
   .image-row[data-layout="grid-3-landscape"] .img-wrap:nth-child(3),
   .image-row[data-layout="grid-3-mixed"] .img-wrap:nth-child(3){max-width:100%}
 }
+
+/* Iklan AdSense (disembunyikan sementara) */
+.art-sidebar-ad, .in-article-ad { display: none !important; }

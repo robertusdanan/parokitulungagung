@@ -358,6 +358,27 @@ try {
             apiJson(['success' => true]);
             break;
 
+        // ── REJECT / TOLAK (MINTA REVISI) ─────────────────────────────────
+        case 'reject':
+        case 'tolak':
+            if (!canPublishArtikel($currentUser, $menu)) {
+                apiJson(['error' => 'Anda tidak memiliki izin untuk menolak / meminta revisi artikel.'], 403);
+            }
+            $id      = $body['id'] ?? '';
+            $catatan = trim($body['catatan'] ?? $body['saran'] ?? '');
+            if (!$id) apiJson(['error' => 'ID artikel wajib diisi'], 400);
+            if (!$catatan) apiJson(['error' => 'Catatan / alasan revisi wajib diisi.'], 400);
+
+            $art = $am->getById($menu, $id);
+            if (!$art) apiJson(['error' => 'Artikel tidak ditemukan'], 404);
+
+            $reviewerName = getDisplayName($currentUser);
+            $am->reject($menu, $id, $catatan, $reviewerName);
+            $logger->log($currentUser, 'UPDATE', $menu, 'Minta Revisi: ' . ($art['judul'] ?? '') . " (Oleh: {$reviewerName})");
+            invalidateAllRelatedCaches($menu, 'articles');
+            apiJson(['success' => true, 'message' => 'Artikel ditandai perlu revisi.']);
+            break;
+
         // ── DELETE ────────────────────────────────────────────────────────
         case 'delete':
             $id  = $body['id'] ?? '';
