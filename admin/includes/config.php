@@ -144,6 +144,8 @@ if (!defined('SESSION_NAME'))     define('SESSION_NAME',     'smdtba_admin');
 // ── Email (Resend API / Gmail SMTP) ───────────────────────────────────
 if (!defined('RESEND_API_KEY')) define('RESEND_API_KEY', defined('SECRET_RESEND_API_KEY') ? SECRET_RESEND_API_KEY : '');
 if (!defined('RESEND_FROM'))    define('RESEND_FROM',    'Redaksi Paroki SMDTBA <redaksi@parokitulungagung.org>');
+if (!defined('GRAVATAR_API_KEY')) define('GRAVATAR_API_KEY', defined('SECRET_GRAVATAR_API_KEY') ? SECRET_GRAVATAR_API_KEY : '');
+
 // ── Email (Gmail SMTP) ─────────────────────────────────────────────────
 if (!defined('MAIL_FROM'))      define('MAIL_FROM',      SECRET_MAIL_USERNAME);
 if (!defined('MAIL_FROM_NAME')) define('MAIL_FROM_NAME', 'Redaksi Paroki SMDTBA');
