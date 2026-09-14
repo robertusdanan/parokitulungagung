@@ -234,8 +234,7 @@ function _buildArticleRevisionEmail(string $nama, string $judul, string $menu, s
              alt="Logo Paroki SMDTBA"
              width="72" height="72"
              style="width:72px;height:72px;object-fit:contain;display:block;margin:0 auto 12px">
-        <div style="font-family:'Georgia',serif;font-size:20px;color:#f5debb;font-weight:700;letter-spacing:0.02em">Redaksi Paroki SMDTBA</div>
-        <div style="font-size:11.5px;color:#a8957c;letter-spacing:.12em;text-transform:uppercase;margin-top:4px">Gereja Santa Maria dengan Tidak Bernoda Asal Tulungagung</div>
+        <div style="font-family:'Georgia',serif;font-size:20px;color:#f5debb;font-weight:700;letter-spacing:0.02em">Paroki SMDTBA Tulungagung</div>
       </td></tr>
       
       <!-- Body Konten -->
