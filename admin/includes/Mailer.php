@@ -1,8 +1,7 @@
 <?php
 /**
  * admin/includes/Mailer.php
- * Kirim email via Gmail SMTP menggunakan PHP socket (tanpa PHPMailer/library eksternal)
- * Compatible dengan InfinityFree (tidak pakai mail() bawaan PHP yang diblokir)
+ * Kirim email via Resend REST API (Utama) dengan Fallback ke Gmail SMTP
  *
  * Cara pakai:
  *   $mailer = new Mailer();
@@ -11,6 +10,8 @@
 
 class Mailer
 {
+    private string $resendApiKey;
+    private string $resendFrom;
     private string $host     = 'smtp.gmail.com';
     private int    $port     = 587;
     private string $from;
@@ -21,17 +22,82 @@ class Mailer
 
     public function __construct()
     {
-        $this->from     = defined('MAIL_FROM')      ? MAIL_FROM      : '';
-        $this->fromName = defined('MAIL_FROM_NAME') ? MAIL_FROM_NAME : 'Admin SMDTBA';
-        $this->username = defined('MAIL_USERNAME')  ? MAIL_USERNAME  : '';
-        $this->password = defined('MAIL_PASSWORD')  ? MAIL_PASSWORD  : '';
+        $this->resendApiKey = defined('RESEND_API_KEY') ? RESEND_API_KEY : '';
+        $this->resendFrom   = defined('RESEND_FROM')    ? RESEND_FROM    : 'Redaksi Paroki SMDTBA <onboarding@resend.dev>';
+        $this->from         = defined('MAIL_FROM')      ? MAIL_FROM      : '';
+        $this->fromName     = defined('MAIL_FROM_NAME') ? MAIL_FROM_NAME : 'Redaksi Paroki SMDTBA';
+        $this->username     = defined('MAIL_USERNAME')  ? MAIL_USERNAME  : '';
+        $this->password     = defined('MAIL_PASSWORD')  ? MAIL_PASSWORD  : '';
     }
 
     /**
-     * Kirim email.
-     * @throws RuntimeException jika pengiriman gagal
+     * Kirim email (Coba Resend API dulu, jika gagal/kosong fallback ke SMTP).
+     * @throws RuntimeException jika semua metode pengiriman gagal
      */
     public function send(string $toEmail, string $toName, string $subject, string $htmlBody): void
+    {
+        if (!empty($this->resendApiKey)) {
+            try {
+                $this->sendViaResend($toEmail, $toName, $subject, $htmlBody);
+                return;
+            } catch (Throwable $e) {
+                error_log('[Mailer] Resend API failed: ' . $e->getMessage() . '. Fallback ke SMTP.');
+                $this->log[] = "Resend API Error: " . $e->getMessage() . " -> Try SMTP fallback";
+            }
+        }
+
+        $this->sendViaSmtp($toEmail, $toName, $subject, $htmlBody);
+    }
+
+    /**
+     * Kirim via Resend REST API
+     */
+    private function sendViaResend(string $toEmail, string $toName, string $subject, string $htmlBody): void
+    {
+        $from = $this->resendFrom;
+
+        $payload = [
+            'from'    => $from,
+            'to'      => [$toEmail],
+            'subject' => $subject,
+            'html'    => $htmlBody,
+        ];
+
+        $ch = curl_init('https://api.resend.com/emails');
+        curl_setopt_array($ch, [
+            CURLOPT_POST           => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER     => [
+                'Authorization: Bearer ' . $this->resendApiKey,
+                'Content-Type: application/json',
+                'User-Agent: ParokiSMDTBA-Mailer/1.0',
+            ],
+            CURLOPT_POSTFIELDS     => json_encode($payload),
+            CURLOPT_TIMEOUT        => 10,
+        ]);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error    = curl_error($ch);
+        curl_close($ch);
+
+        if ($error) {
+            throw new RuntimeException("Resend cURL error: {$error}");
+        }
+
+        $res = json_decode($response, true);
+        if ($httpCode < 200 || $httpCode >= 300) {
+            $msg = $res['message'] ?? $res['error'] ?? $response;
+            throw new RuntimeException("Resend API error [{$httpCode}]: {$msg}");
+        }
+
+        $this->log[] = "Resend Success: ID " . ($res['id'] ?? 'OK');
+    }
+
+    /**
+     * Kirim via SMTP socket (Fallback)
+     */
+    private function sendViaSmtp(string $toEmail, string $toName, string $subject, string $htmlBody): void
     {
         if (!$this->from || !$this->password) {
             throw new RuntimeException('Konfigurasi email (MAIL_FROM / MAIL_PASSWORD) belum diisi di config.php.');
@@ -42,7 +108,6 @@ class Mailer
             $this->smtp($sock, "EHLO localhost",         ['250']);
             $this->smtp($sock, "STARTTLS",               ['220']);
 
-            // Upgrade ke TLS
             if (!stream_socket_enable_crypto($sock, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
                 throw new RuntimeException('Gagal upgrade ke TLS.');
             }
@@ -98,7 +163,6 @@ class Mailer
 
     private function smtp($sock, string $cmd, array $expectCodes): string
     {
-        // Tulis command (kecuali DATA body yang sudah berisi \r\n.)
         if (!str_contains($cmd, "\r\n.")) {
             fwrite($sock, $cmd . "\r\n");
             $this->log[] = "C: " . (str_starts_with($cmd, base64_encode($this->password)) ? 'C: [PASSWORD]' : "C: {$cmd}");
@@ -107,14 +171,12 @@ class Mailer
             $this->log[] = "C: [DATA BODY]";
         }
 
-        // Baca respons (bisa multi-line)
         $response = '';
         while (true) {
             $line = fgets($sock, 512);
             if ($line === false) break;
             $this->log[] = "S: " . trim($line);
             $response   .= $line;
-            // Baris terakhir: "250 " (space setelah kode, bukan dash)
             if (strlen($line) >= 4 && $line[3] === ' ') break;
         }
 
@@ -156,6 +218,6 @@ class Mailer
         return $headers . $body;
     }
 
-    /** Ambil log SMTP untuk debug */
+    /** Ambil log pengiriman untuk debug */
     public function getLog(): array { return $this->log; }
 }
