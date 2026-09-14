@@ -824,7 +824,8 @@ async function submitRejectArticle() {
       catatan
     });
     if (!res.success) throw new Error(res.error || 'Gagal mengirim catatan revisi');
-    toast('Berhasil', 'Artikel ditandai perlu revisi dengan catatan.', 'success');
+    const mailInfo = res.email_sent ? ` & email notifikasi terkirim ke ${res.email}` : '';
+    toast('Berhasil', 'Artikel ditandai perlu revisi' + mailInfo + '.', 'success');
     closeRejectModal();
     loadData();
   } catch (e) {
