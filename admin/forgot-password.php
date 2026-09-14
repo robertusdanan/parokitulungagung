@@ -104,11 +104,10 @@ function _buildResetEmail(string $nama, string $username, string $resetUrl): str
       <!-- Header -->
       <tr><td style="background:#1a1410;padding:28px 36px;text-align:center">
         <img src="{$photoUrl}"
-             alt="Komsos Paroki SMDTBA"
+             alt="Paroki SMDTBA Tulungagung"
              width="80" height="80"
              style="width:80px;height:80px;display:block;margin:0 auto 10px">
-        <div style="font-family:'Georgia',serif;font-size:18px;color:#fff;font-weight:600">Komsos Paroki SMDTBA</div>
-        <div style="font-size:11px;color:#9a8a70;letter-spacing:.12em;text-transform:uppercase;margin-top:3px">Tulungagung</div>
+        <div style="font-family:'Georgia',serif;font-size:18px;color:#fff;font-weight:600">Paroki SMDTBA Tulungagung</div>
       </td></tr>
       <!-- Body -->
       <tr><td style="padding:36px 36px 28px">
