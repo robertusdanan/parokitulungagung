@@ -210,7 +210,7 @@ function _buildArticleRevisionEmail(string $nama, string $judul, string $menu, s
         'historia' => 'Historia Gereja',
     ];
     $menuName = $menuLabels[$menu] ?? ucfirst($menu);
-    $logoUrl = 'https://img.parokitulungagung.org/assets/parokitulungagung.webp';
+    $logoUrl = 'https://img.parokitulungagung.org/assets/smdtba.png';
     $catatanHtml = nl2br(htmlspecialchars($catatan, ENT_QUOTES, 'UTF-8'));
     $judulEsc = htmlspecialchars($judul, ENT_QUOTES, 'UTF-8');
     $reviewerEsc = htmlspecialchars($reviewer ?: 'Tim Redaksi', ENT_QUOTES, 'UTF-8');

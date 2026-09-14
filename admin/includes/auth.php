@@ -48,7 +48,7 @@ function startAdminSession(): void
             'path'     => '/',
             'secure'   => (function_exists('is_https') ? is_https() : isset($_SERVER['HTTPS'])),
             'httponly' => true,
-            'samesite' => 'Strict',
+            'samesite' => 'Lax',
         ]);
         session_start();
 
@@ -64,7 +64,7 @@ function startAdminSession(): void
                 'path'     => '/admin',
                 'secure'   => (function_exists('is_https') ? is_https() : isset($_SERVER['HTTPS'])),
                 'httponly' => true,
-                'samesite' => 'Strict',
+                'samesite' => 'Lax',
             ]);
         }
     }
@@ -74,11 +74,15 @@ function requireLogin(): array
 {
     startAdminSession();
     if (empty($_SESSION['admin_user'])) {
-        header('Location: /admin/index.php'); exit;
+        $uri = $_SERVER['REQUEST_URI'] ?? '';
+        $redirectParam = safeRedirectBack($uri) ? '?redirect=' . urlencode($uri) : '';
+        header('Location: /admin/index.php' . $redirectParam); exit;
     }
     if (!empty($_SESSION['admin_expire']) && time() > $_SESSION['admin_expire']) {
         session_destroy();
-        header('Location: /admin/index.php?expired=1'); exit;
+        $uri = $_SERVER['REQUEST_URI'] ?? '';
+        $redirectParam = safeRedirectBack($uri) ? '&redirect=' . urlencode($uri) : '';
+        header('Location: /admin/index.php?expired=1' . $redirectParam); exit;
     }
     $_SESSION['admin_expire'] = time() + SESSION_LIFETIME;
     return $_SESSION['admin_user'];
@@ -235,4 +239,4 @@ function renderAccessDenied(): string
     p{color:#aaa;}a{color:#a8dadc;}</style></head>
     <body><div class="box"><h1>403</h1><p>Anda tidak memiliki akses ke halaman ini.</p>
     <a href="/admin/dashboard.php">← Kembali ke Dashboard</a></div></body></html>';
-}
+}
