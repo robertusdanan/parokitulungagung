@@ -406,6 +406,67 @@ adminHeader('Kelola Artikel', 'artikel', $user);
 </a>
 <?php endif; ?>
 
+<!-- Modal 1: Form Minta Revisi (Editor/Superadmin) -->
+<div class="modal-revisi-overlay" id="modalRejectArticle" onclick="if(event.target===this)closeRejectModal()">
+  <div class="modal-revisi-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:32px;height:32px;border-radius:8px;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);display:flex;align-items:center;justify-content:center;color:#f59e0b">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <div>
+          <h3 style="margin:0;font-size:16px;font-family:'Playfair Display',serif;color:#f5debb">Minta Revisi Artikel</h3>
+          <div style="font-size:11.5px;color:#a89f91" id="rejectArticleTitle">Artikel</div>
+        </div>
+      </div>
+      <button onclick="closeRejectModal()" style="background:none;border:none;color:#a89f91;font-size:20px;cursor:pointer;line-height:1">&times;</button>
+    </div>
+    <div style="margin-bottom:16px">
+      <label style="display:block;font-size:12px;font-weight:600;color:#c9a84c;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em">
+        Catatan Alasan Ditolak / Saran Perbaikan:
+      </label>
+      <textarea id="rejectNotesInput" class="form-control" rows="4" style="width:100%;resize:vertical;font-size:13px;padding:10px 12px;background:#14110e;border:1px solid rgba(255,255,255,.15);border-radius:8px;color:#ede6dc" placeholder="Tuliskan poin perbaikan secara jelas, misal: judul kurang spesifik, foto buram, atau butuh penambahan nama romo..."></textarea>
+      <div style="font-size:11px;color:#8c8275;margin-top:5px">Catatan ini akan langsung terbaca oleh penulis artikel saat login ke admin.</div>
+    </div>
+    <input type="hidden" id="rejectArticleId" value="">
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button type="button" class="btn btn-secondary" onclick="closeRejectModal()" style="padding:7px 16px;font-size:13px">Batal</button>
+      <button type="button" class="btn btn-primary" id="btnSubmitReject" onclick="submitRejectArticle()" style="padding:7px 18px;font-size:13px;background:#d97706;border-color:#b45309">
+        Kirim Catatan Revisi
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 2: Lihat Catatan Revisi (Penulis / Admin) -->
+<div class="modal-revisi-overlay" id="modalViewNotes" onclick="if(event.target===this)closeViewNotesModal()">
+  <div class="modal-revisi-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:32px;height:32px;border-radius:8px;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);display:flex;align-items:center;justify-content:center;color:#f59e0b">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div>
+          <h3 style="margin:0;font-size:16px;font-family:'Playfair Display',serif;color:#f5debb">Catatan & Saran Redaksi</h3>
+          <div style="font-size:11.5px;color:#a89f91" id="viewNotesArticleTitle">Artikel</div>
+        </div>
+      </div>
+      <button onclick="closeViewNotesModal()" style="background:none;border:none;color:#a89f91;font-size:20px;cursor:pointer;line-height:1">&times;</button>
+    </div>
+    <div style="background:#14110e;border:1px solid rgba(245,158,11,.25);border-radius:8px;padding:14px;margin-bottom:16px">
+      <div style="font-size:11.5px;color:#c9a84c;margin-bottom:6px;font-weight:600" id="viewNotesReviewerInfo">Dari Redaksi:</div>
+      <div style="font-size:13px;color:#ede6dc;line-height:1.6;white-space:pre-wrap" id="viewNotesContent">—</div>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button type="button" class="btn btn-secondary" onclick="closeViewNotesModal()" style="padding:7px 16px;font-size:13px">Tutup</button>
+      <a href="#" id="viewNotesEditLink" class="btn btn-primary" style="padding:7px 18px;font-size:13px;text-decoration:none;display:inline-flex;align-items:center;gap:6px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Edit & Perbaiki Artikel
+      </a>
+    </div>
+  </div>
+</div>
+
 <script>
 const ACTIVE_MENU   = '<?= e($activeMenu) ?>';
 const ALLOWED_MENUS = <?= json_encode($allowedMenus) ?>;
