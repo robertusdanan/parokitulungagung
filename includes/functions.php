@@ -216,17 +216,6 @@ function is_https(): bool
 }
 
 /**
- * Ambil IP asli pengunjung, dengan dukungan Cloudflare proxy.
- */
-function get_real_ip(): string
-{
-    return $_SERVER["HTTP_CF_CONNECTING_IP"]
-        ?? $_SERVER["HTTP_X_FORWARDED_FOR"]
-        ?? $_SERVER["REMOTE_ADDR"]
-        ?? "0.0.0.0";
-}
-
-/**
  * Bangun base URL yang benar (https://www.parokitulungagung.org).
  */
 function base_url(string $path = ""): string
@@ -386,19 +375,6 @@ function fetchSupabaseCached(
     return $data;
 }
 
-/**
- * TTL per tabel — data jarang berubah dapat cache lebih lama
- */
-function _cacheTTL(string $table): int {
-    $static  = ['galeri_foto','daftar_wilayah','daftar_asisten_imam',
-                'kepengurusan_dpp_bgkp','petugas','kelompok_profil',
-                'master_lingkungan','master_bidang','master_koordinator'];
-    $dynamic = ['info_paroki','umkm_umat'];
-    if (in_array($table, $static))  return 600;
-    if (in_array($table, $dynamic)) return 180;
-    return 300;
-}
-
 
 
 function fetchSheet(string $url): ?array
@@ -410,42 +386,6 @@ function fetchSheet(string $url): ?array
     return null;
 }
 
-/**
- * Format teks dengan sintaks markdown sederhana
- * **bold**, >center, - list item
- */
-function formatStyledText(?string $text): string
-{
-    if (!$text || trim($text) === '-' || trim($text) === '') return '-';
-
-    $lines    = explode("\n", str_replace("\r\n", "\n", $text));
-    $html     = '';
-    $listOpen = false;
-
-    foreach ($lines as $rawLine) {
-        $line = trim($rawLine);
-        if ($line === '') {
-            if ($listOpen) { $html .= '</ul>'; $listOpen = false; }
-            $html .= '<br>';
-            continue;
-        }
-        $line = preg_replace('/\*\*(.+?)\*\*/', '<strong>$1</strong>', $line);
-        if (strpos($line, '>') === 0) {
-            if ($listOpen) { $html .= '</ul>'; $listOpen = false; }
-            $html .= '<div style="text-align:center">' . trim(substr($line, 1)) . '</div>';
-        } elseif (strpos($line, '- ') === 0) {
-            if (!$listOpen) { $html .= '<ul>'; $listOpen = true; }
-            $html .= '<li>' . substr($line, 2) . '</li>';
-        } else {
-            if ($listOpen) { $html .= '</ul>'; $listOpen = false; }
-            $html .= '<p>' . $line . '</p>';
-        }
-    }
-    if ($listOpen) $html .= '</ul>';
-    return $html;
-}
-
-/**
  * Format tanggal YYYY-MM-DD ke format Indonesia
  */
 function formatTanggalIndo(string $dateStr): string
@@ -774,21 +714,6 @@ function invalidateAllRelatedCaches(string $page, string $table = ''): void
 }
 
 /**
- * Buat path foto dari nama orang
- * SEBELUMNYA: mengembalikan "/img/person/<nama>.webp" (lokal hosting)
- * SEKARANG  : kembalikan URL absolut R2 CDN, mis.
- *             "https://img.parokitulungagung.org/person/<nama>.webp"
- *             Kalau R2_CDN_URL belum terdefinisi, fallback ke "/person/<nama>.webp"
- *             (relatif terhadap root situs, agar tidak error fatal).
- */
-function fotoFromNama(string $nama): string
-{
-    $nama = str_replace(['.', ' '], ['', '-'], trim($nama));
-    $base = defined('R2_CDN_URL') ? rtrim(R2_CDN_URL, '/') : '';
-    return $base . '/person/' . $nama . '.webp';
-}
-
-/**
  * Bangun URL publik foto person dari nama file (nama di kolom "Foto" DB).
  * - $namaFile: nama file relatif (mis. "Andreas-Andrie-Djatmiko.webp")
  * - Hasil    : URL absolut R2 CDN.
@@ -1106,41 +1031,4 @@ if (!function_exists('galeriCoverUrls')) {
         $display  = r2CdnUrl(defined('R2_GALERI_THUMB_PREFIX') ? R2_GALERI_THUMB_PREFIX . $filename : '_thumbnails/galeri/' . $filename);
         return ['raw' => $raw, 'display' => $display];
     }
-}
-
-/**
- * Hitung mergeMap untuk rowspan tabel petugas
- */
-function calcMergeMap(array $data, array $cols): array
-{
-    $mergeMap = [];
-    $n        = count($data);
-    foreach ($cols as $ci => $col) {
-        $prevVal  = null;
-        $startIdx = null;
-        for ($i = 0; $i < $n; $i++) {
-            $val = trim($data[$i][$col] ?? '');
-            if ($val === '' && $prevVal !== null && $startIdx !== null) {
-                if (!isset($mergeMap[$startIdx])) $mergeMap[$startIdx] = [];
-                $mergeMap[$startIdx][$ci] = ($mergeMap[$startIdx][$ci] ?? 1) + 1;
-            } else {
-                $prevVal  = $val === '' ? null : $val;
-                $startIdx = $val === '' ? null : $i;
-            }
-        }
-    }
-    return $mergeMap;
-}
-
-/**
- * Cek apakah sel sudah dicakup rowspan dari baris sebelumnya
- */
-function isMergedCell(int $row, int $col, array $mergeMap): bool
-{
-    for ($si = 0; $si < $row; $si++) {
-        if (isset($mergeMap[$si][$col]) && $row < $si + $mergeMap[$si][$col]) {
-            return true;
-        }
-    }
-    return false;
 }

@@ -41,8 +41,6 @@ function getDB(): SupabaseClient {
     return $instance;
 }
 
-function getSheets(): SupabaseClient { return getDB(); }
-
 function getLogger(): ActivityLogger {
     static $instance = null;
     if (!$instance) $instance = new ActivityLogger(getDB());
