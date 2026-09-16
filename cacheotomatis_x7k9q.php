@@ -2,14 +2,28 @@
 // cacheotomatis_x7k9q.php — Automated Cache Warmer Paroki SMDTBA (v2.0)
 // ──────────────────────────────────────────────────────────────────
 // Warming cache Cloudflare & server-side runtime cache untuk SEMUA
-// halaman publik aktif (statis, sitemap, kategorial, romo, galeri album, artikel).
+// halaman publik aktif.
 //
-// Cron cPanel (tiap 6 jam) — JANGAN ditulis dalam /* */ block comment,
-// pola "*/6" akan menutup comment lebih awal dan memicu PHP parse error:
+// Cron cPanel (tiap 6 jam):
 //   0 */6 * * * php /home/ejtkecoh/public_html/cacheotomatis_x7k9q.php >> /home/ejtkecoh/logs/cache_warmer.log 2>&1
 // ──────────────────────────────────────────────────────────────────
 
-// Load sistem internal jika dijalankan via CLI / Web
+@ini_set('max_execution_time', '600');
+@set_time_limit(600);
+@ini_set('memory_limit', '256M');
+
+// Output text/plain agar bisa distreaming langsung jika diakses via browser
+if (php_sapi_name() !== 'cli') {
+    header('Content-Type: text/plain; charset=UTF-8');
+    header('X-Accel-Buffering: no');
+    if (function_exists('apache_setenv')) {
+        @apache_setenv('no-gzip', '1');
+    }
+    @ini_set('output_buffering', 'off');
+    @ini_set('zlib.output_compression', 'off');
+}
+
+// Load helper publik jika tersedia
 if (file_exists(__DIR__ . '/includes/functions.php')) {
     require_once __DIR__ . '/includes/functions.php';
     if (function_exists('privatePath') && file_exists(privatePath('secrets.php'))) {
@@ -18,40 +32,74 @@ if (file_exists(__DIR__ . '/includes/functions.php')) {
 }
 
 define('SITE_BASE', 'https://www.parokitulungagung.org');
-define('REQUEST_TIMEOUT', 15);
-define('REQUEST_DELAY', 250000); // 0.25 detik
+define('CONCURRENCY', 5); // 5 request paralel agar cepat dan tidak kena timeout web server
 
 function log_msg(string $msg): void {
     echo '[' . date('Y-m-d H:i:s') . '] ' . $msg . PHP_EOL;
+    if (php_sapi_name() !== 'cli') {
+        @ob_flush();
+        @flush();
+    }
 }
 
-function warm_url(string $url): bool {
-    $ch = curl_init($url);
-    curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_TIMEOUT        => REQUEST_TIMEOUT,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_MAXREDIRS      => 3,
-        CURLOPT_SSL_VERIFYPEER => true,
-        CURLOPT_USERAGENT      => 'CacheWarmer/2.0 (parokitulungagung.org)',
-        CURLOPT_HTTPHEADER     => [
-            'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Language: id-ID,id;q=0.9,en-US;q=0.8',
-        ],
-    ]);
-    curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $error    = curl_error($ch);
-    curl_close($ch);
+/**
+ * Fetch URLs secara paralel menggunakan curl_multi
+ */
+function warm_urls_parallel(array $urls): array {
+    $results = ['success' => 0, 'total' => count($urls)];
+    if (empty($urls)) return $results;
 
-    if ($error) {
-        log_msg("  ERROR: $url -> $error");
-        return false;
+    $chunks = array_chunk($urls, CONCURRENCY);
+
+    foreach ($chunks as $chunk) {
+        $mh = curl_multi_init();
+        $handles = [];
+
+        foreach ($chunk as $url) {
+            $ch = curl_init($url);
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT        => 12,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_MAXREDIRS      => 3,
+                CURLOPT_SSL_VERIFYPEER => true,
+                CURLOPT_USERAGENT      => 'CacheWarmer/2.0 (parokitulungagung.org)',
+                CURLOPT_HTTPHEADER     => [
+                    'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                    'Accept-Language: id-ID,id;q=0.9,en-US;q=0.8',
+                ],
+            ]);
+            curl_multi_add_handle($mh, $ch);
+            $handles[$url] = $ch;
+        }
+
+        $running = null;
+        do {
+            curl_multi_exec($mh, $running);
+            curl_multi_select($mh);
+        } while ($running > 0);
+
+        foreach ($handles as $url => $ch) {
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $error    = curl_error($ch);
+            $ok       = ($httpCode >= 200 && $httpCode < 400);
+
+            if ($error) {
+                log_msg("  ERROR: $url -> $error");
+            } else {
+                log_msg(($ok ? '  OK' : '  GAGAL') . " [$httpCode] $url");
+            }
+
+            if ($ok) $results['success']++;
+            curl_multi_remove_handle($mh, $ch);
+            curl_close($ch);
+        }
+
+        curl_multi_close($mh);
+        usleep(100000); // 0.1s jeda antar batch
     }
 
-    $ok = ($httpCode >= 200 && $httpCode < 400);
-    log_msg(($ok ? '  OK' : '  GAGAL') . " [$httpCode] $url");
-    return $ok;
+    return $results;
 }
 
 function parse_sitemap_urls(string $sitemapUrl): array {
@@ -77,10 +125,10 @@ function parse_sitemap_urls(string $sitemapUrl): array {
 }
 
 log_msg('=== Cache Warmer Dimulai ===');
-$total   = 0;
-$success = 0;
+$grandTotal   = 0;
+$grandSuccess = 0;
 
-// 1. Halaman Utama Statis & Menu Navigasi
+// 1. Kumpulkan semua Halaman Utama Statis
 $staticPaths = [
     '/',
     '/jadwal-misa',
@@ -109,16 +157,14 @@ $staticPaths = [
     '/sitemap.xml',
     '/sitemap-static.xml',
 ];
+$staticUrls = array_map(fn($p) => SITE_BASE . $p, $staticPaths);
 
-log_msg('--- [1/4] Halaman Utama & Menu Statis ---');
-foreach ($staticPaths as $path) {
-    $url = SITE_BASE . $path;
-    if (warm_url($url)) $success++;
-    $total++;
-    usleep(REQUEST_DELAY);
-}
+log_msg('--- [1/4] Halaman Utama & Menu Statis (' . count($staticUrls) . ' URL) ---');
+$res = warm_urls_parallel($staticUrls);
+$grandSuccess += $res['success'];
+$grandTotal   += $res['total'];
 
-// 2. Sub-Sitemap Dinamis (Kategorial, Artikel Berita/Kronik/Historia)
+// 2. Kumpulkan Halaman dari Sub-Sitemap (Artikel & Kategorial)
 $subSitemaps = [
     'Kategorial'  => SITE_BASE . '/sitemap-kelompok.xml',
     'Berita'      => SITE_BASE . '/sitemap-berita.xml',
@@ -126,42 +172,39 @@ $subSitemaps = [
     'Historia'    => SITE_BASE . '/sitemap-historia.xml',
 ];
 
-log_msg('--- [2/4] Halaman Dinamis dari Sitemap (Artikel & Kategorial) ---');
+log_msg('--- [2/4] Halaman Dinamis dari Sitemap ---');
+$sitemapUrls = [];
 foreach ($subSitemaps as $label => $smUrl) {
-    log_msg("--- Sitemap $label ---");
-    $urls = parse_sitemap_urls($smUrl);
-    if (empty($urls)) {
-        log_msg("  (sitemap kosong/tidak terbaca)");
-        continue;
-    }
-    foreach ($urls as $u) {
-        if (warm_url($u)) $success++;
-        $total++;
-        usleep(REQUEST_DELAY);
-    }
+    $parsed = parse_sitemap_urls($smUrl);
+    log_msg("  Sitemap $label: " . count($parsed) . " URL");
+    $sitemapUrls = array_merge($sitemapUrls, $parsed);
 }
+$sitemapUrls = array_unique($sitemapUrls);
+$res = warm_urls_parallel($sitemapUrls);
+$grandSuccess += $res['success'];
+$grandTotal   += $res['total'];
 
-// 3. Album Galeri Foto (Fetch ID & Slug langsung dari Supabase/Cache)
+// 3. Kumpulkan Album Galeri Foto
 log_msg('--- [3/4] Album Galeri Foto ---');
+$galeriUrls = [];
 if (function_exists('fetchSupabaseCached')) {
     $albums = fetchSupabaseCached('galeri_foto', [], 'Tanggal.desc') ?? [];
-    if (!empty($albums)) {
-        log_msg('  Ditemukan ' . count($albums) . ' album galeri');
-        foreach ($albums as $alb) {
-            $albId   = $alb['id'] ?? 0;
-            $albSlug = function_exists('slugify') ? slugify($alb['Judul'] ?? '') : 'album';
-            if ($albId) {
-                $albUrl = SITE_BASE . '/galeri/album/' . $albId . '/' . $albSlug;
-                if (warm_url($albUrl)) $success++;
-                $total++;
-                usleep(REQUEST_DELAY);
-            }
+    foreach ($albums as $alb) {
+        $albId   = $alb['id'] ?? 0;
+        $albSlug = function_exists('slugify') ? slugify($alb['Judul'] ?? '') : 'album';
+        if ($albId) {
+            $galeriUrls[] = SITE_BASE . '/galeri/album/' . $albId . '/' . $albSlug;
         }
     }
 }
+log_msg('  Ditemukan ' . count($galeriUrls) . ' album galeri');
+$res = warm_urls_parallel($galeriUrls);
+$grandSuccess += $res['success'];
+$grandTotal   += $res['total'];
 
-// 4. Detail Romo Paroki
+// 4. Kumpulkan Profil Romo Paroki
 log_msg('--- [4/4] Profil Romo Paroki ---');
+$romoUrls = [];
 if (function_exists('fetchSupabaseCached')) {
     $romos = fetchSupabaseCached('romo_paroki', [], 'tanggal_mulai.asc') ?? [];
     $processedSlugs = [];
@@ -169,12 +212,13 @@ if (function_exists('fetchSupabaseCached')) {
         $slug = trim($r['slug'] ?? '');
         if ($slug && !isset($processedSlugs[$slug])) {
             $processedSlugs[$slug] = true;
-            $romoUrl = SITE_BASE . '/romo/' . rawurlencode($slug);
-            if (warm_url($romoUrl)) $success++;
-            $total++;
-            usleep(REQUEST_DELAY);
+            $romoUrls[] = SITE_BASE . '/romo/' . rawurlencode($slug);
         }
     }
 }
+log_msg('  Ditemukan ' . count($romoUrls) . ' profil romo');
+$res = warm_urls_parallel($romoUrls);
+$grandSuccess += $res['success'];
+$grandTotal   += $res['total'];
 
-log_msg('=== Selesai: ' . $success . '/' . $total . ' URL berhasil di-warm ===');
+log_msg('=== Selesai: ' . $grandSuccess . '/' . $grandTotal . ' URL berhasil di-warm ===');
