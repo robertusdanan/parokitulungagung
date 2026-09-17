@@ -926,17 +926,55 @@ document.addEventListener('DOMContentLoaded', function () {
 
   captureInitialFormData();
 
-  // Daftarkan listener input untuk dirty detection
+  // Daftarkan listener input untuk dirty detection.
+  // PENTING: hanya tandai dirty jika nilai BENAR-BENAR berubah dari baseline.
+  // Autofill browser (Chrome mengisi username/email/password saat halaman
+  // dibuka) memicu event input 'insertReplacementText' — perlakukan sebagai
+  // baseline baru, bukan perubahan user (menghilangkan bug "dirty palsu"
+  // saat halaman baru dibuka).
   const watchIds = [
     'fieldUsername','fieldNama','fieldEmail','fieldBio','fieldJabatan',
     'fieldInstagram','fieldFacebook','fieldTwitter','fieldWebsite',
     'fieldOldPw','fieldNewPw','fieldNewPw2'
   ];
+
+  function baselineFor(id) {
+    // Field password tidak pernah masuk baseline (selalu dianggap kosong)
+    if (id.startsWith('fieldOldPw') || id.startsWith('fieldNewPw')) return '';
+    return initialFormData[id] ?? '';
+  }
+
+  function allBackToBaseline() {
+    return watchIds.every(id => {
+      const el = document.getElementById(id);
+      return el ? el.value === baselineFor(id) : true;
+    });
+  }
+
   watchIds.forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
-    el.addEventListener('input', () => markDirty('Ada data profil yang diubah. Simpan perubahan sebelum beralih!'));
-    el.addEventListener('change', () => markDirty('Ada data profil yang diubah. Simpan perubahan sebelum beralih!'));
+
+    el.addEventListener('input', (e) => {
+      // Autofill browser → simpan sebagai baseline, jangan tandai dirty
+      if (e.inputType === 'insertReplacementText') {
+        initialFormData[id] = el.value;
+        return;
+      }
+      if (el.value === baselineFor(id)) {
+        // Nilai kembali ke awal → lepas dirty jika semua field sudah bersih
+        if (allBackToBaseline()) clearDirty();
+        return;
+      }
+      markDirty('Ada data profil yang diubah. Simpan perubahan sebelum beralih!');
+    });
+
+    // Chrome memicu animation 'onautocomplete' saat autofill — sinkronkan baseline
+    el.addEventListener('animationstart', (e) => {
+      if (e.animationName === 'onautocomplete') {
+        initialFormData[id] = el.value;
+      }
+    });
   });
 });
 </script>
