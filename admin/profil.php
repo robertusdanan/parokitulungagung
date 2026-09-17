@@ -405,7 +405,7 @@ adminHeader('Pengaturan Profil', 'profil', $user);
             <input type="text" class="form-control" id="fieldUsername"
                    value="<?= e($user['username']) ?>"
                    placeholder="username_anda"
-                   autocomplete="username">
+                   autocomplete="off">
             <small style="color:var(--text-muted);font-size:11px">Digunakan untuk login. Tidak boleh mengandung spasi. Maks 64 karakter.</small>
           </div>
           <div class="form-group">
@@ -524,7 +524,8 @@ adminHeader('Pengaturan Profil', 'profil', $user);
             <div style="position:relative">
               <input type="password" class="form-control" id="fieldOldPw"
                      placeholder="Masukkan password saat ini"
-                     autocomplete="current-password">
+                     autocomplete="new-password"
+                     readonly onfocus="this.removeAttribute('readonly')">
               <button type="button" onclick="togglePw('fieldOldPw', this)"
                 style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;padding:4px">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -925,6 +926,17 @@ document.addEventListener('DOMContentLoaded', function () {
   <?php endif; ?>
 
   captureInitialFormData();
+
+  // Pastikan kolom password selalu bersih saat halaman dibuka (cegah Chrome autofill)
+  const pwClear = () => {
+    ['fieldOldPw', 'fieldNewPw', 'fieldNewPw2'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.hasAttribute('readonly')) el.value = '';
+    });
+  };
+  pwClear();
+  setTimeout(pwClear, 100);
+  setTimeout(pwClear, 350);
 
   // Daftarkan listener input untuk dirty detection.
   // PENTING: hanya tandai dirty jika nilai BENAR-BENAR berubah dari baseline.
