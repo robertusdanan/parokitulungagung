@@ -315,39 +315,68 @@ adminHeader('Stories', 'stories', $user);
 <!-- Upload Section -->
 <?php if ($canCreate): ?>
 <div class="stories-upload-card" id="uploadSectionCard">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-    <strong style="font-size:14px;color:var(--text-primary);display:flex;align-items:center;gap:6px">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      Upload Foto / Video Stories
-    </strong>
-    <span style="font-size:12px;color:var(--text-muted)">Foto otomatis dioptimasi WebP, video dikompresi otomatis</span>
-  </div>
+  <form id="storyUploadForm" onsubmit="event.preventDefault(); submitStoryUpload();">
+    <input type="file" id="storyFileInput" accept="image/*,video/*" style="display:none" onchange="onFilePicked(this.files[0])">
 
-  <div id="quotaWarningBanner" style="display:none;padding:12px 14px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;font-size:12.5px;color:var(--danger);margin-bottom:14px">
-    ⚠️ <b>Kapasitas Penuh (21/21 Media).</b> Untuk mengunggah media baru, silakan hapus salah satu media yang sudah ada di bawah terlebih dahulu.
-  </div>
-
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px" id="uploadInputsRow">
-    <div>
-      <label class="form-label" style="font-size:12.5px;font-weight:600">Nama File (Opsional)</label>
-      <input type="text" id="storyFileNameInput" class="form-control" placeholder="Contoh: Misa Paskah 2026 (kosongkan untuk default nama asli)">
-      <small style="color:var(--text-muted);font-size:11px">Jika diisi, akan menjadi nama file yang terupload.</small>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <strong style="font-size:15px;color:var(--text-primary);display:flex;align-items:center;gap:8px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Tambah Media Stories Baru
+      </strong>
+      <span style="font-size:12px;color:var(--text-muted)">Foto otomatis dioptimasi WebP, video dikompresi otomatis</span>
     </div>
-    <div>
-      <label class="form-label" style="font-size:12.5px;font-weight:600">Deskripsi (Opsional)</label>
-      <input type="text" id="storyDescInput" class="form-control" placeholder="Deskripsi singkat yang tampil saat media diklik...">
-      <small style="color:var(--text-muted);font-size:11px">Akan muncul di bagian bawah modal card.</small>
-    </div>
-  </div>
 
-  <div class="stories-upload-zone" id="storiesDropzone" onclick="triggerFileInput()">
-    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--text-muted);margin:0 auto 8px">
-      <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/>
-    </svg>
-    <p style="font-size:13.5px;font-weight:600;color:var(--text-primary);margin:0 0 4px">Seret file foto atau video ke sini, atau klik untuk memilih file</p>
-    <p style="font-size:12px;color:var(--text-muted);margin:0">Mendukung Foto (JPG, PNG, WebP) &amp; Video (MP4, MOV, MKV, WebM)</p>
-    <input type="file" id="storyFileInput" accept="image/*,video/*" style="display:none" onchange="handleFileSelected(this.files[0])">
-  </div>
+    <div id="quotaWarningBanner" style="display:none;padding:12px 14px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;font-size:12.5px;color:var(--danger);margin-bottom:14px">
+      ⚠️ <b>Kapasitas Penuh (21/21 Media).</b> Untuk menambahkan media baru, hapus dulu salah satu media yang ada di bawah.
+    </div>
+
+    <!-- Dropzone -->
+    <div class="stories-upload-zone" id="storiesDropzone" onclick="triggerFileInput()">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--text-muted);margin:0 auto 8px">
+        <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/>
+      </svg>
+      <p style="font-size:13.5px;font-weight:600;color:var(--text-primary);margin:0 0 4px">Seret file foto/video ke sini, atau klik untuk memilih file</p>
+      <p style="font-size:12px;color:var(--text-muted);margin:0">Mendukung Foto (JPG, PNG, WebP) &amp; Video (MP4, MOV, MKV, WebM)</p>
+    </div>
+
+    <!-- Preview File Terpilih -->
+    <div id="selectedFilePreviewCard" style="display:none;margin-top:14px;padding:12px 16px;background:var(--bg-card2);border:1px solid var(--border);border-radius:8px;align-items:center;justify-content:space-between;gap:12px">
+      <div style="display:flex;align-items:center;gap:12px;min-width:0;flex:1">
+        <div id="filePreviewThumb" style="width:48px;height:48px;border-radius:6px;background:#000;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--text-muted)"></div>
+        <div style="min-width:0;flex:1">
+          <div id="filePreviewName" style="font-size:13px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
+          <div id="filePreviewSize" style="font-size:11.5px;color:var(--text-muted)"></div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-secondary btn-sm" onclick="clearSelectedFile()" style="color:var(--danger)">Ganti File</button>
+    </div>
+
+    <!-- Input Fields -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px" id="uploadInputsRow">
+      <div>
+        <label class="form-label" style="font-size:12.5px;font-weight:600">Judul / Nama Media <span style="color:var(--danger)">*</span></label>
+        <input type="text" id="storyFileNameInput" class="form-control" placeholder="Misal: Perayaan Paskah 2026" oninput="validateFormState()">
+        <small style="color:var(--text-muted);font-size:11px">Judul media wajib diisi.</small>
+      </div>
+      <div>
+        <label class="form-label" style="font-size:12.5px;font-weight:600">Deskripsi Stories <span style="color:var(--danger)">*</span></label>
+        <input type="text" id="storyDescInput" class="form-control" placeholder="Deskripsi singkat yang tampil saat media dibuka..." oninput="validateFormState()">
+        <small style="color:var(--text-muted);font-size:11px">Deskripsi singkat yang tampil di bagian bawah media.</small>
+      </div>
+    </div>
+
+    <!-- Action Trigger Button -->
+    <div style="display:flex;justify-content:flex-end;margin-top:18px">
+      <button type="submit" id="btnPublishStory" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:8px;padding:10px 22px;font-weight:600">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+          <polyline points="17 21 13 13 7 13 7 21"/>
+          <polyline points="7 3 7 8 15 8"/>
+        </svg>
+        <span>Publikasikan Stories</span>
+      </button>
+    </div>
+  </form>
 
   <!-- Progress Bar Upload -->
   <div id="storyUploadProgress" style="display:none;margin-top:14px;padding:12px 14px;background:var(--bg-card2);border-radius:8px;border:1px solid var(--border)">
@@ -560,12 +589,86 @@ function renderStoriesGrid() {
   });
 }
 
+let selectedStoryFile = null;
+
 function triggerFileInput() {
   if (storiesData.length >= MAX_CAPACITY) {
     toast('Kapasitas Penuh', 'Kapasitas maksimal 21 media telah tercapai. Hapus salah satu media terlebih dahulu.', 'warning');
     return;
   }
   document.getElementById('storyFileInput').click();
+}
+
+function onFilePicked(file) {
+  if (!file) return;
+  if (storiesData.length >= MAX_CAPACITY) {
+    toast('Kapasitas Penuh', 'Kapasitas maksimal 21 media telah tercapai.', 'warning');
+    return;
+  }
+
+  selectedStoryFile = file;
+
+  // Auto fill nama file jika input Judul masih kosong
+  const nameInput = document.getElementById('storyFileNameInput');
+  if (nameInput && !nameInput.value.trim()) {
+    const cleanName = file.name.replace(/\.[^/.]+$/, '').replace(/[_\-]/g, ' ');
+    nameInput.value = cleanName;
+  }
+
+  // Tampilkan preview card file terpilih
+  const previewCard = document.getElementById('selectedFilePreviewCard');
+  const nameEl = document.getElementById('filePreviewName');
+  const sizeEl = document.getElementById('filePreviewSize');
+  const thumbEl = document.getElementById('filePreviewThumb');
+
+  if (previewCard && nameEl && sizeEl && thumbEl) {
+    nameEl.textContent = file.name;
+    sizeEl.textContent = formatBytes(file.size) + ' • ' + (file.type.startsWith('video/') ? '🎬 Video' : '📷 Foto');
+
+    thumbEl.innerHTML = '';
+    if (file.type.startsWith('image/')) {
+      const img = document.createElement('img');
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'cover';
+      img.src = URL.createObjectURL(file);
+      thumbEl.appendChild(img);
+    } else {
+      thumbEl.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>';
+    }
+    previewCard.style.display = 'flex';
+  }
+
+  validateFormState();
+}
+
+function clearSelectedFile() {
+  selectedStoryFile = null;
+  const fileInput = document.getElementById('storyFileInput');
+  if (fileInput) fileInput.value = '';
+
+  const previewCard = document.getElementById('selectedFilePreviewCard');
+  if (previewCard) previewCard.style.display = 'none';
+
+  validateFormState();
+}
+
+function validateFormState() {
+  const title = document.getElementById('storyFileNameInput')?.value.trim() || '';
+  const desc  = document.getElementById('storyDescInput')?.value.trim() || '';
+  const btn   = document.getElementById('btnPublishStory');
+
+  if (btn) {
+    const isValid = selectedStoryFile !== null && title !== '' && desc !== '';
+    btn.style.opacity = isValid ? '1' : '0.65';
+  }
+}
+
+function formatBytes(bytes) {
+  if (!bytes) return '0 B';
+  const k = 1024, sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
 }
 
 const dz = document.getElementById('storiesDropzone');
@@ -580,33 +683,55 @@ if (dz) {
       return;
     }
     const file = e.dataTransfer.files[0];
-    if (file) handleFileSelected(file);
+    if (file) onFilePicked(file);
   });
 }
 
-async function handleFileSelected(file) {
-  if (!file) return;
+async function submitStoryUpload() {
   if (storiesData.length >= MAX_CAPACITY) {
     toast('Kapasitas Penuh', 'Kapasitas maksimal 21 media telah tercapai.', 'warning');
     return;
   }
 
+  if (!selectedStoryFile) {
+    toast('File Belum Dipilih', 'Silakan pilih file foto atau video Stories terlebih dahulu.', 'warning');
+    return;
+  }
+
+  const customName = document.getElementById('storyFileNameInput')?.value.trim() || '';
+  const desc       = document.getElementById('storyDescInput')?.value.trim() || '';
+
+  if (!customName) {
+    toast('Judul Wajib Diisi', 'Silakan isi Judul / Nama Media terlebih dahulu.', 'warning');
+    document.getElementById('storyFileNameInput')?.focus();
+    return;
+  }
+
+  if (!desc) {
+    toast('Deskripsi Wajib Diisi', 'Silakan isi Deskripsi Stories terlebih dahulu.', 'warning');
+    document.getElementById('storyDescInput')?.focus();
+    return;
+  }
+
+  const btn     = document.getElementById('btnPublishStory');
   const prog    = document.getElementById('storyUploadProgress');
   const bar     = document.getElementById('storyUploadBarFill');
   const percent = document.getElementById('storyUploadPercent');
   const status  = document.getElementById('storyUploadStatusLabel');
 
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span>Mempublikasikan...</span>';
+  }
+
   prog.style.display  = 'block';
   bar.style.width     = '0%';
   percent.textContent = '0%';
-  status.textContent  = `Mengunggah & mengoptimasi ${file.name}...`;
-
-  const customName = document.getElementById('storyFileNameInput')?.value || '';
-  const desc       = document.getElementById('storyDescInput')?.value || '';
+  status.textContent  = `Mengunggah & mengoptimasi ${selectedStoryFile.name}...`;
 
   const formData = new FormData();
   formData.append('action', 'upload');
-  formData.append('file', file);
+  formData.append('file', selectedStoryFile);
   formData.append('file_name', customName);
   formData.append('description', desc);
 
@@ -615,7 +740,7 @@ async function handleFileSelected(file) {
 
   xhr.upload.onprogress = (e) => {
     if (e.lengthComputable) {
-      const p = Math.round((e.loaded / e.total) * 85); // 85% untuk upload, sisa untuk proses cloud
+      const p = Math.round((e.loaded / e.total) * 85);
       bar.style.width = p + '%';
       percent.textContent = p + '%';
     }
@@ -627,10 +752,10 @@ async function handleFileSelected(file) {
     try {
       const res = JSON.parse(xhr.responseText);
       if (res.success) {
-        toast('Sukses', 'Media berhasil diunggah dan disimpan!', 'success');
+        toast('Sukses', 'Stories berhasil dipublikasikan!', 'success');
+        clearSelectedFile();
         if (document.getElementById('storyFileNameInput')) document.getElementById('storyFileNameInput').value = '';
         if (document.getElementById('storyDescInput')) document.getElementById('storyDescInput').value = '';
-        document.getElementById('storyFileInput').value = '';
         loadStories();
       } else {
         toast('Gagal', res.error || 'Gagal mengunggah media', 'error');
@@ -638,6 +763,14 @@ async function handleFileSelected(file) {
     } catch (e) {
       toast('Error', 'Gagal memproses response server', 'error');
     } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+          <polyline points="17 21 13 13 7 13 7 21"/>
+          <polyline points="7 3 7 8 15 8"/>
+        </svg><span>Publikasikan Stories</span>`;
+      }
       setTimeout(() => { prog.style.display = 'none'; }, 1200);
     }
   };
@@ -645,6 +778,10 @@ async function handleFileSelected(file) {
   xhr.onerror = () => {
     toast('Error', 'Koneksi jaringan terputus saat upload', 'error');
     prog.style.display = 'none';
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = `<span>Publikasikan Stories</span>`;
+    }
   };
 
   xhr.send(formData);

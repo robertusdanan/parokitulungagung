@@ -60,12 +60,18 @@ final class StoriesManager
             throw new RuntimeException('Batas maksimal ' . self::MAX_STORIES . ' media telah tercapai. Hapus media lain terlebih dahulu.');
         }
 
+        // Geser order item yang sudah ada agar bertambah +1 (upload terbaru berada di urutan pertama/paling atas)
+        foreach ($items as &$it) {
+            $it['order'] = ($it['order'] ?? 0) + 1;
+        }
+        unset($it);
+
         $id = !empty($storyData['id']) ? (string)$storyData['id'] : 'st_' . bin2hex(random_bytes(6));
         $storyData['id']         = $id;
-        $storyData['order']      = count($items); // taruh di urutan paling akhir
+        $storyData['order']      = 0; // urutan 0 (paling atas)
         $storyData['created_at'] = $storyData['created_at'] ?? date('c');
 
-        $items[] = $storyData;
+        array_unshift($items, $storyData);
         self::saveAll($items);
 
         return $storyData;

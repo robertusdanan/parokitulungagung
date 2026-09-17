@@ -60,6 +60,14 @@ if ($method === 'POST') {
         $description  = trim($_POST['description'] ?? '');
         $fileSize     = (int)($_FILES['file']['size'] ?? filesize($tmpPath) ?: 0);
 
+        if ($customName === '') {
+            apiJson(['success' => false, 'error' => 'Judul / Nama Media wajib diisi.'], 400);
+        }
+
+        if ($description === '') {
+            apiJson(['success' => false, 'error' => 'Deskripsi Stories wajib diisi.'], 400);
+        }
+
         // Tentukan nama dasar file
         $baseRawName = $customName !== '' ? $customName : pathinfo($origName, PATHINFO_FILENAME);
         // Sanitasi nama file agar aman di URL & S3
