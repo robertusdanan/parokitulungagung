@@ -52,15 +52,20 @@ final class StoriesManager
 
     /**
      * Tambah media baru ke stories (maks 21).
+     * Jika slot penuh (21/21), media terlama di urutan belakang akan tergeser dari daftar aktif,
+     * namun file medianya tetap aman tersimpan di Cloudflare R2.
      */
     public static function addStory(array $storyData): array
     {
         $items = self::getStories();
-        if (count($items) >= self::MAX_STORIES) {
-            throw new RuntimeException('Batas maksimal ' . self::MAX_STORIES . ' media telah tercapai. Hapus media lain terlebih dahulu.');
+
+        // Jika sudah mencapai kapasitas maksimal (21),
+        // keluarkan item terlama (paling belakang) dari manifest JSON tanpa menghapus file R2.
+        while (count($items) >= self::MAX_STORIES) {
+            array_pop($items);
         }
 
-        // Geser order item yang sudah ada agar bertambah +1 (upload terbaru berada di urutan pertama/paling atas)
+        // Geser order item yang ada (+1) agar upload terbaru berada di urutan pertama (order = 0)
         foreach ($items as &$it) {
             $it['order'] = ($it['order'] ?? 0) + 1;
         }
@@ -72,6 +77,16 @@ final class StoriesManager
         $storyData['created_at'] = $storyData['created_at'] ?? date('c');
 
         array_unshift($items, $storyData);
+
+        // Pastikan jumlah item tidak melebihi batas maksimal (21)
+        $items = array_slice($items, 0, self::MAX_STORIES);
+
+        // Re-index order
+        foreach ($items as $k => &$it) {
+            $it['order'] = $k;
+        }
+        unset($it);
+
         self::saveAll($items);
 
         return $storyData;

@@ -326,8 +326,8 @@ adminHeader('Stories', 'stories', $user);
       <span style="font-size:12px;color:var(--text-muted)">Foto otomatis dioptimasi WebP, video dikompresi otomatis</span>
     </div>
 
-    <div id="quotaWarningBanner" style="display:none;padding:12px 14px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;font-size:12.5px;color:var(--danger);margin-bottom:14px">
-      ⚠️ <b>Kapasitas Penuh (21/21 Media).</b> Untuk menambahkan media baru, hapus dulu salah satu media yang ada di bawah.
+    <div id="quotaInfoBanner" style="display:none;padding:12px 14px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.25);border-radius:8px;font-size:12.5px;color:var(--text-primary);margin-bottom:14px">
+      ℹ️ <b>Kapasitas Maksimal (21/21 Media Active).</b> Mempublikasikan Stories baru akan menggeser media terlama di urutan paling belakang secara otomatis. <i>File media terlama tetap tersimpan di Cloudflare R2 (/stories).</i>
     </div>
 
     <!-- Dropzone -->
@@ -501,8 +501,8 @@ function updateCapacityUI() {
 
   document.getElementById('capRatio').textContent = ratio;
   document.getElementById('capText').textContent = count >= MAX_CAPACITY
-    ? 'Kapasitas penuh (21 media). Hapus media untuk menambah baru.'
-    : `Tersedia sisa ruang untuk ${MAX_CAPACITY - count} media lagi.`;
+    ? 'Kapasitas penuh (21 media aktif). Publikasi baru akan menggeser media terlama di urutan belakang.'
+    : `Tersedia sisa slot untuk ${MAX_CAPACITY - count} media lagi.`;
 
   const fill = document.getElementById('capBarFill');
   fill.style.width = pct + '%';
@@ -513,20 +513,14 @@ function updateCapacityUI() {
   }
 
   const dropzone = document.getElementById('storiesDropzone');
-  const banner   = document.getElementById('quotaWarningBanner');
+  const banner   = document.getElementById('quotaInfoBanner');
   const inputsRow= document.getElementById('uploadInputsRow');
 
-  if (dropzone && banner) {
-    if (count >= MAX_CAPACITY) {
-      dropzone.classList.add('disabled');
-      banner.style.display = 'block';
-      if (inputsRow) inputsRow.style.opacity = '0.5';
-    } else {
-      dropzone.classList.remove('disabled');
-      banner.style.display = 'none';
-      if (inputsRow) inputsRow.style.opacity = '1';
-    }
+  if (banner) {
+    banner.style.display = count >= MAX_CAPACITY ? 'block' : 'none';
   }
+  if (dropzone) dropzone.classList.remove('disabled');
+  if (inputsRow) inputsRow.style.opacity = '1';
 }
 
 function renderStoriesGrid() {
@@ -592,19 +586,11 @@ function renderStoriesGrid() {
 let selectedStoryFile = null;
 
 function triggerFileInput() {
-  if (storiesData.length >= MAX_CAPACITY) {
-    toast('Kapasitas Penuh', 'Kapasitas maksimal 21 media telah tercapai. Hapus salah satu media terlebih dahulu.', 'warning');
-    return;
-  }
   document.getElementById('storyFileInput').click();
 }
 
 function onFilePicked(file) {
   if (!file) return;
-  if (storiesData.length >= MAX_CAPACITY) {
-    toast('Kapasitas Penuh', 'Kapasitas maksimal 21 media telah tercapai.', 'warning');
-    return;
-  }
 
   selectedStoryFile = file;
 
@@ -678,21 +664,12 @@ if (dz) {
   dz.addEventListener('drop', (e) => {
     e.preventDefault();
     dz.classList.remove('dragover');
-    if (storiesData.length >= MAX_CAPACITY) {
-      toast('Kapasitas Penuh', 'Kapasitas maksimal 21 media telah tercapai.', 'warning');
-      return;
-    }
     const file = e.dataTransfer.files[0];
     if (file) onFilePicked(file);
   });
 }
 
 async function submitStoryUpload() {
-  if (storiesData.length >= MAX_CAPACITY) {
-    toast('Kapasitas Penuh', 'Kapasitas maksimal 21 media telah tercapai.', 'warning');
-    return;
-  }
-
   if (!selectedStoryFile) {
     toast('File Belum Dipilih', 'Silakan pilih file foto atau video Stories terlebih dahulu.', 'warning');
     return;

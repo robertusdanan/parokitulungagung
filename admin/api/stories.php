@@ -41,14 +41,6 @@ if ($method === 'POST') {
     if ($action === 'upload') {
         apiRequirePageAccess('stories', 'create');
 
-        $currentItems = StoriesManager::getStories();
-        if (count($currentItems) >= StoriesManager::MAX_STORIES) {
-            apiJson([
-                'success' => false,
-                'error'   => 'Batas maksimal ' . StoriesManager::MAX_STORIES . ' media telah tercapai. Hapus salah satu media terlebih dahulu.'
-            ], 400);
-        }
-
         if (empty($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
             $errCode = $_FILES['file']['error'] ?? -1;
             apiJson(['success' => false, 'error' => 'File tidak berhasil diunggah (error code: ' . $errCode . ')'], 400);
