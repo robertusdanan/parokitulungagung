@@ -31,6 +31,107 @@ if ($method === 'GET' && ($action === 'list' || $action === '')) {
     ]);
 }
 
+if ($method === 'GET' && $action === 'archive') {
+    apiRequirePageAccess('stories', 'list');
+
+    $activeItems = StoriesManager::getStories();
+    $activeKeys = [];
+    foreach ($activeItems as $item) {
+        if (!empty($item['r2_key'])) {
+            $activeKeys[$item['r2_key']] = true;
+        }
+        if (!empty($item['poster_key'])) {
+            $activeKeys[$item['poster_key']] = true;
+        }
+    }
+
+    $r2 = function_exists('getR2WriteClient') ? getR2WriteClient() : null;
+    if (!$r2) {
+        apiJson(['success' => false, 'error' => 'Klien Cloudflare R2 tidak tersedia.'], 500);
+    }
+
+    try {
+        $allObjects = $r2->listAllObjects(StoriesManager::R2_PREFIX);
+    } catch (Throwable $e) {
+        apiJson(['success' => false, 'error' => 'Gagal mengambil daftar file dari Cloudflare R2: ' . $e->getMessage()], 500);
+    }
+
+    $cdnUrl = defined('R2_CDN_URL') ? rtrim(R2_CDN_URL, '/') : 'https://img.parokitulungagung.org';
+
+    // Buat map poster untuk video jika ada (.webp pendamping .mp4)
+    $posterMap = [];
+    foreach ($allObjects as $obj) {
+        $key = $obj['key'] ?? '';
+        if (preg_match('/\.webp$/i', $key)) {
+            $baseKey = preg_replace('/\.webp$/i', '', $key);
+            $posterMap[$baseKey] = $cdnUrl . '/' . $key;
+        }
+    }
+
+    $archivedItems = [];
+    foreach ($allObjects as $obj) {
+        $key = $obj['key'] ?? '';
+        if (empty($key) || $key === StoriesManager::META_KEY) {
+            continue; // Skip metadata.json
+        }
+
+        // Skip jika merupakan key yang sedang aktif di stories.json
+        if (isset($activeKeys[$key])) {
+            continue;
+        }
+
+        $ext = strtolower(pathinfo($key, PATHINFO_EXTENSION));
+        $isPosterForVideo = false;
+        if ($ext === 'webp') {
+            $baseKey = preg_replace('/\.webp$/i', '', $key);
+            if (isset($activeKeys[$baseKey . '.mp4']) || isset($activeKeys[$baseKey . '.mov'])) {
+                continue; // Ini poster dari video aktif
+            }
+            // Cek apakah ada file video terarsip dengan baseKey sama
+            foreach ($allObjects as $vObj) {
+                $vKey = $vObj['key'] ?? '';
+                if ($vKey !== $key && preg_match('/\.(mp4|mov|mkv|webm)$/i', $vKey)) {
+                    if (preg_replace('/\.(mp4|mov|mkv|webm)$/i', '', $vKey) === $baseKey) {
+                        $isPosterForVideo = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if ($isPosterForVideo) {
+            continue; // Skip poster karena sudah menjadi thumbnail video
+        }
+
+        $isVideo = in_array($ext, ['mp4', 'mov', 'mkv', 'webm'], true);
+        $cleanName = pathinfo($key, PATHINFO_FILENAME);
+        $cleanNameFormatted = preg_replace('/_[a-f0-9]{5,10}$/i', '', $cleanName);
+        $cleanNameFormatted = str_replace('_', ' ', $cleanNameFormatted);
+
+        $baseKeyNoExt = preg_replace('/\.[a-zA-Z0-9]+$/', '', $key);
+        $posterUrl = $isVideo && isset($posterMap[$baseKeyNoExt]) ? $posterMap[$baseKeyNoExt] : null;
+
+        $archivedItems[] = [
+            'key'           => $key,
+            'file_name'     => ucfirst($cleanNameFormatted),
+            'url'           => $cdnUrl . '/' . $key,
+            'poster_url'    => $posterUrl,
+            'type'          => $isVideo ? 'video' : 'image',
+            'size'          => $obj['size'] ?? 0,
+            'last_modified' => $obj['lastModified'] ?? date('c'),
+        ];
+    }
+
+    usort($archivedItems, function ($a, $b) {
+        return strcmp($b['last_modified'], $a['last_modified']);
+    });
+
+    apiJson([
+        'success' => true,
+        'items'   => $archivedItems,
+        'total'   => count($archivedItems)
+    ]);
+}
+
 // Untuk POST actions
 if ($method === 'POST') {
     if (empty($action)) {
@@ -218,6 +319,76 @@ if ($method === 'POST') {
 
         $ok = StoriesManager::reorderStories($ids);
         apiJson(['success' => $ok]);
+    }
+
+    if ($action === 'restore_archive') {
+        apiRequirePageAccess('stories', 'create');
+        $body = jsonBody();
+        $key  = trim((string)($body['key'] ?? ''));
+        $customName = trim((string)($body['file_name'] ?? ''));
+        $desc = trim((string)($body['description'] ?? ''));
+
+        if (empty($key)) {
+            apiJson(['success' => false, 'error' => 'Key file media wajib diisi.'], 400);
+        }
+
+        $cdnUrl = defined('R2_CDN_URL') ? rtrim(R2_CDN_URL, '/') : 'https://img.parokitulungagung.org';
+        $ext    = strtolower(pathinfo($key, PATHINFO_EXTENSION));
+        $isVideo = in_array($ext, ['mp4', 'mov', 'mkv', 'webm'], true);
+
+        $cleanName = $customName !== '' ? $customName : ucfirst(str_replace('_', ' ', preg_replace('/_[a-f0-9]{5,10}$/i', '', pathinfo($key, PATHINFO_FILENAME))));
+        $desc = $desc !== '' ? $desc : 'Dipublikasikan kembali dari Arsip Media R2.';
+
+        $posterKey = null;
+        $posterUrl = null;
+        if ($isVideo) {
+            $baseKeyNoExt = preg_replace('/\.[a-zA-Z0-9]+$/', '', $key);
+            $possiblePoster = $baseKeyNoExt . '.webp';
+            $r2 = function_exists('getR2WriteClient') ? getR2WriteClient() : null;
+            if ($r2 && $r2->headObjectSize($possiblePoster) !== null) {
+                $posterKey = $possiblePoster;
+                $posterUrl = $cdnUrl . '/' . $possiblePoster;
+            }
+        }
+
+        $storyData = [
+            'type'        => $isVideo ? 'video' : 'image',
+            'file_name'   => $cleanName,
+            'r2_key'      => $key,
+            'url'         => $cdnUrl . '/' . $key,
+            'poster_key'  => $posterKey,
+            'poster_url'  => $posterUrl,
+            'description' => $desc,
+            'video_status'=> $isVideo ? 'ready' : null,
+        ];
+
+        $saved = StoriesManager::addStory($storyData);
+        apiJson(['success' => true, 'item' => $saved]);
+    }
+
+    if ($action === 'delete_archive') {
+        apiRequirePageAccess('stories', 'delete');
+        $body = jsonBody();
+        $key  = trim((string)($body['key'] ?? ''));
+
+        if (empty($key)) {
+            apiJson(['success' => false, 'error' => 'Key file media wajib diisi.'], 400);
+        }
+
+        $r2 = function_exists('getR2WriteClient') ? getR2WriteClient() : null;
+        if (!$r2) {
+            apiJson(['success' => false, 'error' => 'Klien Cloudflare R2 tidak tersedia.'], 500);
+        }
+
+        $deleted = $r2->deleteObject($key);
+
+        $ext = strtolower(pathinfo($key, PATHINFO_EXTENSION));
+        if (in_array($ext, ['mp4', 'mov', 'mkv', 'webm'], true)) {
+            $posterKey = preg_replace('/\.[a-zA-Z0-9]+$/', '.webp', $key);
+            $r2->deleteObject($posterKey);
+        }
+
+        apiJson(['success' => $deleted]);
     }
 }
 

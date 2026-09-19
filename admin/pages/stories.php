@@ -89,6 +89,259 @@ adminHeader('Stories', 'stories', $user);
   background: linear-gradient(90deg, #ef4444, #dc2626);
 }
 
+/* ── Tombol Arsip Media ── */
+.btn-archive {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: rgba(201, 162, 58, 0.12);
+  border: 1px solid rgba(201, 162, 58, 0.45);
+  color: var(--accent);
+  font-size: 13.5px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all .2s ease;
+  white-space: nowrap;
+}
+.btn-archive:hover {
+  background: rgba(201, 162, 58, 0.22);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+}
+.btn-archive .archive-count {
+  background: var(--accent);
+  color: #14100a;
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Modal Arsip Media ── */
+.archive-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 8, 16, 0.72);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: archiveModalFade .18s ease;
+}
+@keyframes archiveModalFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.archive-modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 860px;
+  max-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+  animation: archiveModalSlide .22s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+@keyframes archiveModalSlide {
+  from { transform: translateY(18px) scale(0.985); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+.archive-modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.archive-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.archive-modal-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: rgba(201, 162, 58, 0.14);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.archive-modal-header h2 {
+  margin: 0 0 3px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.archive-modal-header p {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.archive-modal-close {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-card2);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .15s ease;
+  flex-shrink: 0;
+}
+.archive-modal-close:hover {
+  color: var(--danger);
+  border-color: rgba(239,68,68,0.4);
+}
+.archive-modal-body {
+  padding: 20px 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+.archive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 14px;
+}
+.archive-card {
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all .2s ease;
+}
+.archive-card:hover {
+  border-color: rgba(201, 162, 58, 0.4);
+  transform: translateY(-2px);
+}
+.archive-thumb {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #111;
+  position: relative;
+  overflow: hidden;
+}
+.archive-thumb img, .archive-thumb video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.archive-thumb .story-badge {
+  top: 6px;
+  left: 6px;
+  font-size: 10px;
+}
+.archive-card-body {
+  padding: 10px 12px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.archive-card-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.archive-card-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.archive-card-actions {
+  margin-top: auto;
+  display: flex;
+  gap: 6px;
+}
+.archive-card-actions button {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 7px 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all .15s ease;
+  background: var(--bg-card);
+}
+.archive-act-restore {
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.35);
+}
+.archive-act-restore:hover {
+  background: rgba(52, 211, 153, 0.12);
+}
+.archive-act-delete {
+  color: var(--danger);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+.archive-act-delete:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+.archive-empty {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--text-muted);
+}
+.archive-empty svg {
+  margin: 0 auto 12px;
+  opacity: 0.5;
+}
+.archive-empty strong {
+  display: block;
+  font-size: 14px;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.archive-empty span {
+  font-size: 12.5px;
+}
+.archive-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 48px 20px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+.archive-spinner {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid rgba(201, 162, 58, 0.2);
+  border-top-color: var(--accent);
+  animation: storyAdminSpin .9s linear infinite;
+}
+
 /* Upload card */
 .stories-upload-card {
   background: var(--bg-card);
@@ -283,32 +536,18 @@ adminHeader('Stories', 'stories', $user);
 <div class="page-header">
   <div class="page-header-left">
     <h1>Stories Paroki</h1>
-    <p>Kelola konten Stories visual (foto &amp; video) yang ditampilkan secara dinamis di website (Maks. 21 media).</p>
+    <p>Kelola konten Stories visual (foto &amp; video) yang ditampilkan secara dinamis di website (Maks. 21 media aktif, rotasi otomatis).</p>
   </div>
-</div>
-
-<!-- Kapasitas & Status -->
-<div class="stories-capacity-card">
-  <div class="stories-cap-info">
-    <div class="stories-cap-icon">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/>
+  <div class="page-header-right">
+    <button type="button" class="btn-archive" onclick="openArchiveModal()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="21 8 21 21 3 21 3 8"></polyline>
+        <rect x="1" y="3" width="22" height="5"></rect>
+        <line x1="10" y1="12" x2="14" y2="12"></line>
       </svg>
-    </div>
-    <div>
-      <div class="stories-cap-title">Kapasitas Stories</div>
-      <div class="stories-cap-sub" id="capText">Memuat data stories...</div>
-    </div>
-  </div>
-
-  <div class="stories-cap-meter">
-    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-secondary)">
-      <span>Terisi</span>
-      <strong id="capRatio">0 / 21</strong>
-    </div>
-    <div class="stories-bar-wrap">
-      <div class="stories-bar-fill" id="capBarFill"></div>
-    </div>
+      <span>Arsip Media Stories</span>
+      <span class="archive-count" id="headerArchiveCount">...</span>
+    </button>
   </div>
 </div>
 
@@ -461,6 +700,73 @@ adminHeader('Stories', 'stories', $user);
   </div>
 </div>
 
+<!-- Modal Arsip Media Stories (Elegan & Responsif) -->
+<div class="archive-modal-overlay" id="archiveModal" style="display:none" onclick="if(event.target===this) closeArchiveModal()">
+  <div class="archive-modal">
+    <div class="archive-modal-header">
+      <div class="archive-modal-title">
+        <div class="archive-modal-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="21 8 21 21 3 21 3 8"></polyline>
+            <rect x="1" y="3" width="22" height="5"></rect>
+            <line x1="10" y1="12" x2="14" y2="12"></line>
+          </svg>
+        </div>
+        <div>
+          <h2>Arsip Media Stories (Cloudflare R2)</h2>
+          <p>Koleksi foto &amp; video di folder <code>/stories</code> R2 Storage yang tidak aktif di 21 Stories utama.</p>
+        </div>
+      </div>
+      <button type="button" class="archive-modal-close" onclick="closeArchiveModal()" title="Tutup">&times;</button>
+    </div>
+
+    <!-- Filter & Toolbar -->
+    <div style="padding:12px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--bg-card2)">
+      <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px">
+        <input type="text" id="archiveSearchInput" class="form-control" placeholder="Cari nama file media di R2..." oninput="filterArchiveGrid()" style="font-size:12.5px;padding:7px 12px">
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <select id="archiveTypeFilter" class="form-control" onchange="filterArchiveGrid()" style="font-size:12.5px;padding:7px 12px;width:auto">
+          <option value="all">Semua Tipe</option>
+          <option value="image">📷 Foto Saja</option>
+          <option value="video">🎬 Video Saja</option>
+        </select>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="loadArchiveMedia()" style="display:flex;align-items:center;gap:6px;font-size:12px;padding:7px 12px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          <span>Refresh</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Content Body -->
+    <div class="archive-modal-body">
+      <!-- Loading State -->
+      <div id="archiveLoading" class="archive-loading">
+        <div class="archive-spinner"></div>
+        <span>Memindai file media di Cloudflare R2...</span>
+      </div>
+
+      <!-- Empty State -->
+      <div id="archiveEmpty" class="archive-empty" style="display:none">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+        <strong>Arsip Media Kosong</strong>
+        <span>Semua file media Stories saat ini sedang aktif atau belum ada media yang tergeser ke arsip.</span>
+      </div>
+
+      <!-- Grid Arsip -->
+      <div id="archiveGrid" class="archive-grid"></div>
+    </div>
+
+    <!-- Footer -->
+    <div style="padding:14px 24px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg-card2)">
+      <div style="font-size:12px;color:var(--text-muted)">
+        Total <strong id="archiveTotalCount" style="color:var(--text-primary)">0</strong> file media tersimpan di R2.
+      </div>
+      <button type="button" class="btn btn-secondary btn-sm" onclick="closeArchiveModal()">Tutup</button>
+    </div>
+  </div>
+</div>
+
 <script>
 let storiesData = [];
 const MAX_CAPACITY = 21;
@@ -495,32 +801,7 @@ async function loadStories() {
 }
 
 function updateCapacityUI() {
-  const count = storiesData.length;
-  const ratio = `${count} / ${MAX_CAPACITY}`;
-  const pct   = Math.min(100, Math.round((count / MAX_CAPACITY) * 100));
-
-  document.getElementById('capRatio').textContent = ratio;
-  document.getElementById('capText').textContent = count >= MAX_CAPACITY
-    ? 'Kapasitas penuh (21 media aktif). Publikasi baru akan menggeser media terlama di urutan belakang.'
-    : `Tersedia sisa slot untuk ${MAX_CAPACITY - count} media lagi.`;
-
-  const fill = document.getElementById('capBarFill');
-  fill.style.width = pct + '%';
-  if (count >= MAX_CAPACITY) {
-    fill.classList.add('full');
-  } else {
-    fill.classList.remove('full');
-  }
-
-  const dropzone = document.getElementById('storiesDropzone');
-  const banner   = document.getElementById('quotaInfoBanner');
-  const inputsRow= document.getElementById('uploadInputsRow');
-
-  if (banner) {
-    banner.style.display = count >= MAX_CAPACITY ? 'block' : 'none';
-  }
-  if (dropzone) dropzone.classList.remove('disabled');
-  if (inputsRow) inputsRow.style.opacity = '1';
+  updateArchiveBadge();
 }
 
 function renderStoriesGrid() {
@@ -878,6 +1159,179 @@ async function moveOrder(fromIdx, dir) {
     });
   } catch (e) {
     console.error('Gagal sync order:', e);
+  }
+}
+
+let archiveData = [];
+
+async function updateArchiveBadge() {
+  try {
+    const res = await fetch('/admin/api/stories.php?action=archive');
+    const d = await res.json();
+    if (d.success) {
+      archiveData = d.items || [];
+      const badge = document.getElementById('headerArchiveCount');
+      if (badge) badge.textContent = archiveData.length;
+    }
+  } catch (e) {
+    console.error('Gagal memuat badge arsip:', e);
+  }
+}
+
+function openArchiveModal() {
+  const modal = document.getElementById('archiveModal');
+  if (modal) {
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    loadArchiveMedia();
+  }
+}
+
+function closeArchiveModal() {
+  const modal = document.getElementById('archiveModal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+}
+
+async function loadArchiveMedia() {
+  const loading = document.getElementById('archiveLoading');
+  const empty   = document.getElementById('archiveEmpty');
+  const grid    = document.getElementById('archiveGrid');
+
+  if (loading) loading.style.display = 'flex';
+  if (empty)   empty.style.display   = 'none';
+  if (grid)    grid.style.display    = 'none';
+
+  try {
+    const res = await fetch('/admin/api/stories.php?action=archive');
+    const d   = await res.json();
+    if (d.success) {
+      archiveData = d.items || [];
+      const badge = document.getElementById('headerArchiveCount');
+      if (badge) badge.textContent = archiveData.length;
+      renderArchiveGrid();
+    } else {
+      toast('Gagal', d.error || 'Gagal memuat arsip media', 'error');
+    }
+  } catch (err) {
+    toast('Error', 'Gagal terhubung ke server', 'error');
+  } finally {
+    if (loading) loading.style.display = 'none';
+  }
+}
+
+function filterArchiveGrid() {
+  renderArchiveGrid();
+}
+
+function renderArchiveGrid() {
+  const grid  = document.getElementById('archiveGrid');
+  const empty = document.getElementById('archiveEmpty');
+  const totalCountEl = document.getElementById('archiveTotalCount');
+
+  const searchVal = (document.getElementById('archiveSearchInput')?.value || '').toLowerCase().trim();
+  const typeVal   = document.getElementById('archiveTypeFilter')?.value || 'all';
+
+  const filtered = archiveData.filter(item => {
+    const matchesSearch = !searchVal || item.file_name.toLowerCase().includes(searchVal) || item.key.toLowerCase().includes(searchVal);
+    const matchesType   = typeVal === 'all' || item.type === typeVal;
+    return matchesSearch && matchesType;
+  });
+
+  if (totalCountEl) totalCountEl.textContent = archiveData.length;
+
+  if (!filtered.length) {
+    grid.style.display  = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+
+  empty.style.display = 'none';
+  grid.style.display  = 'grid';
+  grid.innerHTML      = '';
+
+  filtered.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'archive-card';
+
+    const isVideo = item.type === 'video';
+    const thumbHtml = isVideo
+      ? (item.poster_url ? `<img src="${escHtml(item.poster_url)}" alt="${escHtml(item.file_name)}" loading="lazy">` : `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted)"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></div>`)
+      : `<img src="${escHtml(item.url)}" alt="${escHtml(item.file_name)}" loading="lazy">`;
+
+    const formattedSize = formatBytes(item.size);
+    const dateStr = item.last_modified ? new Date(item.last_modified).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' }) : '';
+
+    card.innerHTML = `
+      <div class="archive-thumb">
+        ${thumbHtml}
+        <div class="story-badge">
+          ${isVideo ? '🎬 Video' : '📷 Foto'}
+        </div>
+      </div>
+      <div class="archive-card-body">
+        <div class="archive-card-name" title="${escHtml(item.file_name)}">${escHtml(item.file_name)}</div>
+        <div class="archive-card-meta">${formattedSize} • ${dateStr}</div>
+        <div class="archive-card-actions">
+          <button type="button" class="archive-act-restore" onclick="restoreArchiveItem('${escHtml(item.key)}', '${escHtml(item.file_name)}')" title="Publikasikan Kembali ke Stories Utama">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <span>Restore</span>
+          </button>
+          <button type="button" class="archive-act-delete" onclick="deleteArchiveItem('${escHtml(item.key)}', '${escHtml(item.file_name)}')" title="Hapus Permanen dari R2">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            <span>Hapus</span>
+          </button>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+async function restoreArchiveItem(key, name) {
+  const ok = confirm(`🚀 Publikasikan Kembali Stories?\n\nMedia "${name}" akan dimasukkan kembali ke daftar aktif Stories utama (posisi pertama).`);
+  if (!ok) return;
+
+  try {
+    const res = await fetch('/admin/api/stories.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'restore_archive', key: key, file_name: name })
+    });
+    const d = await res.json();
+    if (d.success) {
+      toast('Berhasil Restorasi', `Media "${name}" dipublikasikan kembali ke Stories utama.`, 'success');
+      loadArchiveMedia();
+      loadStories();
+    } else {
+      toast('Gagal Restorasi', d.error || 'Gagal mempublikasikan media', 'error');
+    }
+  } catch (e) {
+    toast('Error', 'Gagal terhubung ke server', 'error');
+  }
+}
+
+async function deleteArchiveItem(key, name) {
+  const ok = confirm(`⚠️ Hapus Permanen dari Cloudflare R2?\n\nFile media "${name}" akan dihapus PERMANEN dari Cloudflare R2 Storage (/stories). Tindakan ini tidak dapat dibatalkan!`);
+  if (!ok) return;
+
+  try {
+    const res = await fetch('/admin/api/stories.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'delete_archive', key: key })
+    });
+    const d = await res.json();
+    if (d.success) {
+      toast('Terhapus', `File media "${name}" terhapus permanen dari Cloudflare R2.`, 'success');
+      loadArchiveMedia();
+    } else {
+      toast('Gagal', d.error || 'Gagal menghapus file dari R2', 'error');
+    }
+  } catch (e) {
+    toast('Error', 'Gagal terhubung ke server', 'error');
   }
 }
 
