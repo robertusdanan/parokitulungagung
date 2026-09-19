@@ -566,7 +566,7 @@ adminHeader('Stories', 'stories', $user);
     </div>
 
     <div id="quotaInfoBanner" style="display:none;padding:12px 14px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.25);border-radius:8px;font-size:12.5px;color:var(--text-primary);margin-bottom:14px">
-      ℹ️ <b>Kapasitas Maksimal (21/21 Media Active).</b> Mempublikasikan Stories baru akan menggeser media terlama di urutan paling belakang secara otomatis. <i>File media terlama tetap tersimpan di Cloudflare R2 (/stories).</i>
+      ℹ️ <b>Kapasitas Maksimal (21/21 Media Aktif).</b> Mempublikasikan Stories baru akan menggeser media terlama di urutan paling belakang secara otomatis. <i>File media terlama tetap tersimpan aman di arsip.</i>
     </div>
 
     <!-- Dropzone -->
@@ -713,8 +713,7 @@ adminHeader('Stories', 'stories', $user);
           </svg>
         </div>
         <div>
-          <h2>Arsip Media Stories (Cloudflare R2)</h2>
-          <p>Koleksi foto &amp; video di folder <code>/stories</code> R2 Storage yang tidak aktif di 21 Stories utama.</p>
+          <h2>Arsip Media Stories</h2>
         </div>
       </div>
       <button type="button" class="archive-modal-close" onclick="closeArchiveModal()" title="Tutup">&times;</button>
@@ -723,7 +722,7 @@ adminHeader('Stories', 'stories', $user);
     <!-- Filter & Toolbar -->
     <div style="padding:12px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--bg-card2)">
       <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px">
-        <input type="text" id="archiveSearchInput" class="form-control" placeholder="Cari nama file media di R2..." oninput="filterArchiveGrid()" style="font-size:12.5px;padding:7px 12px">
+        <input type="text" id="archiveSearchInput" class="form-control" placeholder="Cari nama file media di arsip..." oninput="filterArchiveGrid()" style="font-size:12.5px;padding:7px 12px">
       </div>
       <div style="display:flex;align-items:center;gap:8px">
         <select id="archiveTypeFilter" class="form-control" onchange="filterArchiveGrid()" style="font-size:12.5px;padding:7px 12px;width:auto">
@@ -743,7 +742,7 @@ adminHeader('Stories', 'stories', $user);
       <!-- Loading State -->
       <div id="archiveLoading" class="archive-loading">
         <div class="archive-spinner"></div>
-        <span>Memindai file media di Cloudflare R2...</span>
+        <span>Memuat arsip media...</span>
       </div>
 
       <!-- Empty State -->
@@ -760,7 +759,7 @@ adminHeader('Stories', 'stories', $user);
     <!-- Footer -->
     <div style="padding:14px 24px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg-card2)">
       <div style="font-size:12px;color:var(--text-muted)">
-        Total <strong id="archiveTotalCount" style="color:var(--text-primary)">0</strong> file media tersimpan di R2.
+        Total <strong id="archiveTotalCount" style="color:var(--text-primary)">0</strong> file media terarsip.
       </div>
       <button type="button" class="btn btn-secondary btn-sm" onclick="closeArchiveModal()">Tutup</button>
     </div>
@@ -1279,7 +1278,7 @@ function renderArchiveGrid() {
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
             <span>Restore</span>
           </button>
-          <button type="button" class="archive-act-delete" onclick="deleteArchiveItem('${escHtml(item.key)}', '${escHtml(item.file_name)}')" title="Hapus Permanen dari R2">
+          <button type="button" class="archive-act-delete" onclick="deleteArchiveItem('${escHtml(item.key)}', '${escHtml(item.file_name)}')" title="Hapus Permanen">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
             <span>Hapus</span>
           </button>
@@ -1314,7 +1313,7 @@ async function restoreArchiveItem(key, name) {
 }
 
 async function deleteArchiveItem(key, name) {
-  const ok = confirm(`⚠️ Hapus Permanen dari Cloudflare R2?\n\nFile media "${name}" akan dihapus PERMANEN dari Cloudflare R2 Storage (/stories). Tindakan ini tidak dapat dibatalkan!`);
+  const ok = confirm(`⚠️ Hapus Permanen?\n\nFile media "${name}" akan dihapus PERMANEN dari penyimpanan arsip. Tindakan ini tidak dapat dibatalkan!`);
   if (!ok) return;
 
   try {
@@ -1325,10 +1324,10 @@ async function deleteArchiveItem(key, name) {
     });
     const d = await res.json();
     if (d.success) {
-      toast('Terhapus', `File media "${name}" terhapus permanen dari Cloudflare R2.`, 'success');
+      toast('Terhapus', `File media "${name}" terhapus permanen.`, 'success');
       loadArchiveMedia();
     } else {
-      toast('Gagal', d.error || 'Gagal menghapus file dari R2', 'error');
+      toast('Gagal', d.error || 'Gagal menghapus file arsip', 'error');
     }
   } catch (e) {
     toast('Error', 'Gagal terhubung ke server', 'error');
