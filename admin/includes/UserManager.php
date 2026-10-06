@@ -186,9 +186,17 @@ class UserManager
         return true;
     }
 
-    public function verifyLogin(string $username, string $password): ?array
+    public function verifyLogin(string $identifier, string $password): ?array
     {
-        $u = $this->findByUsername($username);
+        $identifier = trim($identifier);
+        if ($identifier === '') return null;
+
+        if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
+            $u = $this->findByEmail($identifier) ?? $this->findByUsername($identifier);
+        } else {
+            $u = $this->findByUsername($identifier) ?? $this->findByEmail($identifier);
+        }
+
         if (!$u) return null;
         if (($u['is_active'] ?? '1') !== '1') return null;
         if (!password_verify($password, $u['password_hash'])) return null;

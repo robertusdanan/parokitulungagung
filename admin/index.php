@@ -61,14 +61,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Verifikasi keamanan gagal. Silakan coba lagi.';
     } else {
 
-    $username = trim($_POST['username'] ?? '');
-    $password = $_POST['password'] ?? '';
+    $identifier = trim($_POST['username'] ?? '');
+    $password   = $_POST['password'] ?? '';
 
-    if ($username && $password) {
+    if ($identifier && $password) {
         try {
             $db     = new SupabaseClient();
             $um     = new UserManager($db);
-            $user   = $um->verifyLogin($username, $password);
+            $user   = $um->verifyLogin($identifier, $password);
 
             if ($user) {
                 session_regenerate_id(true); // Cegah session fixation
@@ -91,14 +91,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $attempts[] = $now;
                 file_put_contents($cacheFile, json_encode($attempts));
-                $error = 'Username atau password salah, atau akun tidak aktif.';
+                $error = 'Username/email atau password salah, atau akun tidak aktif.';
             }
         } catch (Throwable $e) {
             $error = 'Gagal menghubungi database. Periksa konfigurasi Supabase.';
             error_log('[index.php] ' . $e->getMessage());
         }
     } else {
-        $error = 'Mohon isi username dan password.';
+        $error = 'Mohon isi username atau email dan password.';
     }
 
     } // end rate-limit
@@ -141,10 +141,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <input type="hidden" name="redirect" value="<?= e($redirectTo) ?>">
       <?php endif; ?>
       <div class="form-group">
-        <label for="loginUsername">Username</label>
+        <label for="loginUsername">Username atau Email</label>
         <input type="text" name="username" id="loginUsername" class="form-control"
                value="<?= e($_POST['username'] ?? '') ?>"
-               placeholder="Masukkan username"
+               placeholder="Masukkan username atau email"
                autocomplete="username" required autofocus>
       </div>
       <div class="form-group">
