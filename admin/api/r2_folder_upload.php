@@ -33,7 +33,7 @@ adminBoot();
 
 header('Content-Type: application/json; charset=utf-8');
 
-$user = apiRequirePageAccess('media', 'create');
+$user = apiRequirePageAccess(['media', 'galeri'], 'create');
 
 // Lepaskan lock session SEGERA agar request upload paralel tidak saling memblokir (session lock bottleneck)
 session_write_close();

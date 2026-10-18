@@ -141,33 +141,39 @@ function apiRequireLogin(): array
 
 /**
  * Cek akses halaman DAN aksi spesifik untuk API.
+ * $page bisa berupa string tunggal atau array halaman alternatif (misal ['media', 'galeri']).
  * $action = 'create' | 'edit' | 'delete' | 'list'
  */
-function apiRequirePageAccess(string $page, string $action = 'list'): array
+function apiRequirePageAccess(string|array $page, string $action = 'list'): array
 {
     $user = apiRequireLogin();
     if ($user['role'] === ROLE_SUPERADMIN) return $user;
 
     $perms = getPermissionsMap($user);
+    $pages = is_array($page) ? $page : [$page];
 
-    if (!array_key_exists($page, $perms)) {
-        apiJson(['error' => 'Akses ditolak: tidak punya akses ke halaman ' . $page], 403);
+    $hasPageAccess = false;
+    foreach ($pages as $p) {
+        if (!array_key_exists($p, $perms)) continue;
+        $hasPageAccess = true;
+
+        $actions = $perms[$p];
+        // 'view' selalu ada implisit — inject jika belum ada
+        if (!in_array('view', $actions)) array_unshift($actions, 'view');
+
+        // 'list' dan 'view' selalu boleh jika punya akses halaman
+        if ($action === 'list' || $action === 'view') return $user;
+
+        // Untuk create/edit/delete/publish, cek apakah ada di actions
+        if (in_array($action, $actions)) return $user;
     }
 
-    $actions = $perms[$page];
-    // 'view' selalu ada implisit — inject jika belum ada
-    if (!in_array('view', $actions)) array_unshift($actions, 'view');
-
-    // 'list' dan 'view' selalu boleh jika punya akses halaman
-    if ($action === 'list' || $action === 'view') return $user;
-
-    // Untuk create/edit/delete/publish, cek apakah ada di actions
-    if (!in_array($action, $actions)) {
-        $label = PAGE_ACTION_LABELS[$action] ?? $action;
-        apiJson(['error' => 'Akses ditolak: Anda tidak punya izin "' . $label . '" di halaman ini'], 403);
+    if (!$hasPageAccess) {
+        apiJson(['error' => 'Akses ditolak: tidak punya akses ke halaman ' . implode('/', $pages)], 403);
     }
 
-    return $user;
+    $label = PAGE_ACTION_LABELS[$action] ?? $action;
+    apiJson(['error' => 'Akses ditolak: Anda tidak punya izin "' . $label . '" di halaman ini'], 403);
 }
 
 /**
@@ -239,4 +245,4 @@ function renderAccessDenied(): string
     p{color:#aaa;}a{color:#a8dadc;}</style></head>
     <body><div class="box"><h1>403</h1><p>Anda tidak memiliki akses ke halaman ini.</p>
     <a href="/admin/dashboard.php">← Kembali ke Dashboard</a></div></body></html>';
-}
+}

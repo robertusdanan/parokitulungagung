@@ -33,7 +33,7 @@ adminBoot();
 
 header('Content-Type: application/json; charset=utf-8');
 
-$user = apiRequirePageAccess('media', 'create');
+$user = apiRequirePageAccess(['media', 'galeri'], 'create');
 
 require_once __DIR__ . '/../../includes/R2WriteClient.php';
 require_once __DIR__ . '/../../includes/GitHubDispatcher.php';

@@ -24,7 +24,7 @@ $body   = jsonBody();
 $action = $body['action'] ?? '';
 $force  = !empty($body['force']); // bypass cache lokal — dipakai tombol "↻ Refresh" manual
 
-$user = apiRequirePageAccess('media', $action === 'delete_file' || $action === 'delete_album' ? 'delete' : 'list');
+$user = apiRequirePageAccess(['media', 'galeri'], $action === 'delete_file' || $action === 'delete_album' ? 'delete' : 'list');
 
 require_once __DIR__ . '/../../includes/R2WriteClient.php';
 require_once __DIR__ . '/../includes/R2AlbumCache.php';
