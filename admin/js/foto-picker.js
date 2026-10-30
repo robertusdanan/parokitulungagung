@@ -121,7 +121,7 @@ ${css}
     </div>
     <div class="fp-tabs">
       <button class="fp-tab active" onclick="FotoPicker.switchTab('gallery')" id="fpTabGallery">
-        📁 Dari Galeri (<?= count_or_86 ?>)
+        📁 Dari Galeri (29)
       </button>
       <button class="fp-tab" onclick="FotoPicker.switchTab('upload')" id="fpTabUpload">
         ⬆️ Upload Foto Baru
@@ -135,7 +135,7 @@ ${css}
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <input type="text" id="fpSearchInput" placeholder="Cari nama..." oninput="FotoPicker.search(this.value)">
         </div>
-        <div class="fp-count" id="fpCount">86 foto tersedia</div>
+        <div class="fp-count" id="fpCount">29 foto tersedia</div>
         <div class="fp-grid" id="fpGrid"></div>
       </div>
 
