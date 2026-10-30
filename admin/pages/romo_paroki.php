@@ -5,7 +5,7 @@ adminBoot();
 $user = requirePageAccess('romo_paroki');
 adminHeader('Romo Paroki', 'romo_paroki', $user);
 ?>
-<script src="/admin/js/admin.js" defer></script>
+<div class="page-header">
   <div class="page-header-left">
     <h1>Romo Paroki</h1>
     <p>Kelola data Romo yang tampil di homepage &amp; halaman riwayat/profil Romo</p>

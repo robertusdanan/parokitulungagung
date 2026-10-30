@@ -109,7 +109,7 @@ function adminHeader(string $pageTitle, string $activePage, array $user): void {
   </noscript>
   <link rel="icon" href="/favicon.ico?v=2">
   <link rel="stylesheet" href="/admin/css/admin.css">
-  <script src="/admin/js/admin.js" defer></script>
+  <script src="/admin/js/admin.js"></script>
   <script>
     window.PAGE_ACTIONS = <?= json_encode($pageActionsJs) ?>;
     // URL CDN untuk foto person (R2). Default fallback: /person/<file> (relatif)
