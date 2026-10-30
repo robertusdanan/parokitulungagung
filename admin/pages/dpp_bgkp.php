@@ -7,6 +7,7 @@ $isSuperadmin   = $user['role'] === ROLE_SUPERADMIN;
 $defaultPeriode = getCurrentPeriode();
 adminHeader('DPP & BGKP', 'dpp_bgkp', $user);
 ?>
+<script src="/admin/js/admin.js"></script>
 <script src="/admin/js/foto-picker.js"></script>
 <div class="page-header">
   <div class="page-header-left"><h1>Kepengurusan DPP &amp; BGKP</h1><p>Kelola data pengurus Dewan Paroki dan Badan Gerejawi</p></div>
