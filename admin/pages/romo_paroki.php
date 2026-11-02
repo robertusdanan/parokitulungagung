@@ -127,7 +127,7 @@ adminHeader('Romo Paroki', 'romo_paroki', $user);
   </div>
 </div>
 <?php endif; ?>
-<script src="/admin/js/foto-picker.js"></script>
+<script src="/admin/js/foto-picker.js?v=2"></script>
 <script>
 const PAGE = 'romo_paroki';
 let allData = [], editRow = null, slugTouched = false;

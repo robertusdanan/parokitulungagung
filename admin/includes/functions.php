@@ -108,8 +108,9 @@ function adminHeader(string $pageTitle, string $activePage, array $user): void {
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap">
   </noscript>
   <link rel="icon" href="/favicon.ico?v=2">
-  <link rel="stylesheet" href="/admin/css/admin.css">
-  <script src="/admin/js/admin.js"></script>
+  <link rel="stylesheet" href="/admin/css/admin.css?v=2">
+  <script src="/admin/js/admin.js?v=2"></script>
+  <script src="/admin/js/foto-picker.js?v=2"></script>
   <script>
     window.PAGE_ACTIONS = <?= json_encode($pageActionsJs) ?>;
     // URL CDN untuk foto person (R2). Default fallback: /person/<file> (relatif)
