@@ -180,7 +180,11 @@ try {
             $rowData = $body['data'] ?? [];
             $insert  = [];
             foreach ($cols as $col) {
-                $insert[$col] = $rowData[$col] ?? '';
+                $val = $rowData[$col] ?? null;
+                if ($val === '') {
+                    $val = null;
+                }
+                $insert[$col] = $val;
             }
             $result = $db->insert($table, $insert);
             $newId = (int)($result[$pk] ?? 0);
@@ -208,7 +212,11 @@ try {
             $update  = [];
             foreach ($cols as $col) {
                 if (array_key_exists($col, $rowData)) {
-                    $update[$col] = $rowData[$col];
+                    $val = $rowData[$col];
+                    if ($val === '') {
+                        $val = null;
+                    }
+                    $update[$col] = $val;
                 }
             }
             $db->update($table, $pk, $recordId, $update);

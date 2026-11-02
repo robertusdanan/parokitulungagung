@@ -145,8 +145,8 @@ $extraCss = ['/css/content.css'];
           <?php endif; ?>
         <?php else: ?>
           Purna tugas sebagai <?= e($jabatan) ?> di Paroki Tulungagung
-          <?php if (!empty($current['tanggal_mulai'])): ?>
-            (<?= e(romo_fmtTgl($current['tanggal_mulai'])) ?> &ndash; <?= $current['tanggal_selesai'] ? e(romo_fmtTgl($current['tanggal_selesai'])) : 'sekarang' ?>)
+          <?php if (!empty($current['tanggal_mulai']) || !empty($current['tanggal_selesai'])): ?>
+            (<?= !empty($current['tanggal_mulai']) ? e(romo_fmtTgl($current['tanggal_mulai'])) : '—' ?> &ndash; <?= !empty($current['tanggal_selesai']) ? e(romo_fmtTgl($current['tanggal_selesai'])) : 'sekarang' ?>)
           <?php endif; ?>
         <?php endif; ?>
       </div>
@@ -165,17 +165,27 @@ $extraCss = ['/css/content.css'];
     <ul class="romo-timeline">
       <?php foreach ($history as $h):
           $hAktif = romo_isAktifMenjabat($h, $today);
+          $hasMulai = !empty($h['tanggal_mulai']);
+          $hasSelesai = !empty($h['tanggal_selesai']);
       ?>
       <li class="<?= $hAktif ? 'now' : '' ?>">
         <div class="tl-jabatan">
           <?= e($h['jabatan'] ?? '') ?>
           <?php if ($hAktif): ?><span class="tl-badge">Sekarang</span><?php endif; ?>
         </div>
+        <?php if ($hasMulai || $hasSelesai || $hAktif): ?>
         <div class="tl-masa">
-          <?= e(romo_fmtTgl($h['tanggal_mulai'] ?? '')) ?>
-          &ndash;
-          <?= !empty($h['tanggal_selesai']) ? e(romo_fmtTgl($h['tanggal_selesai'])) : 'Sekarang' ?>
+          <?php if ($hasMulai && $hasSelesai): ?>
+            <?= e(romo_fmtTgl($h['tanggal_mulai'])) ?> &ndash; <?= e(romo_fmtTgl($h['tanggal_selesai'])) ?>
+          <?php elseif ($hasMulai): ?>
+            <?= e(romo_fmtTgl($h['tanggal_mulai'])) ?> &ndash; <?= $hAktif ? 'Sekarang' : '' ?>
+          <?php elseif ($hasSelesai): ?>
+            s.d. <?= e(romo_fmtTgl($h['tanggal_selesai'])) ?>
+          <?php elseif ($hAktif): ?>
+            Sekarang
+          <?php endif; ?>
         </div>
+        <?php endif; ?>
       </li>
       <?php endforeach; ?>
     </ul>

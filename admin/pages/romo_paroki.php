@@ -75,7 +75,7 @@ adminHeader('Romo Paroki', 'romo_paroki', $user);
           </datalist>
         </div>
         <div class="form-group">
-          <label>Tanggal Mulai Menjabat <span class="required">*</span></label>
+          <label>Tanggal Mulai Menjabat</label>
           <input type="date" class="form-control" id="fieldMulai">
         </div>
         <div class="form-group">
@@ -176,6 +176,14 @@ function isMenjabat(row){
   if (selesai && selesai < today) return false;
   return true;
 }
+function fmtMasa(row){
+  const m = row['tanggal_mulai'] ? fmtTgl(row['tanggal_mulai']) : '';
+  const s = row['tanggal_selesai'] ? fmtTgl(row['tanggal_selesai']) : '';
+  if (m && s) return `${m} &ndash; ${s}`;
+  if (m) return `${m} &ndash; Sekarang`;
+  if (s) return `s.d. ${s}`;
+  return '—';
+}
 function renderTable(data){
   const tbody=document.getElementById('tableBody');
   document.getElementById('rowCount').textContent=data.length+' data';
@@ -189,7 +197,7 @@ function renderTable(data){
     <td>${fotoAvatar(row['foto']||'')}</td>
     <td style="font-weight:500">${escHtml(row['nama']||'')}</td>
     <td><span class="badge badge-gold" style="font-size:10px">${escHtml(row['jabatan']||'—')}</span></td>
-    <td style="font-size:12px;color:var(--text-secondary)">${fmtTgl(row['tanggal_mulai'])} &ndash; ${row['tanggal_selesai']?fmtTgl(row['tanggal_selesai']):'Sekarang'}</td>
+    <td style="font-size:12px;color:var(--text-secondary)">${fmtMasa(row)}</td>
     <td>${menjabat?'<span class="badge badge-green" style="font-size:10px">Masih Menjabat</span>':(aktifDb?'<span class="badge badge-gray" style="font-size:10px">Purna Tugas</span>':'<span class="badge badge-gray" style="font-size:10px">Nonaktif</span>')}</td>
     <td style="text-align:center;font-family:'DM Mono',monospace;font-size:12px">${escHtml(String(row['urutan']??0))}</td>
     ${showAksi?`<td><div class="actions">
@@ -255,11 +263,11 @@ async function submitForm(){
   const jabatan=document.getElementById('fieldJabatan').value.trim();
   const mulai=document.getElementById('fieldMulai').value;
   const selesai=document.getElementById('fieldSelesai').value;
-  if(!nama||!jabatan||!mulai){toast('Error','Nama, Jabatan, dan Tanggal Mulai wajib diisi','error');return;}
-  if(selesai && selesai<mulai){toast('Error','Tanggal Selesai tidak boleh sebelum Tanggal Mulai','error');return;}
+  if(!nama||!jabatan){toast('Error','Nama dan Jabatan wajib diisi','error');return;}
+  if(mulai && selesai && selesai<mulai){toast('Error','Tanggal Selesai tidak boleh sebelum Tanggal Mulai','error');return;}
   const data={
     'nama':nama,'slug':slug,'jabatan':jabatan,
-    'tanggal_mulai':mulai,'tanggal_selesai':selesai||null,
+    'tanggal_mulai':mulai||null,'tanggal_selesai':selesai||null,
     'riwayat':document.getElementById('fieldRiwayat').value.trim(),
     'urutan':parseInt(document.getElementById('fieldUrutan').value||'0',10),
     'aktif':document.getElementById('fieldAktif').checked,
