@@ -1030,8 +1030,30 @@ main { padding-top: 20px; padding-bottom: 32px; }
 <main>
 <div class="container-main">
 
-  <!-- INSTAGRAM -->
-  <div class="content-section reveal-up instagram-modern" style="margin-top: 20px;">
+  <!-- ROMO PAROKI — Skeleton -->
+  <div class="hp-skel-wrap" id="skelRomo" aria-hidden="true" style="margin-top: 20px;">
+    <div class="content-section" style="padding-bottom:28px">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:28px">
+        <div class="hp-skel" style="height:12px;width:80px"></div>
+        <div class="hp-skel" style="height:20px;width:160px"></div>
+      </div>
+      <div style="display:flex;gap:20px;justify-content:center">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+          <div class="hp-skel" style="width:82px;height:82px;border-radius:50%"></div>
+          <div class="hp-skel" style="height:12px;width:90px"></div>
+          <div class="hp-skel" style="height:12px;width:120px"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+          <div class="hp-skel" style="width:82px;height:82px;border-radius:50%"></div>
+          <div class="hp-skel" style="height:12px;width:90px"></div>
+          <div class="hp-skel" style="height:12px;width:120px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROMO PAROKI — Content -->
+  <div class="content-section romo-modern" id="secRomo" style="display:none; margin-top: 20px; padding-bottom: 32px;">
     <div class="section-heading">
       <div class="section-heading__ornament" aria-hidden="true">
         <span></span>
@@ -1040,29 +1062,11 @@ main { padding-top: 20px; padding-bottom: 32px; }
         </svg>
         <span></span>
       </div>
-      <h2>Reels</h2>
-      <p class="section-heading__sub">@komsosparokitulungagung</p>
+      <h2>Romo Paroki</h2>
+      <p class="section-heading__sub">Gembala Umat Tulungagung</p>
     </div>
 
-    <div class="ig-home-card">
-      <div class="ig-home-frame" id="igHomeFrame">
-        <div class="ig-home-card-body" id="igHomeBody">
-          <?php  ?>
-          <div class="tagembed-widget" style="width:100%;height:100%;overflow:auto;" data-widget-id="334168" data-website="1"></div>
-          <script src="https://widget.tagembed.com/embed.min.js" type="text/javascript" async></script>
-        </div>
-      </div>
-      <div class="ig-home-follow-wrap">
-        <a href="https://www.instagram.com/komsosparokitulungagung/" class="ig-home-follow" target="_blank" rel="noopener">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <rect x="3" y="3" width="18" height="18" rx="5"/>
-            <circle cx="12" cy="12" r="4"/>
-            <circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/>
-          </svg>
-          Ikuti di Instagram
-        </a>
-      </div>
-    </div>
+    <div class="romo-wrapper" id="romoWrapper"></div>
   </div>
 
   <!-- ARTIKEL SECTION -->
@@ -1119,7 +1123,7 @@ main { padding-top: 20px; padding-bottom: 32px; }
         <div class="quick-nav-icon" aria-hidden="true">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-            <line x1="8" y1="14" x2="8" y2="14" stroke-width="2.5"/><line x1="12" y1="14" x2="12" y2="14" stroke-width="2.5"/><line x1="12" y1="18" x2="12" y2="18" stroke-width="2.5"/>
+            <line x1="8" y1="14" x2="8" y2="14" stroke-width="2.5"/><line x1="12" y1="14" x2="12" y2="14" stroke-width="2.5"/><line x1="12" y1="18" x2="18" y2="18" stroke-width="2.5"/>
           </svg>
         </div>
         <span class="quick-nav-label">Agenda</span>
@@ -1146,30 +1150,8 @@ main { padding-top: 20px; padding-bottom: 32px; }
     </nav>
   </section>
 
-  <!-- ROMO PAROKI — Skeleton -->
-  <div class="hp-skel-wrap" id="skelRomo" aria-hidden="true">
-    <div class="content-section" style="padding-bottom:28px">
-      <div style="display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:28px">
-        <div class="hp-skel" style="height:12px;width:80px"></div>
-        <div class="hp-skel" style="height:20px;width:160px"></div>
-      </div>
-      <div style="display:flex;gap:20px;justify-content:center">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
-          <div class="hp-skel" style="width:82px;height:82px;border-radius:50%"></div>
-          <div class="hp-skel" style="height:12px;width:90px"></div>
-          <div class="hp-skel" style="height:12px;width:120px"></div>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
-          <div class="hp-skel" style="width:82px;height:82px;border-radius:50%"></div>
-          <div class="hp-skel" style="height:12px;width:90px"></div>
-          <div class="hp-skel" style="height:12px;width:120px"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ROMO PAROKI — Content -->
-  <div class="content-section romo-modern" id="secRomo" style="display:none; padding-bottom: 32px;">
+  <!-- INSTAGRAM -->
+  <div class="content-section reveal-up instagram-modern">
     <div class="section-heading">
       <div class="section-heading__ornament" aria-hidden="true">
         <span></span>
@@ -1178,11 +1160,29 @@ main { padding-top: 20px; padding-bottom: 32px; }
         </svg>
         <span></span>
       </div>
-      <h2>Romo Paroki</h2>
-      <p class="section-heading__sub">Gembala Umat Tulungagung</p>
+      <h2>Reels</h2>
+      <p class="section-heading__sub">@komsosparokitulungagung</p>
     </div>
 
-    <div class="romo-wrapper" id="romoWrapper"></div>
+    <div class="ig-home-card">
+      <div class="ig-home-frame" id="igHomeFrame">
+        <div class="ig-home-card-body" id="igHomeBody">
+          <?php  ?>
+          <div class="tagembed-widget" style="width:100%;height:100%;overflow:auto;" data-widget-id="334168" data-website="1"></div>
+          <script src="https://widget.tagembed.com/embed.min.js" type="text/javascript" async></script>
+        </div>
+      </div>
+      <div class="ig-home-follow-wrap">
+        <a href="https://www.instagram.com/komsosparokitulungagung/" class="ig-home-follow" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="3" y="3" width="18" height="18" rx="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+          Ikuti di Instagram
+        </a>
+      </div>
+    </div>
   </div>
 
 </div><!-- /container-main -->
